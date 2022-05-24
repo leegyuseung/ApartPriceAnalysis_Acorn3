@@ -21,3 +21,7 @@ print(people.head(2))
 # 통화량, cpi, 기대인플레 데이터 불러오기
 data = pd.read_csv('../datas/시간별 데이터 합.csv', encoding='cp949')
 print(data.head(2))
+
+# 부동산 아파트 거래량
+buy_data = pd.read_csv('../datas/부동산 아파트 거래량 2011.01-2021.12.csv', encoding='cp949')
+print(buy_data.head(2))
