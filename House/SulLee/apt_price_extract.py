@@ -16,10 +16,13 @@ apart3 = apt2.copy()
 
 for city, _ in seoul: 
     apart1 = apart[apart['구'] == city]
-    apart1 = apart.loc[:,['거래금액','ymd','전용면적']]
+    # print(apart1.head(1))
+    apart1 = apart1.loc[:,['거래금액','ymd','전용면적']]
     apart1['면적가격'] = (apart1['거래금액']/apart1['전용면적']) * 3.3
     apart1['평균값'] = apart1.groupby(['ymd'])['면적가격'].transform('mean')
+    print(apart1.head(1))
     apart2 = apart1.drop_duplicates(['ymd'], ignore_index=True)
+    # print(apart2['평균값'])
     apart3[city] = apart2['평균값']
 
 apart3 = apart3.drop(['거래금액','전용면적','평균값','면적가격'], axis="columns")
