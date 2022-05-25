@@ -42,7 +42,7 @@ print(mydata.info())
 
 features = data.iloc[:,1:10]
 # label = data.iloc[:,11]
-features.plot(subplots=True)
+mydata.plot(subplots=True)
 plt.show()
 #정상성 호
 #differencing / 차분
