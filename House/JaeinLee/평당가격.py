@@ -1,11 +1,10 @@
 '''
-Created on 2022. 5. 25. 구별 평당 거래 금액
+Created on 2022. 5. 26.
 '''
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 plt.rc('font', family='malgun gothic')
-pd.set_option('display.max_columns', None)
 
 # 데이터를 불러오기
 apart = pd.read_csv('../datas/아파트2.csv', encoding='cp949')
@@ -20,12 +19,16 @@ apart3 = apt2.copy()
 
 for city, _ in seoul: 
     apart1 = apart[apart['구'] == city]
+    # print(apart1.head(1))
     apart1 = apart1.loc[:,['거래금액','ymd','전용면적']]
     apart1['면적가격'] = (apart1['거래금액']/apart1['전용면적']) * 3.3
     apart1['평균값'] = apart1.groupby(['ymd'])['면적가격'].transform('mean')
+    print(apart1.head(1))
     apart2 = apart1.drop_duplicates(['ymd'], ignore_index=True)
+    # print(apart2['평균값'])
     apart3[city] = apart2['평균값']
-apart3 = apart3.drop(['거래금액','전용면적','평균값'], axis="columns")
-print(apart3)
-apart3.to_csv('../datas/구별,월별 평당가격.csv', index=False, encoding ='utf-8-sig')
 
+apart3 = apart3.drop(['거래금액','전용면적','평균값','면적가격'], axis="columns")
+
+print(apart3.head(3))
+apart3.to_csv('구별,월별 평당가격2.csv', index=False, encoding ='utf-8-sig')
