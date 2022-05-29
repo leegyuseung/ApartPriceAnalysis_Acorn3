@@ -3,7 +3,8 @@ import requests
 import xmltodict       
 import pandas as pd    
 
-APIKEY = "janG8FZzVlFCaTco2h3fKdlm9%2B3nn1gOaLMRkjcM9CczaBaE%2B1rat9qQQTuTNKcP4KAyPYLM3Bn80l%2FRQkT6%2Bw%3D%3D"
+# APIKEY = "janG8FZzVlFCaTco2h3fKdlm9%2B3nn1gOaLMRkjcM9CczaBaE%2B1rat9qQQTuTNKcP4KAyPYLM3Bn80l%2FRQkT6%2Bw%3D%3D"
+APIKEY = "4YeaEvyflE79LxS%2Fbx7tR%2BqYS8Y496aHOcPjJlvyB8D6PkngSX7wJIh0nhfE5qKvdK6LjYoWhQ2ITChhUl8H8Q%3D%3D"
 
 def get_data(lawd_cd, deal_ymd):
     base_url = "http://openapi.molit.go.kr:8081/OpenAPI_ToolInstallPackage/service/rest/RTMSOBJSvc/getRTMSDataSvcAptTrade?serviceKey=" +APIKEY
