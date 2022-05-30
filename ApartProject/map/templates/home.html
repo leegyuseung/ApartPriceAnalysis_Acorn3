@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>검색테스트</title>
+<script src="http://code.jquery.com/jquery-latest.min.js"></script>
+<script>
+function data(){
+	  let send_data = {};
+	  let search = document.getElementById("search").value;
+	  send_data['search'] = search;
+	  //alert(send_data)
+	  
+	  $(".apart").empty();
+
+	  $.ajax({
+	     url:"map/apart",
+	     type:"post",
+	     data:send_data,
+	     dataType:"json",
+	     success:function(data){
+	    	 $(".apart").append(data.df)
+	     },
+	     error : function(){
+	    	 alert('실패')
+	     }
+	  });
+}
+</script>
+</head>
+<body>
+<input type = "text" placeholder = "주소입력" id = "search">
+<button onclick="data()" type = "submit">제출</button>
+<div class="apart">
+</div>
+</body>
+</html>
