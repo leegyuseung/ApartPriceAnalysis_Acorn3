@@ -20,6 +20,7 @@ function data(){
 	     dataType:"json",
 	     success:function(data){
 	    	 $(".apart").append(data.df)
+	    	 print(data)
 	     },
 	     error : function(){
 	    	 alert('실패')
