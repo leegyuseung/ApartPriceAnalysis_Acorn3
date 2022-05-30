@@ -20,3 +20,6 @@ def apart(request):
     context = {'df':df2}
     print(context)
     return HttpResponse(json.dumps(context), content_type='application/json')
+
+def cssTest(request):
+    return render(request,'index.html')
