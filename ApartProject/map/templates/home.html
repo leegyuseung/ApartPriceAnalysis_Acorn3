@@ -19,6 +19,7 @@ function data(){
 	     data:send_data,
 	     dataType:"json",
 	     success:function(data){
+	    	 var juso = JSON.parse(data[juso]);
 	    	 $(".apart").append(data.df)
 	     },
 	     error : function(){
