@@ -23,9 +23,8 @@
 		  let send_data = {};
 		  let search = document.getElementById("search").value;
 		  send_data['search'] = search;
-		  //alert(send_data)
 		  
-		  $(".apart").empty();
+		  $(".apartdata").empty();
 	
 		  $.ajax({
 		     url:"map/apart",
@@ -33,7 +32,7 @@
 		     data:send_data,
 		     dataType:"json",
 		     success:function(data){
-		    	 $(".apart").append(data.df)
+		    	 $(".apartdata").append(data.apartdata);
 		     },
 		     error : function(){
 		    	 alert('실패')
@@ -59,10 +58,9 @@
 	               style="min-width: 225px"
 	               id = "search"
 	               />
-	         <button onclick="data()" type = "submit">제출</button>
-	          <!--<span class="input-group-text border-0" >
-	        	<i class="fas fa-search"></i>
-	        </span> -->
+	        <span class="input-group-text border-0" >
+	        	<button class="fas fa-search" onclick="data()" type = "submit"></button>
+	        </span>
 	      </div>
         <a
            href="#"
@@ -70,7 +68,7 @@
            aria-current="true"
            >
           <i class="fas fa-tachometer-alt fa-fw me-3"></i>
-          <span>Main dashboard</span>
+          <span class="apartdata"></span>
         </a>
         <a
            href="#"
@@ -158,72 +156,6 @@
           </a>
         </li>
 
-        <!-- Icon dropdown -->
-        <li class="nav-item dropdown">
-          <a
-             class="nav-link me-3 me-lg-0 dropdown-toggle hidden-arrow"
-             href="#"
-             id="navbarDropdown"
-             role="button"
-             data-mdb-toggle="dropdown"
-             aria-expanded="false"
-             >
-            <i class="united kingdom flag m-0"></i>
-          </a>
-          <ul
-              class="dropdown-menu dropdown-menu-end"
-              aria-labelledby="navbarDropdown"
-              >
-            <li>
-              <a class="dropdown-item" href="#"
-                 ><i class="united kingdom flag"></i>English
-                <i class="fa fa-check text-success ms-2"></i
-                  ></a>
-            </li>
-            <li><hr class="dropdown-divider" /></li>
-            <li>
-              <a class="dropdown-item" href="#"
-                 ><i class="poland flag"></i>Polski</a
-                >
-            </li>
-            <li>
-              <a class="dropdown-item" href="#"
-                 ><i class="china flag"></i>中文</a
-                >
-            </li>
-            <li>
-              <a class="dropdown-item" href="#"
-                 ><i class="japan flag"></i>日本語</a
-                >
-            </li>
-            <li>
-              <a class="dropdown-item" href="#"
-                 ><i class="germany flag"></i>Deutsch</a
-                >
-            </li>
-            <li>
-              <a class="dropdown-item" href="#"
-                 ><i class="france flag"></i>Français</a
-                >
-            </li>
-            <li>
-              <a class="dropdown-item" href="#"
-                 ><i class="spain flag"></i>Español</a
-                >
-            </li>
-            <li>
-              <a class="dropdown-item" href="#"
-                 ><i class="russia flag"></i>Русский</a
-                >
-            </li>
-            <li>
-              <a class="dropdown-item" href="#"
-                 ><i class="portugal flag"></i>Português</a
-                >
-            </li>
-          </ul>
-        </li>
-
         <!-- Avatar -->
         <li class="nav-item dropdown">
           <a
@@ -274,8 +206,8 @@
   </div>
 </main>
 <!--Main layout-->
-	<script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=3209863b8ce059f0b5c2bf4e41cfef2d&libraries=services"></script>
-	<script>
+<script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=3209863b8ce059f0b5c2bf4e41cfef2d&libraries=services"></script>
+<script>
 	var mapContainer = document.getElementById('map'), // 지도를 표시할 div 
 	    mapOption = {
 	        center: new kakao.maps.LatLng(33.450701, 126.570667), // 지도의 중심좌표
@@ -313,11 +245,11 @@
 	    } 
 	});    
 	
-	</script>
-    <!-- MDB -->
-    <script type="text/javascript" src="../static/js/mdb.min.js"></script>
-    <!-- Custom scripts -->
-    <script type="text/javascript" src="../static/js/script.js"></script>
+</script>
+<!-- MDB -->
+<script type="text/javascript" src="../static/js/mdb.min.js"></script>
+<!-- Custom scripts -->
+<script type="text/javascript" src="../static/js/script.js"></script>
 </body>
 </html>
 

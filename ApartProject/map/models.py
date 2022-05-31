@@ -7,6 +7,9 @@ class Test(models.Model):
     apart = models.CharField(max_length=45, blank=True, null=True)
     code = models.IntegerField(blank=True, null=True)
     price = models.IntegerField(blank=True, null=True)
+    we = models.CharField(max_length=45, blank=True, null=True)
+    gd = models.CharField(max_length=45, blank=True, null=True)
+    juso = models.CharField(max_length=45, blank=True, null=True)
 
     class Meta:
         managed = False
