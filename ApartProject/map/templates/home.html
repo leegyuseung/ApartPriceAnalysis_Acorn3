@@ -21,6 +21,7 @@ function data(){
 	     success:function(data){
 	    	 var juso = JSON.parse(data[juso]);
 	    	 $(".apart").append(data.df)
+	    	 print(data)
 	     },
 	     error : function(){
 	    	 alert('실패')

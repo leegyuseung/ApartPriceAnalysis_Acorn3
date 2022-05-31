@@ -2,6 +2,9 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+	<style>
+		* { margin : 0}
+	</style>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
     <meta http-equiv="x-ua-compatible" content="ie=edge" />
@@ -14,6 +17,30 @@
   	<link rel="stylesheet" href="../static/css/mdb.min.css" />
     <!-- Custom styles -->
     <link rel="stylesheet" href="../static/css/style.css" />
+    <script src="http://code.jquery.com/jquery-latest.min.js"></script>
+    <script>
+	function data(){
+		  let send_data = {};
+		  let search = document.getElementById("search").value;
+		  send_data['search'] = search;
+		  //alert(send_data)
+		  
+		  $(".apart").empty();
+	
+		  $.ajax({
+		     url:"map/apart",
+		     type:"post",
+		     data:send_data,
+		     dataType:"json",
+		     success:function(data){
+		    	 $(".apart").append(data.df)
+		     },
+		     error : function(){
+		    	 alert('실패')
+		     }
+		  });
+	}
+	</script>
 </head>
 <body>
     <!--Main Navigation-->
@@ -23,18 +50,20 @@
     <div class="position-sticky">
       <div class="list-group list-group-flush mx-3 mt-4" >
 	      	<!-- Search form -->
-	      <form class="d-none d-md-flex input-group w-auto my-auto">
+	      <div class="d-none d-md-flex input-group w-auto my-auto">
 	        <input
 	               autocomplete="off"
 	               type="search"
 	               class="form-control rounded"
 	               placeholder='아파트 검색'
 	               style="min-width: 225px"
+	               id = "search"
 	               />
-	        <span class="input-group-text border-0" >
+	         <button onclick="data()" type = "submit">제출</button>
+	          <!--<span class="input-group-text border-0" >
 	        	<i class="fas fa-search"></i>
-	        </span>
-	      </form>
+	        </span> -->
+	      </div>
         <a
            href="#"
            class="list-group-item list-group-item-action py-2 ripple"
@@ -48,9 +77,9 @@
            class="list-group-item list-group-item-action py-2 ripple active"
            >
           <i class="fas fa-chart-area fa-fw me-3"></i
-            ><span>Webiste traffic</span>
+            ><span class="apart">Webiste traffic</span>
         </a>
-       
+       	
       </div>
     </div>
   </nav>
@@ -232,7 +261,7 @@
 
 <!--Main layout-->
 <main style="margin-top: 72px;padding-left: 389px;">
-  <div class="container-fluid" style='margin-left: 163px;'>
+  <div class="container-fluid" style='margin-left: 0px;'>
         <p style="margin-top:-12px">
 		    <em class="link">
 		        <!--<a href="javascript:void(0);" onclick="window.open('http://fiy.daum.net/fiy/map/CsGeneral.daum', '_blank', 'width=981, height=650')">
@@ -240,7 +269,7 @@
 		        </a>-->
 		    </em>
 		</p>
-		<div id="map" style="width:100%;height:890px;"></div>
+		<div id="map" style="width:100vw;height:100vh;"></div>
     
   </div>
 </main>
