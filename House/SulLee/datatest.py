@@ -32,6 +32,6 @@ for i in dong:
 print(data.info())
     
 
-# new_df = pd.DataFrame(df, columns=['ymd','법정동','아파트','전용면적','거래금액'])
-# print(new_df.head(3))
-# new_df.to_csv('apt2.csv',encoding ='utf-8-sig')
+new_df = pd.DataFrame(df, columns=['ymd','법정동','아파트','전용면적','거래금액'])
+print(new_df.head(3))
+new_df.to_csv('apt1212.csv',encoding ='utf-8-sig')
