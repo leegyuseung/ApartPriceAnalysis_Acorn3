@@ -18,28 +18,6 @@
     <!-- Custom styles -->
     <link rel="stylesheet" href="../static/css/style.css" />
     <script src="http://code.jquery.com/jquery-latest.min.js"></script>
-    <script>
-	function data(){
-		  let send_data = {};
-		  let search = document.getElementById("search").value;
-		  send_data['search'] = search;
-		  
-		  $(".apartdata").empty();
-	
-		  $.ajax({
-		     url:"apart",
-		     type:"post",
-		     data:send_data,
-		     dataType:"json",
-		     success:function(data){
-		    	 $(".apartdata").append(data.apartdata);
-		     },
-		     error : function(){
-		    	 alert('실패')
-		     }
-		  });
-	}
-	</script>
 </head>
 <body>
     <!--Main Navigation-->
@@ -58,8 +36,9 @@
 	               style="min-width: 225px"
 	               id = "search"
 	               />
+	        
 	        <span class="input-group-text border-0" >
-	        	<button class="fas fa-search" onclick="data()" type = "submit"></button>
+	        	<button id="serch" class="fas fa-search" onclick="data()" type = "submit"></button>
 	        </span>
 	      </div>
         <a
@@ -208,6 +187,7 @@
 <!--Main layout-->
 <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=3209863b8ce059f0b5c2bf4e41cfef2d&libraries=services"></script>
 <script>
+	
 	var mapContainer = document.getElementById('map'), // 지도를 표시할 div 
 	    mapOption = {
 	        center: new kakao.maps.LatLng(33.450701, 126.570667), // 지도의 중심좌표
@@ -216,33 +196,70 @@
 	// 지도를 생성합니다    
 	var map = new kakao.maps.Map(mapContainer, mapOption); 
 	
-	// 주소-좌표 변환 객체를 생성합니다
-	var geocoder = new kakao.maps.services.Geocoder();
+	function map1(){
+		
+		
+		//let juso = data()
+		console.log(ajaxResult.juso)
+		
+		
+		// 주소로 좌표를 검색합니다
+		geocoder.addressSearch(ajaxResult.juso, function(result, status) {
+		
+		    // 정상적으로 검색이 완료됐으면 
+		     if (status === kakao.maps.services.Status.OK) {
+		
+		        var coords = new kakao.maps.LatLng(result[0].y, result[0].x);
+		
+		        // 결과값으로 받은 위치를 마커로 표시합니다
+		        var marker = new kakao.maps.Marker({
+		            map: map,
+		            position: coords
+		        });
+		
+		        // 인포윈도우로 장소에 대한 설명을 표시합니다
+		        var infowindow = new kakao.maps.InfoWindow({
+		            content: '<div style="width:150px;text-align:center;padding:6px 0;"></div>'
+		        });
+		        infowindow.open(map, marker);
+		
+		        // 지도의 중심을 결과값으로 받은 위치로 이동시킵니다
+		        map.setCenter(coords);
+		    } 
+		});
+	}
 	
-	// 주소로 좌표를 검색합니다
-	geocoder.addressSearch('제주특별자치도 제주시 첨단로 242', function(result, status) {
+	//var ajaxResult=null;
+	function data(){
+		  let send_data = {};
+		  let search = document.getElementById("search").value;
+		  send_data['search'] = search;
+		  
+		  
+		  $(".apartdata").empty();
 	
-	    // 정상적으로 검색이 완료됐으면 
-	     if (status === kakao.maps.services.Status.OK) {
+		  $.ajax({
+			  /* 비동기 통신 여부  */        
+			 //async : false, 
+		     url:"apart",
+		     type:"post",
+		     data:send_data,
+		     dataType:"json",
+		     success:function(data){
+		    	 $(".apartdata").append(data.apartdata);
+		    	 ajaxResult =data;
+		    	 map1();
+		     },
+		     error : function(){
+		    	 alert('실패')
+		     }
+		  });
+		  
+		  //return ajaxResult;
+	}
 	
-	        var coords = new kakao.maps.LatLng(result[0].y, result[0].x);
 	
-	        // 결과값으로 받은 위치를 마커로 표시합니다
-	        var marker = new kakao.maps.Marker({
-	            map: map,
-	            position: coords
-	        });
-	
-	        // 인포윈도우로 장소에 대한 설명을 표시합니다
-	        var infowindow = new kakao.maps.InfoWindow({
-	            content: '<div style="width:150px;text-align:center;padding:6px 0;"></div>'
-	        });
-	        infowindow.open(map, marker);
-	
-	        // 지도의 중심을 결과값으로 받은 위치로 이동시킵니다
-	        map.setCenter(coords);
-	    } 
-	});    
+	    
 	
 </script>
 <!-- MDB -->

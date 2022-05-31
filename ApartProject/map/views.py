@@ -10,6 +10,11 @@ from django.http.response import HttpResponse, JsonResponse
 def Main(request):
     return render(request,'home.html')
 
+def jusoDataPost(request, jusodata):
+    # jusodata = json.dumps(jusodata)
+    print(jusodata)
+    return render(request, 'index.html', {'jusodata': jusodata})
+
 @csrf_exempt
 def apart(request):
     search = request.POST['search']
@@ -19,6 +24,9 @@ def apart(request):
     apartdata = df['apart'][0]
     jusodata = df['juso'][0]
     
+    print(apartdata, jusodata)
+    
+    jusoDataPost(request, jusodata)
     return JsonResponse({'juso':jusodata, 'apartdata':apartdata})
     
 def cssTest(request):
