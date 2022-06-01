@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from map.models import Test
+from map.models import Test, Addrdata
 import pandas as pd
 import json
 import numpy as np
@@ -10,29 +10,25 @@ from django.http.response import HttpResponse, JsonResponse
 def Main(request):
     return render(request,'home.html')
 
-def jusoDataPost(request, jusodata):
-    # jusodata = json.dumps(jusodata)
-    print(jusodata)
-    return render(request, 'index.html', {'jusodata': jusodata})
+def cssTest(request):
+    return render(request,'index.html')
 
 @csrf_exempt
 def apart(request):
     search = request.POST['search']
-    datas = Test.objects.filter(apart__contains=search).values()
+    datas = Addrdata.objects.filter(apt__contains=search).values()
     df = pd.DataFrame(datas)
+
+    apt = [i for i in df['apt']]
+    juso = [i for i in df['addr']]
+
+    return JsonResponse({'juso':juso, 'apartdata':apt})
+
+@csrf_exempt
+def jusoSearch(request):
+    search = request.POST['search2']
+    datas2 = Addrdata.objects.filter(apt=search).values()
+    df2 = pd.DataFrame(datas2)
     
-    apartdata = df['apart'][0]
-    jusodata = df['juso'][0]
-    # print(df)
-    print(df.columns)
-    
-    apt = [i for i in df['apart']]
-    juso = [i for i in df['juso']]
-    print(apt)
-    print(apartdata, jusodata)
-    
-    jusoDataPost(request, jusodata)
-    return JsonResponse({'juso':jusodata, 'apartdata':apt})
-    
-def cssTest(request):
-    return render(request,'index.html')
+    jusodata = df2['addr'][0]
+    return JsonResponse({'juso2':jusodata})

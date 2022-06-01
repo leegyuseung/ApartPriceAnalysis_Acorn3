@@ -3,5 +3,6 @@ from map import views
 
 urlpatterns = [
      path('apart', views.apart),
-     path('index', views.cssTest)  
+     path('index', views.cssTest),  
+     path('jusoSearch', views.jusoSearch) 
 ]

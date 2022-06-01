@@ -41,23 +41,8 @@
 	        <span class="input-group-text border-0" >
 	        	<button id="serch" class="fas fa-search" onclick="data()" type = "submit"></button>
 	        </span>
+	        <div class="d-none d-md-flex input-group" id="apartList"></div>     
 	      </div>
-        <a
-           href="#"
-           class="list-group-item list-group-item-action py-2 ripple"
-           aria-current="true"
-
-           >
-          <i class="fas fa-tachometer-alt fa-fw me-3"></i>
-          <span class="apartdata"></span>
-        </a>
-        <a
-           href="#"
-           class="list-group-item list-group-item-action py-2 ripple active"
-           >
-          <i class="fas fa-chart-area fa-fw me-3"></i
-            ><span class="apart">Webiste traffic</span>
-        </a>
        	
       </div>
     </div>
@@ -201,7 +186,7 @@
 	// 지도를 생성합니다    
 	var map = new kakao.maps.Map(mapContainer, mapOption); 
 	
-	function map1(){
+	function map1(juso){
 		
 		
 		//let juso = data()
@@ -209,7 +194,7 @@
 		
 		
 		// 주소로 좌표를 검색합니다
-		geocoder.addressSearch(ajaxResult.juso, function(result, status) {
+		geocoder.addressSearch(juso, function(result, status) {
 		
 		    // 정상적으로 검색이 완료됐으면 
 		     if (status === kakao.maps.services.Status.OK) {
@@ -233,13 +218,7 @@
 		    } 
 		});
 	}
-	function searchList(data){
-		data.apartdata.forEach(function(item, index){
-            console.log(item);
-            
-        });
-	}
-	//var ajaxResult=null;
+
 	function data(){
 		  let send_data = {};
 		  let search = document.getElementById("search").value;
@@ -248,12 +227,11 @@
 		 
 		  let aptList = function(data){
 			  data.apartdata.forEach(function(item, index){
-		            console.log(item);
-		          let $a = $('<a href="#" \
-			                class="list-group-item list-group-item-action py-2 ripple" \
-			                aria-current="true" > \
-			               <span class="apartdata">'+item+'</span> \
-			             </a>')
+					  let $a = $('<a href="#" onclick="jusoSearch()"\
+		                         class="aptlists list-group-item list-group-item-action py-2 ripple" \
+		                         aria-current="true" > '
+		                       +item+
+		                      '</a>')
 				  let a = document.createElement('a');
 				  //let text = documemt.createTextNode('Test');
 				  //div.appendChild(text);
@@ -263,8 +241,7 @@
 		        });
 			  
 		  }
-		  
-		  $(".apartdata").empty();
+
 	
 		  $.ajax({
 			  /* 비동기 통신 여부  */        
@@ -274,24 +251,47 @@
 		     data:send_data,
 		     dataType:"json",
 		     success:function(data){
-		    	 $(".apartdata").append(data.apartdata);
 		    	 ajaxResult =data;
-		    	 map1();
-		    	 //console.log(data.apartdata);
-		    	 //searchList(data);
+		    	 map1(ajaxResult.juso[0]);
 		    	 aptList(data);
 		     },
 		     error : function(){
 		    	 alert('실패')
 		     }
 		  });
-		  
-		  //return ajaxResult;
 	}
-	
-	
-	    
-	
+		  function jusoSearch(){
+				let a = document.querySelectorAll("a.aptlists")
+			    for (let i = 0; i < a.length; i++) {
+			          a[i].addEventListener('click',function(){
+			                 //이벤트 리스너로 등록된 함수 안에서 this는 이벤트가 일어난 바로 그 요소를 가리킨다.
+			              b = this.innerText;               
+			             }
+			         )
+			     }
+				
+			    let send_data2 = {};
+			    let search2 = b
+			    
+			    console.log(search2)
+			    send_data2['search2'] = search2;
+			    
+			    $.ajax({ 	
+			        /* 비동기 통신 여부  */        
+			       //async : false, 
+			        url:"jusoSearch",
+			        type:"post",
+			        data:send_data2,
+			        dataType:"json",
+			        success:function(data){
+			           ajaxResult2 = data;
+			           map1(ajaxResult2.juso2);
+			        },
+			        error : function(){
+			           alert('실패')
+			        }
+			     });	
+	}		
 </script>
 <!-- MDB -->
 <script type="text/javascript" src="../static/js/mdb.min.js"></script>
