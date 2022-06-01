@@ -23,11 +23,16 @@ def apart(request):
     
     apartdata = df['apart'][0]
     jusodata = df['juso'][0]
+    # print(df)
+    print(df.columns)
     
+    apt = [i for i in df['apart']]
+    juso = [i for i in df['juso']]
+    print(apt)
     print(apartdata, jusodata)
     
     jusoDataPost(request, jusodata)
-    return JsonResponse({'juso':jusodata, 'apartdata':apartdata})
+    return JsonResponse({'juso':jusodata, 'apartdata':apt})
     
 def cssTest(request):
     return render(request,'index.html')

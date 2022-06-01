@@ -28,7 +28,7 @@
     <div class="position-sticky">
       <div class="list-group list-group-flush mx-3 mt-4" >
 	      	<!-- Search form -->
-	      <div class="d-none d-md-flex input-group w-auto my-auto">
+	      <div class="d-none d-md-flex input-group w-auto my-auto" id="apartList">
 	        <input
 	               autocomplete="off"
 	               type="search"
@@ -46,6 +46,7 @@
            href="#"
            class="list-group-item list-group-item-action py-2 ripple"
            aria-current="true"
+
            >
           <i class="fas fa-tachometer-alt fa-fw me-3"></i>
           <span class="apartdata"></span>
@@ -232,13 +233,36 @@
 		    } 
 		});
 	}
-	
+	function searchList(data){
+		data.apartdata.forEach(function(item, index){
+            console.log(item);
+            
+        });
+	}
 	//var ajaxResult=null;
 	function data(){
 		  let send_data = {};
 		  let search = document.getElementById("search").value;
 		  send_data['search'] = search;
 		  
+		 
+		  let aptList = function(data){
+			  data.apartdata.forEach(function(item, index){
+		            console.log(item);
+		          let $a = $('<a href="#" \
+			                class="list-group-item list-group-item-action py-2 ripple" \
+			                aria-current="true" > \
+			               <span class="apartdata">'+item+'</span> \
+			             </a>')
+				  let a = document.createElement('a');
+				  //let text = documemt.createTextNode('Test');
+				  //div.appendChild(text);
+				  $('#apartList').append($a);
+				  $a.appendTo($('#apartList'));
+				  document.getElementById('apartList').appendChild(a);
+		        });
+			  
+		  }
 		  
 		  $(".apartdata").empty();
 	
@@ -253,6 +277,9 @@
 		    	 $(".apartdata").append(data.apartdata);
 		    	 ajaxResult =data;
 		    	 map1();
+		    	 //console.log(data.apartdata);
+		    	 //searchList(data);
+		    	 aptList(data);
 		     },
 		     error : function(){
 		    	 alert('실패')
