@@ -1,9 +1,10 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
-   <style>
-      * { margin : 0}
-   </style>
+	<style>
+		* { margin : 0}
+	</style>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
     <meta http-equiv="x-ua-compatible" content="ie=edge" />
@@ -13,7 +14,7 @@
     <!-- Google Fonts Roboto -->
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" />
     <!-- MDB -->
-     <link rel="stylesheet" href="../static/css/mdb.min.css" />
+  	<link rel="stylesheet" href="../static/css/mdb.min.css" />
     <!-- Custom styles -->
     <link rel="stylesheet" href="../static/css/style.css" />
     <script src="http://code.jquery.com/jquery-latest.min.js"></script>
@@ -26,23 +27,21 @@
   <nav id="sidebarMenu"class="collapse d-lg-block sidebar collapse bg-white" style = width:400px>
     <div class="position-sticky">
       <div class="list-group list-group-flush mx-3 mt-4" >
-
-            <!-- Search form -->
-         <div class="d-none d-md-flex input-group w-auto my-auto">
-           <input
-                  autocomplete="off"
-                  type="search"
-                  class="form-control rounded"
-                  placeholder='아파트 검색'
-                  style="min-width: 225px"
-                  id = "search"
-                  />
-           
-           <span class="input-group-text border-0" >
-              <button id="serch" class="fas fa-search" onclick="data()" type = "submit"></button>
-           </span>
-         </div>
-
+	      	<!-- Search form -->
+	      <div class="d-none d-md-flex input-group w-auto my-auto" id="apartList">
+	        <input
+	               autocomplete="off"
+	               type="search"
+	               class="form-control rounded"
+	               placeholder='아파트 검색'
+	               style="min-width: 225px"
+	               id = "search"
+	               />
+	        
+	        <span class="input-group-text border-0" >
+	        	<button id="serch" class="fas fa-search" onclick="data()" type = "submit"></button>
+	        </span>
+	      </div>
         <a
            href="#"
            class="list-group-item list-group-item-action py-2 ripple"
@@ -59,7 +58,7 @@
           <i class="fas fa-chart-area fa-fw me-3"></i
             ><span class="apart">Webiste traffic</span>
         </a>
-          
+       	
       </div>
     </div>
   </nav>
@@ -177,98 +176,19 @@
 <main style="margin-top: 72px;padding-left: 389px;">
   <div class="container-fluid" style='margin-left: 0px;'>
         <p style="margin-top:-12px">
-          <em class="link">
-              <!--<a href="javascript:void(0);" onclick="window.open('http://fiy.daum.net/fiy/map/CsGeneral.daum', '_blank', 'width=981, height=650')">
-                  혹시 주소 결과가 잘못 나오는 경우에는 여기에 제보해주세요.
-              </a>-->
-          </em>
-      </p>
-      <div id="map" style="width:100vw;height:100vh;"></div>
+		    <em class="link">
+		        <!--<a href="javascript:void(0);" onclick="window.open('http://fiy.daum.net/fiy/map/CsGeneral.daum', '_blank', 'width=981, height=650')">
+		            혹시 주소 결과가 잘못 나오는 경우에는 여기에 제보해주세요.
+		        </a>-->
+		    </em>
+		</p>
+		<div id="map" style="width:100vw;height:100vh;"></div>
     
   </div>
 </main>
 <!--Main layout-->
 <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=3209863b8ce059f0b5c2bf4e41cfef2d&libraries=services"></script>
 <script>
-<<<<<<< HEAD
-   
-   var mapContainer = document.getElementById('map'), // 지도를 표시할 div 
-   mapOption = {
-       center: new kakao.maps.LatLng(33.450701, 126.570667), // 지도의 중심좌표
-       level: 3 // 지도의 확대 레벨
-   }; 
-   // 주소-좌표 변환 객체를 생성합니다
-   var geocoder = new kakao.maps.services.Geocoder();
-   
-   // 지도를 생성합니다    
-   var map = new kakao.maps.Map(mapContainer, mapOption); 
-   
-   function map1(){
-      
-      
-      //let juso = data()
-      console.log(ajaxResult.juso)
-      
-      
-      // 주소로 좌표를 검색합니다
-      geocoder.addressSearch(ajaxResult.juso, function(result, status) {
-      
-          // 정상적으로 검색이 완료됐으면 
-           if (status === kakao.maps.services.Status.OK) {
-      
-              var coords = new kakao.maps.LatLng(result[0].y, result[0].x);
-      
-              // 결과값으로 받은 위치를 마커로 표시합니다
-              var marker = new kakao.maps.Marker({
-                  map: map,
-                  position: coords
-              });
-      
-              // 인포윈도우로 장소에 대한 설명을 표시합니다
-              var infowindow = new kakao.maps.InfoWindow({
-                  content: '<div style="width:150px;text-align:center;padding:6px 0;"></div>'
-              });
-              infowindow.open(map, marker);
-      
-              // 지도의 중심을 결과값으로 받은 위치로 이동시킵니다
-              map.setCenter(coords);
-          } 
-      });
-   }
-   
-   //var ajaxResult=null;
-   function data(){
-        let send_data = {};
-        let search = document.getElementById("search").value;
-        send_data['search'] = search;
-        
-        
-        $(".apartdata").empty();
-   
-        $.ajax({
-           /* 비동기 통신 여부  */        
-          //async : false, 
-           url:"apart",
-           type:"post",
-           data:send_data,
-           dataType:"json",
-           success:function(data){
-              $(".apartdata").append(data.apartdata);
-              ajaxResult =data;
-              map1();
-           },
-           error : function(){
-              alert('실패')
-           }
-        });
-        
-        //return ajaxResult;
-   }
-   
-   
-       
-   
-=======
 	
 	var mapContainer = document.getElementById('map'), // 지도를 표시할 div 
 	mapOption = {
@@ -347,8 +267,8 @@
 		  $(".apartdata").empty();
 	
 		  $.ajax({
-			  /* 비동기 통신 여부  */        
-			 //async : false, 
+			  /* 비동기 통신 여부  */        
+			 //async : false, 
 		     url:"apart",
 		     type:"post",
 		     data:send_data,
@@ -372,7 +292,6 @@
 	
 	    
 	
->>>>>>> branch 'master' of https://github.com/xerathul/test333.git
 </script>
 <!-- MDB -->
 <script type="text/javascript" src="../static/js/mdb.min.js"></script>
