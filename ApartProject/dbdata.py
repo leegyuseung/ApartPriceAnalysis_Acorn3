@@ -8,22 +8,8 @@
 from django.db import models
 
 
-class Seoulapt(models.Model):
-    ymd = models.IntegerField(blank=True, null=True)
-    gu = models.CharField(db_column='Gu', max_length=50, blank=True, null=True)  # Field name made lowercase.
-    dong = models.CharField(db_column='Dong', max_length=50, blank=True, null=True)  # Field name made lowercase.
-    apt = models.CharField(db_column='Apt', max_length=50, blank=True, null=True)  # Field name made lowercase.
-    area = models.CharField(db_column='Area', max_length=50, blank=True, null=True)  # Field name made lowercase.
-    bunji = models.CharField(db_column='Bunji', max_length=50, blank=True, null=True)  # Field name made lowercase.
-    tradingprice = models.IntegerField(db_column='TradingPrice', blank=True, null=True)  # Field name made lowercase.
-    fulladdr = models.CharField(db_column='FullAddr', max_length=50, blank=True, null=True)  # Field name made lowercase.
-
-    class Meta:
-        managed = False
-        db_table = 'SeoulApt'
-
-
 class Addrdata(models.Model):
+    num = models.IntegerField(primary_key=True)
     price = models.IntegerField(blank=True, null=True)
     year = models.IntegerField(blank=True, null=True)
     dong = models.CharField(max_length=50, blank=True, null=True)
