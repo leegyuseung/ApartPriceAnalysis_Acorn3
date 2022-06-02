@@ -28,7 +28,7 @@
     <div class="position-sticky">
       <div class="list-group list-group-flush mx-3 mt-4" >
 	      	<!-- Search form -->
-	      <div class="d-none d-md-flex input-group w-auto my-auto" id="apartList">
+	      <div class="d-none d-md-flex input-group w-auto my-auto">
 	        <input
 	               autocomplete="off"
 	               type="search"
@@ -186,11 +186,22 @@
 	// 지도를 생성합니다    
 	var map = new kakao.maps.Map(mapContainer, mapOption); 
 	
+	let clickApt = null;
+	function jusoSearch(){
+		//클릭한 요소 가져오기
+		let dv = event.currentTarget;
+		console.log(dv.innerText);
+		clickApt = dv.innerText;
+		//아파트 이름으로 주소 받아오기
+		console.log(ajaxResult.aptJusoJson[clickApt]);
+		map1(ajaxResult.aptJusoJson[clickApt]);
+	}
+			
+		    
+		    
+		
 	function map1(juso){
 		
-		
-		//let juso = data()
-		console.log(ajaxResult.juso)
 		
 		
 		// 주소로 좌표를 검색합니다
@@ -226,8 +237,9 @@
 		  
 		 
 		  let aptList = function(data){
+			  //console.log(data.aptJusoJson)
 			  data.apartdata.forEach(function(item, index){
-					  let $a = $('<a href="#" onclick="jusoSearch()"\
+					  let $a = $('<a href="#" onClick= "jusoSearch();"\
 		                         class="aptlists list-group-item list-group-item-action py-2 ripple" \
 		                         aria-current="true" > '
 		                       +item+
@@ -241,7 +253,9 @@
 		        });
 			  
 		  }
-
+			
+		  //list 값 초기화
+		  $("#apartList").empty();
 	
 		  $.ajax({
 			  /* 비동기 통신 여부  */        
@@ -254,44 +268,14 @@
 		    	 ajaxResult =data;
 		    	 map1(ajaxResult.juso[0]);
 		    	 aptList(data);
+//		    	 jusoSearch(ajaxResult.aptJusoJson);
 		     },
 		     error : function(){
 		    	 alert('실패')
 		     }
 		  });
 	}
-		  function jusoSearch(){
-				let a = document.querySelectorAll("a.aptlists")
-			    for (let i = 0; i < a.length; i++) {
-			          a[i].addEventListener('click',function(){
-			                 //이벤트 리스너로 등록된 함수 안에서 this는 이벤트가 일어난 바로 그 요소를 가리킨다.
-			              b = this.innerText;               
-			             }
-			         )
-			     }
-				
-			    let send_data2 = {};
-			    let search2 = b
-			    
-			    console.log(search2)
-			    send_data2['search2'] = search2;
-			    
-			    $.ajax({ 	
-			        /* 비동기 통신 여부  */        
-			       //async : false, 
-			        url:"jusoSearch",
-			        type:"post",
-			        data:send_data2,
-			        dataType:"json",
-			        success:function(data){
-			           ajaxResult2 = data;
-			           map1(ajaxResult2.juso2);
-			        },
-			        error : function(){
-			           alert('실패')
-			        }
-			     });	
-	}		
+		  	
 </script>
 <!-- MDB -->
 <script type="text/javascript" src="../static/js/mdb.min.js"></script>

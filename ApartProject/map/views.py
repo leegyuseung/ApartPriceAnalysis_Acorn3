@@ -21,14 +21,13 @@ def apart(request):
 
     apt = [i for i in df['apt']]
     juso = [i for i in df['addr']]
-
-    return JsonResponse({'juso':juso, 'apartdata':apt})
-
-@csrf_exempt
-def jusoSearch(request):
-    search = request.POST['search2']
-    datas2 = Addrdata.objects.filter(apt=search).values()
-    df2 = pd.DataFrame(datas2)
     
-    jusodata = df2['addr'][0]
-    return JsonResponse({'juso2':jusodata})
+    apt1 = apt
+    aptJusoJson = {}
+    for apt, juso in zip(apt1, juso):
+        aptJusoJson[apt]=juso
+    
+    apt = [i for i in df['apt']]
+    
+    return JsonResponse({'juso':juso, 'apartdata':apt, 'aptJusoJson':aptJusoJson})
+
