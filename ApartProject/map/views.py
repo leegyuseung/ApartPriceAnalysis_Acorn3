@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from map.models import Test, Addrdata
+from map.models import Test, Addrdata, Addrapt
 import pandas as pd
 import json
 import numpy as np
@@ -16,13 +16,13 @@ def cssTest(request):
 @csrf_exempt
 def apart(request):
     search = request.POST['search']
-    datas = Addrdata.objects.filter(apt__contains=search).values()
+    datas = Addrapt.objects.filter(apt__contains=search).values()
     df = pd.DataFrame(datas)
 
     apt = [i for i in df['apt']]
     juso = [i for i in df['addr']]
     
-    apt1 = apt
+    apt1 = apt 
     aptJusoJson = {}
     for apt, juso in zip(apt1, juso):
         aptJusoJson[apt]=juso

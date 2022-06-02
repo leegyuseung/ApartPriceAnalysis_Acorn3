@@ -29,3 +29,13 @@ class Addrdata(models.Model):
     class Meta:
         managed = False
         db_table = 'addrData'
+        
+class Addrapt(models.Model):
+    num = models.IntegerField(primary_key=True)
+    addr = models.CharField(max_length=50, blank=True, null=True)
+    apt = models.CharField(max_length=50, blank=True, null=True)
+    dong = models.CharField(max_length=50, blank=True, null=True)
+
+    class Meta:
+        managed = False
+        db_table = 'addrapt'
