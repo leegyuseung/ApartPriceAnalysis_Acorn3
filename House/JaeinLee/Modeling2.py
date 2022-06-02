@@ -22,7 +22,7 @@ print(data.head(5))
 print(data.info())
 
 # 집값 데이터 추가( 강남구)
-apt = pd.read_csv('..\datas\구별,월별 평당가격.csv', encoding='utf-8')
+apt = pd.read_csv('..\datas\구별,월별 평당가격_jain.csv', encoding='utf-8')
 data['price']=apt['강남구']
 # print(data.head(5))
 
