@@ -41,22 +41,8 @@
 	        <span class="input-group-text border-0" >
 	        	<button id="serch" class="fas fa-search" onclick="data()" type = "submit"></button>
 	        </span>
+	        <div class="d-none d-md-flex input-group" id="apartList"></div>     
 	      </div>
-        <a
-           href="#"
-           class="list-group-item list-group-item-action py-2 ripple"
-           aria-current="true"
-           >
-          <i class="fas fa-tachometer-alt fa-fw me-3"></i>
-          <span class="apartdata"></span>
-        </a>
-        <a
-           href="#"
-           class="list-group-item list-group-item-action py-2 ripple active"
-           >
-          <i class="fas fa-chart-area fa-fw me-3"></i
-            ><span class="apart">Webiste traffic</span>
-        </a>
        	
       </div>
     </div>
@@ -188,11 +174,14 @@
 <!--Main layout-->
 <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=3209863b8ce059f0b5c2bf4e41cfef2d&libraries=services"></script>
 <script>
+	//마커와 윈도우를 담을 배열입니다
+	var markers = [];
+	var windows = [];
 	
 	var mapContainer = document.getElementById('map'), // 지도를 표시할 div 
 	mapOption = {
-	    center: new kakao.maps.LatLng(33.450701, 126.570667), // 지도의 중심좌표
-	    level: 3 // 지도의 확대 레벨
+	    center: new kakao.maps.LatLng(37.551425, 126.988), // 지도의 중심좌표
+	    level: 7 // 지도의 확대 레벨
 	}; 
 	// 주소-좌표 변환 객체를 생성합니다
 	var geocoder = new kakao.maps.services.Geocoder();
@@ -200,71 +189,141 @@
 	// 지도를 생성합니다    
 	var map = new kakao.maps.Map(mapContainer, mapOption); 
 	
-	function map1(){
+	let clickApt = null;
+	function jusoSearch(){
+		//클릭한 요소 가져오기
+		let dv = event.currentTarget;
+		console.log(dv.innerText);
+		clickApt = dv.innerText;
+		//아파트 이름으로 주소 받아오기
+		console.log(ajaxResult.aptJusoJson[clickApt]);
+		map1(ajaxResult.aptJusoJson[clickApt]);
+	}
+			
+		    
+		    
 		
-		
-		//let juso = data()
-		console.log(ajaxResult.juso)
-		
-		
+	function map1(juso){
+
 		// 주소로 좌표를 검색합니다
-		geocoder.addressSearch(ajaxResult.juso, function(result, status) {
+		geocoder.addressSearch(juso, function(result, status) {
 		
 		    // 정상적으로 검색이 완료됐으면 
 		     if (status === kakao.maps.services.Status.OK) {
 		
 		        var coords = new kakao.maps.LatLng(result[0].y, result[0].x);
-		
+		        
+		        // 마커랑 윈도우 초기화
+		        removeMarker();
+	            removeWindow();
+	            
+	            // index는 1개만 필요해서 0
+				i=0;
 		        // 결과값으로 받은 위치를 마커로 표시합니다
-		        var marker = new kakao.maps.Marker({
-		            map: map,
-		            position: coords
+ 				var marker = addMarker(coords, i);
+				
+		        // 마커에 mouseover 이벤트를 등록합니다
+		        kakao.maps.event.addListener(marker, 'click', function() {
+					location.href = "graph?aptName="+juso;
+	
 		        });
-		
+		        
 		        // 인포윈도우로 장소에 대한 설명을 표시합니다
-		        var infowindow = new kakao.maps.InfoWindow({
-		            content: '<div style="width:150px;text-align:center;padding:6px 0;"></div>'
-		        });
-		        infowindow.open(map, marker);
-		
+              	var infowindow = addWindow(map, marker, i)
+
 		        // 지도의 중심을 결과값으로 받은 위치로 이동시킵니다
 		        map.setCenter(coords);
 		    } 
 		});
 	}
 	
-	//var ajaxResult=null;
+	// 마커를 생성하고 지도 위에 마커를 표시하는 함수입니다
+	   function addMarker(position, idx, title) {
+	       var imageSrc = 'https://i1.daumcdn.net/dmaps/apis/n_local_blit_04.png', // 마커 이미지 url, 스프라이트 이미지를 씁니다
+	           imageSize = new kakao.maps.Size(31, 35),  // 마커 이미지의 크기
+	           imgOptions =  {
+	           },
+	           markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize, imgOptions),
+	               marker = new kakao.maps.Marker({
+	               position: position, // 마커의 위치
+	               image: markerImage 
+	           });
+
+	       marker.setMap(map); // 지도 위에 마커를 표출합니다
+	       markers.push(marker);  // 배열에 생성된 마커를 추가합니다
+
+	       return marker;
+	   }
+	// 윈도우를 생성하고 지도 위에 마커를 표시하는 함수입니다
+	   function addWindow(map, marker, idx){
+	       var infowindow = new kakao.maps.InfoWindow({
+	           content: '<div style="width:150px;text-align:center;padding:6px 0;">'+clickApt+'</div>'
+	       });
+	       infowindow.open(map, marker);
+	       windows.push(infowindow)
+	   }
+	   
+	// 지도 위에 표시되고 있는 마커를 모두 제거합니다
+	   function removeMarker() {
+	       for ( var i = 0; i < markers.length; i++ ) {
+	           markers[i].setMap(null);
+	       }   
+	       markers = [];
+	   }
+	// 지도 위에 표시되고 있는 윈도우를 모두 제거합니다
+	   function removeWindow() {
+	       for ( var i = 0; i < windows.length; i++ ) {
+	           windows[i].close();
+	       }   
+	       windows = [];
+	   }
+	   
 	function data(){
 		  let send_data = {};
 		  let search = document.getElementById("search").value;
 		  send_data['search'] = search;
 		  
-		  
-		  $(".apartdata").empty();
+		 
+		  let aptList = function(data){
+			  console.log(data.apartdata)
+			  data.apartdata.forEach(function(item, index){
+					  let $a = $('<a href="#" onClick= "jusoSearch();"\
+		                         class="aptlists list-group-item list-group-item-action py-2 ripple" \
+		                         aria-current="true" > '
+		                       +item+
+		                      '</a>')
+				  let a = document.createElement('a');
+				  //let text = documemt.createTextNode('Test');
+				  //div.appendChild(text);
+				  $('#apartList').append($a);
+				  $a.appendTo($('#apartList'));
+				  document.getElementById('apartList').appendChild(a);
+		        });
+			  
+		  }
+			
+		  //list 값 초기화
+		  $("#apartList").empty();
 	
 		  $.ajax({
-			  /* 비동기 통신 여부  */        
-			 //async : false, 
+			  /* 비동기 통신 여부  */        
+			 //async : false, 
 		     url:"apart",
 		     type:"post",
 		     data:send_data,
 		     dataType:"json",
 		     success:function(data){
-		    	 $(".apartdata").append(data.apartdata);
 		    	 ajaxResult =data;
-		    	 map1();
+		    	 map1(ajaxResult.juso[0]);
+		    	 aptList(data);
+//		    	 jusoSearch(ajaxResult.aptJusoJson);
 		     },
 		     error : function(){
 		    	 alert('실패')
 		     }
 		  });
-		  
-		  //return ajaxResult;
 	}
-	
-	
-	    
-	
+		  	
 </script>
 <!-- MDB -->
 <script type="text/javascript" src="../static/js/mdb.min.js"></script>
@@ -272,4 +331,3 @@
 <script type="text/javascript" src="../static/js/script.js"></script>
 </body>
 </html>
-
