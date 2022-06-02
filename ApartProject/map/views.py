@@ -18,7 +18,8 @@ def apart(request):
     search = request.POST['search']
     datas = Addrapt.objects.filter(apt__contains=search).values()
     df = pd.DataFrame(datas)
-
+    print(df)
+    
     apt = [i for i in df['apt']]
     juso = [i for i in df['addr']]
     
