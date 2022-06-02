@@ -22,24 +22,24 @@ print(data.head(5))
 print(data.info())
 
 # 집값 데이터 추가( 강남구)
-apt = pd.read_csv('/content/drive/MyDrive/acorn_project/test333/House/datas/구별,월별 평당가격.csv', encoding='utf-8')
+apt = pd.read_csv('https://raw.githubusercontent.com/Loyce0805/test333/jain/House/datas/%EA%B5%AC%EB%B3%84%2C%EC%9B%94%EB%B3%84%20%ED%8F%89%EB%8B%B9%EA%B0%80%EA%B2%A9.csv', encoding='utf-8')
 data['price']=apt['강남구']
 # print(data.head(5))
 
 # 행정구별 인구수 데이터 추가
-popul = pd.read_csv('/content/drive/MyDrive/acorn_project/test333/House/datas/행정구별_인구수.csv', encoding='cp949')
+popul = pd.read_csv('../datas/행정구별_인구수.csv', encoding='cp949')
 # popul = popul.drop([popul.index[0]])
 # popul = popul.drop(0, axis=0)
 data['popul']=popul['강남구']
 # print(data['popul'])
 
 # 혼인건수 추가
-marry = pd.read_excel('/content/drive/MyDrive/acorn_project/test333/House/datas/서울시 구별 혼인건수.xlsx')
+marry = pd.read_excel('../datas/서울시 구별 혼인건수.xlsx')
 data['marry']= marry['강남구']
 # print(data)
 
 # apt거래량 추가
-trading = pd.read_csv('/content/drive/MyDrive/acorn_project/test333/House/datas/거래량.csv', encoding='cp949')
+trading = pd.read_csv('../datas/거래량.csv', encoding='cp949')
 data['trading']= trading['강남구']
 # print(data.head(5))
 
