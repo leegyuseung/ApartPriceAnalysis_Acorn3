@@ -33,3 +33,4 @@ data_sum = pd.merge(data1, data2, how='left', on='ymd')
 data_sum = pd.merge(data_sum, data3, how='left', on=('ymd', '구'))
 
 print(data_sum)
+

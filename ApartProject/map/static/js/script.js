@@ -1,7 +1,7 @@
 // Graph
-var ctx = document.getElementById("myChart");
+//var ctx = document.getElementById("myChart");
 
-var myChart = new Chart(ctx, {
+/*var myChart = new Chart(ctx, {
   type: "line",
   data: {
     labels: [
@@ -38,4 +38,4 @@ var myChart = new Chart(ctx, {
       display: false,
     },
   },
-});
+});*/
