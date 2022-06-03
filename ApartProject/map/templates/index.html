@@ -43,7 +43,34 @@
 	        </span>
 	        <div class="d-none d-md-flex input-group" id="apartList"></div>     
 	      </div>
-       	
+       	                   	<!-- Pagination -->
+            <div class="pagination">
+            
+                <div style="width:35%; margin: 5px;">
+                {% if apt_lists.has_previous %}
+                    <a class="abutton" href="?page=1">맨 앞으로</a>
+                    <a class="abutton" href="?page={{ apt_lists.previous_page_number }}">이전</a>
+                {% endif %}
+                </div>
+
+                <div style="width:30%; margin: 5px;">
+                {% for page in apt_lists.paginator.page_range %}
+                    {% if page >= apt_lists.number|add:-2 and page <= apt_lists.number|add:2 %}
+                    <span class="{% if page == apt_lists.number %}current{% endif %}">
+                        <a href="?page={{ page }}">{{ page}}</a>
+                    </span>
+                    {% elif page >= apt_lists.number|add:-3 and page <= apt_lists.number|add:3 %}
+                        ..
+                    {% endif %}
+                {% endfor %}
+                </div>
+
+                <div style="width:35%; margin: 5px;">
+                {% if apt_lists.has_next %}
+                    <a class="abutton" href="?page={{ apt_lists.next_page_number }}">다음</a>
+                    <a class="abutton" href="?page={{ apt_lists.paginator.num_pages }}">맨 뒤로</a>
+                {% endif %}
+                </div>
       </div>
     </div>
   </nav>
@@ -285,8 +312,7 @@
 		  
 		 
 		  let aptList = function(data){
-			  console.log(data.apartdata)
-			  data.apartdata.forEach(function(item, index){
+			  data.apt_lists.forEach(function(item, index){
 					  let $a = $('<a href="#" onClick= "jusoSearch();"\
 		                         class="aptlists list-group-item list-group-item-action py-2 ripple" \
 		                         aria-current="true" > '
@@ -309,7 +335,7 @@
 			  /* 비동기 통신 여부  */        
 			 //async : false, 
 		     url:"apart",
-		     type:"post",
+		     type:"get",
 		     data:send_data,
 		     dataType:"json",
 		     success:function(data){

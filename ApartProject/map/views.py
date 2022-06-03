@@ -1,10 +1,9 @@
 from django.shortcuts import render
-from map.models import Test, Addrdata, Addrapt
+from map.models import Addrdata, Addrapt
 import pandas as pd
-import json
-import numpy as np
 from django.views.decorators.csrf import csrf_exempt
-from django.http.response import HttpResponse, JsonResponse
+from django.http.response import JsonResponse
+from django.core.paginator import Paginator
 
 # Create your views here.
 def Main(request):
@@ -13,25 +12,33 @@ def Main(request):
 def cssTest(request):
     return render(request,'index.html')
 
+# AJAX 받는 함수
 @csrf_exempt
 def apart(request):
-    search = request.POST['search']
+    # 데이터 검색 받기
+    search = request.GET['search']
+    # DB에 검색
     datas = Addrapt.objects.filter(apt__contains=search).values()
     df = pd.DataFrame(datas)
-    print(df)
     
+    # 아파트명, 주소 저장
     apt = [i for i in df['apt'] + df['dong']]
     juso = [i for i in df['addr']]
     
-    
+    # 아파트명, 주소 json형식 변경
     aptJusoJson = {}
     for apt, juso in zip(apt, juso):
         aptJusoJson[apt]=  juso 
     
-    print(aptJusoJson)
     apt = [i for i in df['apt'] + df['dong']]
     
-    return JsonResponse({'juso':juso, 'apartdata':apt, 'aptJusoJson':aptJusoJson})
+    # 페이징처리
+    paginator = Paginator(apt, 10)
+    page = int(request.GET.get('page', 1))
+    apt_lists = paginator.get_page(page).object_list
+    
+    # json으로 리턴
+    return JsonResponse({'juso':juso, 'apartdata':apt, 'aptJusoJson':aptJusoJson, 'apt_lists':apt_lists})
 
 def importData(request):
     # 클릭한 마커의 데이터 불러오기
