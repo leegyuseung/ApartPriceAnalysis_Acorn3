@@ -4,6 +4,5 @@ from map import views
 urlpatterns = [
      path('apart', views.apart),
      path('index', views.cssTest),  
-     path('graph', views.importData)
-
+     path('graph', views.importData),
 ]

@@ -20,15 +20,16 @@ def apart(request):
     df = pd.DataFrame(datas)
     print(df)
     
-    apt = [i for i in df['apt']]
+    apt = [i for i in df['apt'] + df['dong']]
     juso = [i for i in df['addr']]
     
-    apt1 = apt 
-    aptJusoJson = {}
-    for apt, juso in zip(apt1, juso):
-        aptJusoJson[apt]=juso
     
-    apt = [i for i in df['apt']]
+    aptJusoJson = {}
+    for apt, juso in zip(apt, juso):
+        aptJusoJson[apt]=  juso 
+    
+    print(aptJusoJson)
+    apt = [i for i in df['apt'] + df['dong']]
     
     return JsonResponse({'juso':juso, 'apartdata':apt, 'aptJusoJson':aptJusoJson})
 
