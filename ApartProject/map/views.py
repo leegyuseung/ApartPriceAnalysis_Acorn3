@@ -1,25 +1,35 @@
 from django.shortcuts import render
-from map.models import Test
+from map.models import Test, Addrdata, Addrapt
 import pandas as pd
 import json
+import numpy as np
 from django.views.decorators.csrf import csrf_exempt
-from django.http.response import HttpResponse
+from django.http.response import HttpResponse, JsonResponse
 
 # Create your views here.
 def Main(request):
-
     return render(request,'home.html')
+
+def cssTest(request):
+    return render(request,'index.html')
 
 @csrf_exempt
 def apart(request):
     search = request.POST['search']
-    datas = Test.objects.filter(apart__contains=search).values()
+    datas = Addrapt.objects.filter(apt__contains=search).values()
     df = pd.DataFrame(datas)
-    df2 = df.to_html()
+    print(df)
+    
+    apt = [i for i in df['apt'] + df['dong']]
+    juso = [i for i in df['addr']]
+    
+    
+    aptJusoJson = {}
+    for apt, juso in zip(apt, juso):
+        aptJusoJson[apt]=  juso 
+    
+    print(aptJusoJson)
+    apt = [i for i in df['apt'] + df['dong']]
+    
+    return JsonResponse({'juso':juso, 'apartdata':apt, 'aptJusoJson':aptJusoJson})
 
-    context = {'df':df2}
-    print(context)
-    return HttpResponse(json.dumps(context), content_type='application/json')
-
-def cssTest(request):
-    return render(request,'index.html')
