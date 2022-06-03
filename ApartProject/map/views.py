@@ -37,7 +37,7 @@ def importData(request):
     # 클릭한 마커의 데이터 불러오기
     if request.method == 'GET':
         
-        detailaddr = request.GET['addr']
+        detailaddr = request.GET['aptName']
         
         datas = Addrdata.objects.filter(addr__contains=detailaddr).values()
         
