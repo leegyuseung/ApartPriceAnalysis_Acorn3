@@ -46,7 +46,7 @@
        	                   	<!-- Pagination -->
             <div class="pagination">
             
-                <div style="width:35%; margin: 5px;" id='prev'>
+                <div style="width:35%; margin: 5px;" id=prev>
                 {% if apt_lists.has_previous %}
                     <a class="abutton" href="?page=1">맨 앞으로</a>
                     <a class="abutton" href="?page={{ apt_lists.previous_page_number }}">이전</a>
@@ -65,7 +65,7 @@
                 {% endfor %}
                 </div>
 
-                <div style="width:35%; margin: 5px;" id='next'>
+                <div style="width:35%; margin: 5px;">
                 {% if apt_lists.has_next %}
                     <a class="abutton" href="?page={{ apt_lists.next_page_number }}">다음</a>
                     <a class="abutton" href="?page={{ apt_lists.paginator.num_pages }}">맨 뒤로</a>
@@ -304,44 +304,19 @@
 	       }   
 	       windows = [];
 	   }
-	let send_data = {};
-	let page = 1;
-	
-	send_data['page'] = page;
-	
-	let nextPage = function(nextNum){
-			  let page = nextNum;
-			  send_data['page'] = page;
-			  data()
-	}
+	   
 	function data(){
-		let search = document.getElementById("search").value;
-		
-		send_data['search'] = search;
-		  let pagination = function(data){
-			  if (data.apt_lists['isPrev'] == true) {
-				  	let $a = $('<a class="abutton" href="?page=1">맨 앞으로</a>\
-                               <a class="abutton" href="?page='+ data.apt_lists['prevNum']+'">이전</a>')
-                    let a = document.createElement('a');
-					$('#prev').append($a);
-					$a.appendTo($('#prev'));
-					document.getElementById('prev').appendChild(a);
-					
-				  } else if(data.apt_lists['isNext'] == true){
-					console.log('next');
-					let $a = $('<a class="abutton" href=#" onClick= "nextPage('+data.apt_lists['nextNum']+');">다음</a>\
-		                    <a class="abutton" href="?page='+data.apt_lists['num_pages']+'">맨 뒤로</a>')
-                    let a = document.createElement('a');
-					$('#next').append($a);
-					$a.appendTo($('#next'));
-					document.getElementById('next').appendChild(a);
-				  }
-				
-		  }
+		  let send_data = {};
+		  let search = document.getElementById("search").value;
+		  let page = 1;
+		  send_data['search'] = search;
+		  send_data['page'] = page;
+		  
+		 
 		  let aptList = function(data){
 			  console.log(data.apt_lists)
 			  data.apt_lists['apt_list'].forEach(function(item, index){
-				  let $a = $('<a href="#" onClick= "jusoSearch();"\
+					  let $a = $('<a href="#" onClick= "jusoSearch();"\
 		                         class="aptlists list-group-item list-group-item-action py-2 ripple" \
 		                         aria-current="true" > '
 		                       +item+
@@ -370,7 +345,6 @@
 		    	 ajaxResult =data;
 		    	 map1(ajaxResult.juso[0]);
 		    	 aptList(data);
-		    	 pagination(data);
 //		    	 jusoSearch(ajaxResult.aptJusoJson);
 		     },
 		     error : function(){
