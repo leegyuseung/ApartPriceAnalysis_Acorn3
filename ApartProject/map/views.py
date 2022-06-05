@@ -1,15 +1,10 @@
 from django.shortcuts import render
 from map.models import Addrdata, Addrapt
 import pandas as pd
-
 from django.views.decorators.csrf import csrf_exempt
 from django.http.response import JsonResponse
 from django.core.paginator import Paginator
-import json
-from django.core.serializers.json import DjangoJSONEncoder
-import math
 
-# Create your views here.
 def Main(request):
     return render(request,'home.html')
 
@@ -40,10 +35,6 @@ def apart(request):
     paginator = Paginator(apt, 10)
     page = int(request.GET.get('page', 1))
     apt_lists = paginator.get_page(page)
-    print(apt_lists.paginator.page_range)
-    
-    end = math.floor(len(paginator.page_range)/10) 
-    print('end',end)
     
     tojson = {'isPrev':apt_lists.has_previous(),
                'range': [i for i in range(1,apt_lists.paginator.num_pages+1)],
@@ -52,16 +43,11 @@ def apart(request):
     
     if apt_lists.has_previous() ==True:
         prevNum=apt_lists.previous_page_number()
-        print(prevNum)
         tojson['prevNum']=prevNum
-    elif apt_lists.has_next() == True:
-        print('nextnum')
+    if apt_lists.has_next() == True:
         nextNum = apt_lists.next_page_number()
         tojson['nextNum']=nextNum
-    
-    # print(tojson)
-    # tojson = json.dumps(tojson)
-    print(tojson)
+
     # json으로 리턴
     return JsonResponse({'juso':juso, 'apartdata':apt, 'aptJusoJson':aptJusoJson, 'apt_lists':tojson})
 
