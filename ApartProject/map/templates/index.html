@@ -48,10 +48,11 @@
 	        <div class="d-none d-md-flex input-group" id="apartList"></div>     
 	      </div>
        	  <!-- Pagination -->
-       	  <nav aria-label="Page navigation example">
+       	  <nav id="paging">
             <ul class="pagination" >
                 <li class="page-item" id='prev' ></li>
-                <li class="page-item" id='pageList' ></li>
+                <li id='pageList'></li>
+                
                 <li class="page-item"id='next'></li>
       		</ul>
       	  </nav>
@@ -323,9 +324,8 @@
 		let search = document.getElementById("search").value;
 		send_data['search'] = search;
 		// prev next 버튼초기화
-		$("#prev").empty();
-		$("#pageList").empty();
-		$("#next").empty();
+		$(".page-item").empty();
+		
 
 		//페이징처리 함수
 		let pagination = function(data){
@@ -344,13 +344,13 @@
 				  }
 			  data.apt_lists['range'].forEach(function(page, index){
 				if(page >= (data.apt_lists['num']-2) && page <= data.apt_lists['num']+2){
-					let $a = $('<a class="page-link" href=# onclick = pageLists('+page+')>'+page+'</a>')
-	              	let a = document.createElement('a');
-					$('#pageList').append($a);
-					$a.appendTo($('#pageList'));
+					let $li = $('<li class="page-item"><a class="page-link" href=# onclick = pageLists('+page+')>'+page+'</a></li>')
+	              	let li = document.createElement('li');
+					$('#pageList').before($li);
+					//$li.appendTo($('#pageList'));
 					//document.getElementById('pageList').appendChild(a);
 					  if(page == data.apt_lists['num'] ){
-						  	$a.addClass('active')		  	
+						  	$li.addClass('active')		  	
 					  }
 				}
 				  	
