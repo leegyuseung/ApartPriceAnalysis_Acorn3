@@ -6,9 +6,6 @@ from django.http.response import JsonResponse
 from django.core.paginator import Paginator
 
 def Main(request):
-    return render(request,'home.html')
-
-def cssTest(request):
     return render(request,'index.html')
 
 # AJAX 받는 함수
