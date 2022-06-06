@@ -19,6 +19,8 @@
     <!-- Custom styles -->
     <link rel="stylesheet" href="../static/css/style.css" />
     <script src="http://code.jquery.com/jquery-latest.min.js"></script>
+    <!-- CSS only -->
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
     
 </head>
 <body>
@@ -45,10 +47,13 @@
 	        <div class="d-none d-md-flex input-group" id="apartList"></div>     
 	      </div>
        	  <!-- Pagination -->
-            <div class="pagination">
-                <div id='prev'></div>
-                <div id='next'></div>
-      		</div>
+       	  <nav aria-label="Page navigation example">
+            <ul class="pagination" >
+                <li class="page-item" id='prev' ></li>
+                <li class="page-item" id='pageList' ></li>
+                <li class="page-item"id='next'></li>
+      		</ul>
+      	  </nav>
     	</div>
     </div>
   </nav>
@@ -286,7 +291,12 @@
 			  send_data['page'] = page;
 			  data()
 	}
-	
+	// 페이지 리스트
+	let pageLists = function(pageList){
+		let page = pageList;
+		send_data['page']=page;
+		data();
+	}
 	//이전페이지
 	let prevPage = function(prevNum){
 		  let page = prevNum;
@@ -299,24 +309,49 @@
 		send_data['search'] = search;
 		// prev next 버튼초기화
 		$("#prev").empty();
+		$("#pageList").empty();
 		$("#next").empty();
 		//페이징처리 함수
-		  let pagination = function(data){
-			  if (data.apt_lists['isPrev'] == true) {
-				  	let $a = $('<a class="abutton" href=#" onClick = "prevPage('+ data.apt_lists['prevNum']+');">이전</a>')
+		let pagination = function(data){
+			 if (data.apt_lists['isPrev'] == true) {
+				  	let $a = $('<a class="page-link" href=#" aria-label="Previous" onClick = "prevPage('+ data.apt_lists['prevNum']+');">이전</a>')
 	              	let a = document.createElement('a');
 					$('#prev').append($a);
 					$a.appendTo($('#prev'));
-					document.getElementById('prev').appendChild(a);
-				  } 
+					//document.getElementById('prev').appendChild(a);
+				  }else{
+					  let $a = $('<a class="page-link disabled" href=#" aria-label="Previous" onClick = "prevPage('+ data.apt_lists['prevNum']+');">이전</a>')
+		              	let a = document.createElement('a');
+						$('#prev').append($a);
+						$a.appendTo($('#prev'));
+				  }
+			  data.apt_lists['range'].forEach(function(page, index){
+				if(page >= (data.apt_lists['num']-2) && page <= data.apt_lists['num']+2){
+					let $a = $('<a class="page-link" href=# onclick = pageLists('+page+')>'+page+'</a>')
+	              	let a = document.createElement('a');
+					$('#pageList').append($a);
+					$a.appendTo($('#pageList'));
+					//document.getElementById('pageList').appendChild(a);
+					  if(page == data.apt_lists['num'] ){
+						  	$a.addClass('active')		  	
+					  }
+				}
+				  	
+			  })
 			  if(data.apt_lists['isNext'] == true){
-					let $a = $('<a class="abutton" href=#" onClick= "nextPage('+data.apt_lists['nextNum']+');">다음</a>\
+					let $a = $('<a class="page-link" href=#" onClick= "nextPage('+data.apt_lists['nextNum']+');">다음</a>\
 		                   ')
 	              	let a = document.createElement('a');
 					$('#next').append($a);
 					$a.appendTo($('#next'));
-					document.getElementById('next').appendChild(a);
-				  }			
+					//document.getElementById('next').appendChild(a);
+				  }else{
+					  let $a = $('<a class="page-link disabled" href=#" onClick= "nextPage('+data.apt_lists['nextNum']+');">다음</a>\
+			                   ')
+		             	let a = document.createElement('a');
+						$('#next').append($a);
+						$a.appendTo($('#next'));
+				  }		
 		  }
 		//아파트리스트 불러오는 함수
 		  let aptList = function(data){
@@ -332,7 +367,7 @@
 				  //div.appendChild(text);
 				  $('#apartList').append($a);
 				  $a.appendTo($('#apartList'));
-				  document.getElementById('apartList').appendChild(a);
+				  //document.getElementById('apartList').appendChild(a);
 		        });
 			  
 		  }
