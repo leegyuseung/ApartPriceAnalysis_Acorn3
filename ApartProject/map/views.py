@@ -29,7 +29,7 @@ def apart(request):
     apt = [i for i in df['apt'] + df['dong']]
     
     # 페이징처리
-    paginator = Paginator(apt, 30)
+    paginator = Paginator(apt, 10)
     page = int(request.GET.get('page', 1))
     apt_lists = paginator.get_page(page)
     

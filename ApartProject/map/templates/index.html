@@ -10,7 +10,7 @@
 		}
 		/* scroll bar */
 		#apartList{
-		 overflow:scroll; width:auto; height:800px;
+		 overflow:scroll; height:500px;
 		}
 	</style>
     <meta charset="UTF-8" />
@@ -44,6 +44,7 @@
 	      <!-- Search form -->
 	      <div class="input-group mb-3">
 				<input
+				   onkeyup="enterkey();"
 	               autocomplete="off"
 	               type="search"
 	               class="form-control rounded"
