@@ -2,13 +2,14 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+	<!-- 지도 화면 채우기-->
 	<style>
 		* { margin : 0}
 	</style>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
     <meta http-equiv="x-ua-compatible" content="ie=edge" />
-    <title>Material Design for Bootstrap</title>
+    <title>Apart price analysis</title>
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.11.2/css/all.css" />
     <!-- Google Fonts Roboto -->
@@ -27,7 +28,7 @@
   <nav id="sidebarMenu"class="collapse d-lg-block sidebar collapse bg-white" style = width:400px>
     <div class="position-sticky">
       <div class="list-group list-group-flush mx-3 mt-4" >
-	      	<!-- Search form -->
+	      <!-- Search form -->
 	      <div class="d-none d-md-flex input-group w-auto my-auto">
 	        <input
 	               autocomplete="off"
@@ -43,35 +44,12 @@
 	        </span>
 	        <div class="d-none d-md-flex input-group" id="apartList"></div>     
 	      </div>
-       	                   	<!-- Pagination -->
+       	  <!-- Pagination -->
             <div class="pagination">
-            
-                <div style="width:35%; margin: 5px;" id='prev'>
-                {% if apt_lists.has_previous %}
-                    <a class="abutton" href="?page=1">맨 앞으로</a>
-                    <a class="abutton" href="?page={{ apt_lists.previous_page_number }}">이전</a>
-                {% endif %}
-                </div>
-
-                <div style="width:30%; margin: 5px;">
-                {% for page in apt_lists.range %}
-                    {% if page >= apt_lists.number|add:-2 and page <= apt_lists.number|add:2 %}
-                    <span class="{% if page == apt_lists.number %}current{% endif %}">
-                        <a href="?page={{ page }}">{{ page}}</a>
-                    </span>
-                    {% elif page >= apt_lists.number|add:-3 and page <= apt_lists.number|add:3 %}
-                        ..
-                    {% endif %}
-                {% endfor %}
-                </div>
-
-                <div style="width:35%; margin: 5px;" id='next'>
-                {% if apt_lists.has_next %}
-                    <a class="abutton" href="?page={{ apt_lists.next_page_number }}">다음</a>
-                    <a class="abutton" href="?page={{ apt_lists.paginator.num_pages }}">맨 뒤로</a>
-                {% endif %}
-                </div>
-      </div>
+                <div id='prev'></div>
+                <div id='next'></div>
+      		</div>
+    	</div>
     </div>
   </nav>
   <!-- Sidebar -->
@@ -220,15 +198,10 @@
 	function jusoSearch(){
 		//클릭한 요소 가져오기
 		let dv = event.currentTarget;
-		console.log(dv.innerText);
 		clickApt = dv.innerText;
 		//아파트 이름으로 주소 받아오기
-		console.log(ajaxResult.aptJusoJson[clickApt]);
 		map1(ajaxResult.aptJusoJson[clickApt]);
-	}
-			
-		    
-		    
+	} 
 		
 	function map1(juso){
 
@@ -304,40 +277,48 @@
 	       }   
 	       windows = [];
 	   }
+	
+	// 페이징처리 변수 선언
 	let send_data = {};
-	let page = 1;
-	
-	send_data['page'] = page;
-	
+	// 다음페이지
 	let nextPage = function(nextNum){
 			  let page = nextNum;
 			  send_data['page'] = page;
 			  data()
 	}
+	
+	//이전페이지
+	let prevPage = function(prevNum){
+		  let page = prevNum;
+		  send_data['page'] = page;
+		  data()
+	}
 	function data(){
+		//검색어 담아 ajax로 보내기
 		let search = document.getElementById("search").value;
-		
 		send_data['search'] = search;
+		// prev next 버튼초기화
+		$("#prev").empty();
+		$("#next").empty();
+		//페이징처리 함수
 		  let pagination = function(data){
 			  if (data.apt_lists['isPrev'] == true) {
-				  	let $a = $('<a class="abutton" href="?page=1">맨 앞으로</a>\
-                               <a class="abutton" href="?page='+ data.apt_lists['prevNum']+'">이전</a>')
-                    let a = document.createElement('a');
+				  	let $a = $('<a class="abutton" href=#" onClick = "prevPage('+ data.apt_lists['prevNum']+');">이전</a>')
+	              	let a = document.createElement('a');
 					$('#prev').append($a);
 					$a.appendTo($('#prev'));
 					document.getElementById('prev').appendChild(a);
-					
-				  } else if(data.apt_lists['isNext'] == true){
-					console.log('next');
+				  } 
+			  if(data.apt_lists['isNext'] == true){
 					let $a = $('<a class="abutton" href=#" onClick= "nextPage('+data.apt_lists['nextNum']+');">다음</a>\
-		                    <a class="abutton" href="?page='+data.apt_lists['num_pages']+'">맨 뒤로</a>')
-                    let a = document.createElement('a');
+		                   ')
+	              	let a = document.createElement('a');
 					$('#next').append($a);
 					$a.appendTo($('#next'));
 					document.getElementById('next').appendChild(a);
-				  }
-				
+				  }			
 		  }
+		//아파트리스트 불러오는 함수
 		  let aptList = function(data){
 			  console.log(data.apt_lists)
 			  data.apt_lists['apt_list'].forEach(function(item, index){
@@ -371,7 +352,6 @@
 		    	 map1(ajaxResult.juso[0]);
 		    	 aptList(data);
 		    	 pagination(data);
-//		    	 jusoSearch(ajaxResult.aptJusoJson);
 		     },
 		     error : function(){
 		    	 alert('실패')
