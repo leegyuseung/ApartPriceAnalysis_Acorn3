@@ -37,6 +37,7 @@
 	               placeholder='아파트 검색'
 	               style="min-width: 225px"
 	               id = "search"
+	               onkeyup="enterkey();"
 	               />
 	        
 	        <span class="input-group-text border-0" >
@@ -179,7 +180,16 @@
 <!--Main layout-->
 <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=3209863b8ce059f0b5c2bf4e41cfef2d&libraries=services"></script>
 <script>
-	//마커와 윈도우를 담을 배열입니다
+	// 엔터키 함수
+	function enterkey() {
+	        if (window.event.keyCode == 13) {
+	 			 event.preventDefault();
+	             // 엔터키가 눌렸을 때 실행할 내용
+	             data();
+	        }
+	}
+	
+	// 마커와 윈도우를 담을 배열입니다
 	var markers = [];
 	var windows = [];
 	
@@ -188,6 +198,7 @@
 	    center: new kakao.maps.LatLng(37.551425, 126.988), // 지도의 중심좌표
 	    level: 7 // 지도의 확대 레벨
 	}; 
+	
 	// 주소-좌표 변환 객체를 생성합니다
 	var geocoder = new kakao.maps.services.Geocoder();
 	
@@ -224,7 +235,7 @@
 				
 		        // 마커에 mouseover 이벤트를 등록합니다
 		        kakao.maps.event.addListener(marker, 'click', function() {
-					location.href = "graph?aptName="+juso;
+					location.href = "map/graph?aptName="+juso;
 	
 		        });
 		        
@@ -257,7 +268,7 @@
 	// 윈도우를 생성하고 지도 위에 마커를 표시하는 함수입니다
 	   function addWindow(map, marker, idx){
 	       var infowindow = new kakao.maps.InfoWindow({
-	           content: '<div style="width:150px;text-align:center;padding:6px 0;">'+clickApt+'</div>'
+	           content: '<div style="text-align:center;">'+clickApt+'</div>'
 	       });
 	       infowindow.open(map, marker);
 	       windows.push(infowindow)
@@ -280,6 +291,7 @@
 	
 	// 페이징처리 변수 선언
 	let send_data = {};
+	
 	// 다음페이지
 	let nextPage = function(nextNum){
 			  let page = nextNum;
@@ -287,20 +299,21 @@
 			  data()
 	}
 	
-	//이전페이지
+	// 이전 페이지
 	let prevPage = function(prevNum){
 		  let page = prevNum;
 		  send_data['page'] = page;
 		  data()
 	}
+	
 	function data(){
-		//검색어 담아 ajax로 보내기
+		// 검색어 담아 ajax로 보내기
 		let search = document.getElementById("search").value;
 		send_data['search'] = search;
 		// prev next 버튼초기화
 		$("#prev").empty();
 		$("#next").empty();
-		//페이징처리 함수
+		// 페이징 처리 함수
 		  let pagination = function(data){
 			  if (data.apt_lists['isPrev'] == true) {
 				  	let $a = $('<a class="abutton" href=#" onClick = "prevPage('+ data.apt_lists['prevNum']+');">이전</a>')
@@ -318,9 +331,9 @@
 					document.getElementById('next').appendChild(a);
 				  }			
 		  }
-		//아파트리스트 불러오는 함수
+		
+		// 아파트리스트 불러오는 함수
 		  let aptList = function(data){
-			  console.log(data.apt_lists)
 			  data.apt_lists['apt_list'].forEach(function(item, index){
 				  let $a = $('<a href="#" onClick= "jusoSearch();"\
 		                         class="aptlists list-group-item list-group-item-action py-2 ripple" \
@@ -328,13 +341,10 @@
 		                       +item+
 		                      '</a>')
 				  let a = document.createElement('a');
-				  //let text = documemt.createTextNode('Test');
-				  //div.appendChild(text);
 				  $('#apartList').append($a);
 				  $a.appendTo($('#apartList'));
 				  document.getElementById('apartList').appendChild(a);
 		        });
-			  
 		  }
 			
 		  //list 값 초기화
@@ -354,11 +364,10 @@
 		    	 pagination(data);
 		     },
 		     error : function(){
-		    	 alert('실패')
+		    	 alert('검색된 정보가 없습니다.');
 		     }
 		  });
 	}
-		  	
 </script>
 <!-- MDB -->
 <script type="text/javascript" src="../static/js/mdb.min.js"></script>
