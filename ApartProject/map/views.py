@@ -1,37 +1,52 @@
 from django.shortcuts import render
-from map.models import Test, Addrdata, Addrapt
+from map.models import Addrdata, Addrapt
 import pandas as pd
-import json
-import numpy as np
 from django.views.decorators.csrf import csrf_exempt
-from django.http.response import HttpResponse, JsonResponse
+from django.http.response import JsonResponse
+from django.core.paginator import Paginator
 
-# Create your views here.
 def Main(request):
-    return render(request,'home.html')
-
-def cssTest(request):
     return render(request,'index.html')
 
+# AJAX 받는 함수
 @csrf_exempt
 def apart(request):
-    search = request.POST['search']
+    # 데이터 검색 받기
+    search = request.GET['search']
+    # DB에 검색
     datas = Addrapt.objects.filter(apt__contains=search).values()
     df = pd.DataFrame(datas)
-    print(df)
     
+    # 아파트명, 주소 저장
     apt = [i for i in df['apt'] + df['dong']]
     juso = [i for i in df['addr']]
     
-    
+    # 아파트명, 주소 json형식 변경
     aptJusoJson = {}
     for apt, juso in zip(apt, juso):
         aptJusoJson[apt]=  juso 
     
-    print(aptJusoJson)
     apt = [i for i in df['apt'] + df['dong']]
     
-    return JsonResponse({'juso':juso, 'apartdata':apt, 'aptJusoJson':aptJusoJson})
+    # 페이징처리
+    paginator = Paginator(apt, 30)
+    page = int(request.GET.get('page', 1))
+    apt_lists = paginator.get_page(page)
+    
+    tojson = {'isPrev':apt_lists.has_previous(),
+               'range': [i for i in range(1,apt_lists.paginator.num_pages+1)],
+              'num':apt_lists.number,'apt_list':apt_lists.object_list,
+              'isNext':apt_lists.has_next(), 'num_pages':apt_lists.paginator.num_pages }
+    
+    if apt_lists.has_previous() ==True:
+        prevNum=apt_lists.previous_page_number()
+        tojson['prevNum']=prevNum
+    if apt_lists.has_next() == True:
+        nextNum = apt_lists.next_page_number()
+        tojson['nextNum']=nextNum
+    print(tojson)
+    # json으로 리턴
+    return JsonResponse({'juso':juso, 'apartdata':apt, 'aptJusoJson':aptJusoJson, 'apt_lists':tojson})
 
 def importData(request):
     # 클릭한 마커의 데이터 불러오기

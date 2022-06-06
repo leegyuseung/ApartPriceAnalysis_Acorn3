@@ -2,13 +2,25 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+	<!-- 지도 화면 채우기-->
 	<style>
-		* { margin : 0}
+		/* font */
+		* {
+		 margin : 0; font-family: 'Noto Serif KR', serif;
+		}
+		/* scroll bar */
+		#apartList{
+		 overflow:scroll; width:auto; height:800px;
+		}
 	</style>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
     <meta http-equiv="x-ua-compatible" content="ie=edge" />
-    <title>Material Design for Bootstrap</title>
+    <title>Apart price analysis</title>
+    <!-- font change -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@500&display=swap" rel="stylesheet">
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.11.2/css/all.css" />
     <!-- Google Fonts Roboto -->
@@ -18,6 +30,8 @@
     <!-- Custom styles -->
     <link rel="stylesheet" href="../static/css/style.css" />
     <script src="http://code.jquery.com/jquery-latest.min.js"></script>
+    <!-- CSS only -->
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
     
 </head>
 <body>
@@ -27,24 +41,31 @@
   <nav id="sidebarMenu"class="collapse d-lg-block sidebar collapse bg-white" style = width:400px>
     <div class="position-sticky">
       <div class="list-group list-group-flush mx-3 mt-4" >
-	      	<!-- Search form -->
-	      <div class="d-none d-md-flex input-group w-auto my-auto">
-	        <input
+	      <!-- Search form -->
+	      <div class="input-group mb-3">
+				<input
 	               autocomplete="off"
 	               type="search"
 	               class="form-control rounded"
 	               placeholder='아파트 검색'
-	               style="min-width: 225px"
+	               style="width: 280px"
 	               id = "search"
 	               />
-	        
-	        <span class="input-group-text border-0" >
-	        	<button id="serch" class="fas fa-search" onclick="data()" type = "submit"></button>
-	        </span>
-	        <div class="d-none d-md-flex input-group" id="apartList"></div>     
+	        	<button class="btn btn-outline-dark" id="serch" onclick="data()" type = "submit"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
+  				<path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/></svg>
+  				</button>
 	      </div>
-       	
-      </div>
+	      <div class="d-none d-md-flex input-group" id="apartList"></div>
+       	  <!-- Pagination -->
+       	  <nav id="paging">
+            <ul class="pagination" >
+                <li class="page-item" id='prev' ></li>
+                <li id='pageList'></li>
+                
+                <li class="page-item"id='next'></li>
+      		</ul>
+      	  </nav>
+    	</div>
     </div>
   </nav>
   <!-- Sidebar -->
@@ -69,59 +90,37 @@
         <i class="fas fa-bars"></i>
       </button>
 
-      <!-- Brand -->
-      <a class="navbar-brand" href="#">
-        <img
-             src="https://mdbootstrap.com/img/logo/mdb-transaprent-noshadows.png"
-             height="25"
-             alt=""
-             loading="lazy"
-             />
+      <!-- 집모양 마크 -->
+      <a class="navbar-brand" href="">
+        <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-house" viewBox="0 0 16 16">
+  		<path fill-rule="evenodd" d="M2 13.5V7h1v6.5a.5.5 0 0 0 .5.5h9a.5.5 0 0 0 .5-.5V7h1v6.5a1.5 1.5 0 0 1-1.5 1.5h-9A1.5 1.5 0 0 1 2 13.5zm11-11V6l-2-2V2.5a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5z"/>
+  		<path fill-rule="evenodd" d="M7.293 1.5a1 1 0 0 1 1.414 0l6.647 6.646a.5.5 0 0 1-.708.708L8 2.207 1.354 8.854a.5.5 0 1 1-.708-.708L7.293 1.5z"/>
+		</svg>
+		&nbsp; BUDONGSAN
       </a>
       
 
       <!-- Right links -->
       <ul class="navbar-nav ms-auto d-flex flex-row">
-        <!-- Notification dropdown -->
-        <li class="nav-item dropdown">
-          <a
-             class="nav-link me-3 me-lg-0 dropdown-toggle hidden-arrow"
-             href="#"
-             id="navbarDropdownMenuLink"
-             role="button"
-             data-mdb-toggle="dropdown"
-             aria-expanded="false"
-             >
-            <i class="fas fa-bell"></i>
-            <span class="badge rounded-pill badge-notification bg-danger"
-                  >1</span
-              >
-          </a>
-          <ul
-              class="dropdown-menu dropdown-menu-end"
-              aria-labelledby="navbarDropdownMenuLink"
-              >
-            <li><a class="dropdown-item" href="#">Some news</a></li>
-            <li><a class="dropdown-item" href="#">Another news</a></li>
-            <li>
-              <a class="dropdown-item" href="#">Something else here</a>
-            </li>
-          </ul>
-        </li>
-
-        <!-- Icon -->
-        <li class="nav-item">
-          <a class="nav-link me-3 me-lg-0" href="#">
-            <i class="fas fa-fill-drip"></i>
-          </a>
-        </li>
-        <!-- Icon -->
+        
+		<!-- Map & home -->
         <li class="nav-item me-3 me-lg-0">
-          <a class="nav-link" href="#">
-            <i class="fab fa-github"></i>
+          <a class="nav-link" href="">
+			<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-geo-alt-fill" viewBox="0 0 16 16">
+			  <path d="M8 16s6-5.686 6-10A6 6 0 0 0 2 6c0 4.314 6 10 6 10zm0-7a3 3 0 1 1 0-6 3 3 0 0 1 0 6z"/>
+			</svg>
           </a>
         </li>
-
+        
+        <!-- Github -->
+        <li class="nav-item me-3 me-lg-0">
+          <a class="nav-link" href="https://github.com/xerathul/FinalProject3">
+            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-github" viewBox="0 0 16 16">
+  			<path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.012 8.012 0 0 0 16 8c0-4.42-3.58-8-8-8z"/>
+			</svg>
+          </a>
+        </li>
+        
         <!-- Avatar -->
         <li class="nav-item dropdown">
           <a
@@ -135,7 +134,7 @@
             <img
                  src="https://mdbootstrap.com/img/Photos/Avatars/img (31).jpg"
                  class="rounded-circle"
-                 height="22"
+                 height="32"
                  alt=""
                  loading="lazy"
                  />
@@ -155,8 +154,8 @@
   </nav>
   <!-- Navbar -->
 </header>
-<!--Main Navigation-->
 
+<!--Main Navigation-->
 <!--Main layout-->
 <main style="margin-top: 72px;padding-left: 389px;">
   <div class="container-fluid" style='margin-left: 0px;'>
@@ -174,7 +173,16 @@
 <!--Main layout-->
 <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=3209863b8ce059f0b5c2bf4e41cfef2d&libraries=services"></script>
 <script>
-	//마커와 윈도우를 담을 배열입니다
+	// 엔터키 함수
+	function enterkey() {
+	        if (window.event.keyCode == 13) {
+	 			 event.preventDefault();
+	             // 엔터키가 눌렸을 때 실행할 내용
+	             data();
+	        }
+	}
+	
+	// 마커와 윈도우를 담을 배열입니다
 	var markers = [];
 	var windows = [];
 	
@@ -183,6 +191,7 @@
 	    center: new kakao.maps.LatLng(37.551425, 126.988), // 지도의 중심좌표
 	    level: 7 // 지도의 확대 레벨
 	}; 
+	
 	// 주소-좌표 변환 객체를 생성합니다
 	var geocoder = new kakao.maps.services.Geocoder();
 	
@@ -193,15 +202,10 @@
 	function jusoSearch(){
 		//클릭한 요소 가져오기
 		let dv = event.currentTarget;
-		console.log(dv.innerText);
 		clickApt = dv.innerText;
 		//아파트 이름으로 주소 받아오기
-		console.log(ajaxResult.aptJusoJson[clickApt]);
 		map1(ajaxResult.aptJusoJson[clickApt]);
-	}
-			
-		    
-		    
+	} 
 		
 	function map1(juso){
 
@@ -224,7 +228,7 @@
 				
 		        // 마커에 mouseover 이벤트를 등록합니다
 		        kakao.maps.event.addListener(marker, 'click', function() {
-					location.href = "graph?aptName="+juso;
+					location.href = "map/graph?aptName="+juso;
 	
 		        });
 		        
@@ -257,7 +261,7 @@
 	// 윈도우를 생성하고 지도 위에 마커를 표시하는 함수입니다
 	   function addWindow(map, marker, idx){
 	       var infowindow = new kakao.maps.InfoWindow({
-	           content: '<div style="width:150px;text-align:center;padding:6px 0;">'+clickApt+'</div>'
+	           content: '<div style="text-align:center;">'+clickApt+'</div>'
 	       });
 	       infowindow.open(map, marker);
 	       windows.push(infowindow)
@@ -277,29 +281,96 @@
 	       }   
 	       windows = [];
 	   }
-	   
+	
+	// 페이징처리 변수 선언
+	let send_data = {};
+	
+	// 다음페이지
+	let nextPage = function(nextNum){
+			  let page = nextNum;
+			  send_data['page'] = page;
+			  data()
+	}
+
+	// 페이지 리스트
+	let pageLists = function(pageList){
+		let page = pageList;
+		send_data['page']=page;
+		data();
+	}
+  
+	//이전페이지
+	let prevPage = function(prevNum){
+		  let page = prevNum;
+		  send_data['page'] = page;
+		  data()
+	}
+	
 	function data(){
-		  let send_data = {};
-		  let search = document.getElementById("search").value;
-		  send_data['search'] = search;
-		  
-		 
+		// 검색어 담아 ajax로 보내기
+		let search = document.getElementById("search").value;
+		send_data['search'] = search;
+		// prev next 버튼초기화
+		$(".page-item").empty();
+		
+
+		//페이징처리 함수
+		let pagination = function(data){
+			 if (data.apt_lists['isPrev'] == true) {
+				  	let $a = $('<a class="page-link" href=#" aria-label="Previous" onClick = "prevPage('+ data.apt_lists['prevNum']+');">이전</a>')
+
+	              	let a = document.createElement('a');
+					$('#prev').append($a);
+					$a.appendTo($('#prev'));
+					//document.getElementById('prev').appendChild(a);
+				  }else{
+					  let $a = $('<a class="page-link disabled" href=#" aria-label="Previous" onClick = "prevPage('+ data.apt_lists['prevNum']+');">이전</a>')
+		              	let a = document.createElement('a');
+						$('#prev').append($a);
+						$a.appendTo($('#prev'));
+				  }
+			  data.apt_lists['range'].forEach(function(page, index){
+				if(page >= (data.apt_lists['num']-2) && page <= data.apt_lists['num']+2){
+					let $li = $('<li class="page-item"><a class="page-link" href=# onclick = pageLists('+page+')>'+page+'</a></li>')
+	              	let li = document.createElement('li');
+					$('#pageList').before($li);
+					//$li.appendTo($('#pageList'));
+					//document.getElementById('pageList').appendChild(a);
+					  if(page == data.apt_lists['num'] ){
+						  	$li.addClass('active')		  	
+					  }
+				}
+				  	
+			  })
+			  if(data.apt_lists['isNext'] == true){
+					let $a = $('<a class="page-link" href=#" onClick= "nextPage('+data.apt_lists['nextNum']+');">다음</a>\
+		                   ')
+	              	let a = document.createElement('a');
+					$('#next').append($a);
+					$a.appendTo($('#next'));
+					//document.getElementById('next').appendChild(a);
+				  }else{
+					  let $a = $('<a class="page-link disabled" href=#" onClick= "nextPage('+data.apt_lists['nextNum']+');">다음</a>\
+			                   ')
+		             	let a = document.createElement('a');
+						$('#next').append($a);
+						$a.appendTo($('#next'));
+				  }		
+		  }
+		
+		// 아파트리스트 불러오는 함수
 		  let aptList = function(data){
-			  console.log(data.apartdata)
-			  data.apartdata.forEach(function(item, index){
-					  let $a = $('<a href="#" onClick= "jusoSearch();"\
+			  data.apt_lists['apt_list'].forEach(function(item, index){
+				  let $a = $('<a href="#" onClick= "jusoSearch();"\
 		                         class="aptlists list-group-item list-group-item-action py-2 ripple" \
 		                         aria-current="true" > '
 		                       +item+
 		                      '</a>')
 				  let a = document.createElement('a');
-				  //let text = documemt.createTextNode('Test');
-				  //div.appendChild(text);
 				  $('#apartList').append($a);
 				  $a.appendTo($('#apartList'));
-				  document.getElementById('apartList').appendChild(a);
+				  //document.getElementById('apartList').appendChild(a);
 		        });
-			  
 		  }
 			
 		  //list 값 초기화
@@ -308,22 +379,21 @@
 		  $.ajax({
 			  /* 비동기 통신 여부  */        
 			 //async : false, 
-		     url:"apart",
-		     type:"post",
+		     url:"map/apart",
+		     type:"get",
 		     data:send_data,
 		     dataType:"json",
 		     success:function(data){
 		    	 ajaxResult =data;
 		    	 map1(ajaxResult.juso[0]);
 		    	 aptList(data);
-//		    	 jusoSearch(ajaxResult.aptJusoJson);
+		    	 pagination(data);
 		     },
 		     error : function(){
-		    	 alert('실패')
+		    	 alert('검색된 정보가 없습니다.');
 		     }
 		  });
 	}
-		  	
 </script>
 <!-- MDB -->
 <script type="text/javascript" src="../static/js/mdb.min.js"></script>
