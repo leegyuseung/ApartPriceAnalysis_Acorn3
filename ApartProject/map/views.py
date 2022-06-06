@@ -44,7 +44,7 @@ def apart(request):
     if apt_lists.has_next() == True:
         nextNum = apt_lists.next_page_number()
         tojson['nextNum']=nextNum
-
+    print(tojson)
     # json으로 리턴
     return JsonResponse({'juso':juso, 'apartdata':apt, 'aptJusoJson':aptJusoJson, 'apt_lists':tojson})
 
