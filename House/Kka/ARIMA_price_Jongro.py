@@ -31,7 +31,7 @@ ts = timeSeries.drop("yymm", axis=1)
 
 # # 2011-01부터 2021-12 까지 구별-월별 아파트 평당가격 그래프
 # plt.figure(figsize=(15, 8))
-# plt.plot(Jongro)
+# plt.plot(ts)
 # plt.title("Seoul APT price 2011-01 ~ 2021-12")
 # plt.xlabel("Year-Month")
 # plt.ylabel("price")
@@ -121,15 +121,34 @@ model_fit = model.fit()
 start_index = yymm[120] # 2021-01-31 00:00:00
 end_index = yymm[131]   # 2021-12-31 00:00:00
 forecast = model_fit.predict(start=start_index, end=end_index, typ='levels')
-# 시각화
-plt.figure(figsize=(15, 8))
-plt.plot(Jongro.yymm, Jongro.price, label="original")
-plt.plot(forecast, label='predicted')
-plt.title("Jongro-gu APT price Forecast")
-plt.xlabel("Year-Month")
-plt.ylabel("APT price per 1.8m*1.8m")
-plt.legend()
-plt.show()
+# # 실제값이랑 비교하기
+# print(Jongro.tail(12))
+# print(forecast)
+'''         - 실제값 -           - forecast -
+          yymm        price          price
+    2021-01-31  3496.207318    3575.980581
+    2021-02-28  3839.286391    3562.521393
+    2021-03-31  3042.478637    3708.155043
+    2021-04-30  3472.657944    3347.033717
+    2021-05-31  3360.089149    3308.235230
+    2021-06-30  3652.622963    3403.115084
+    2021-07-31  3464.264264    3540.810975
+    2021-08-31  3703.163257    3536.258541
+    2021-09-30  3869.608889    3611.851518
+    2021-10-31  4057.966887    3805.990202
+    2021-11-30  3687.941989    3985.972877
+    2021-12-31  3907.407257    3829.372543
+'''
+
+# # 시각화
+# plt.figure(figsize=(15, 8))
+# plt.plot(Jongro.yymm, Jongro.price, label="original")
+# plt.plot(forecast, label='predicted')
+# plt.title("Jongro-gu APT price Forecast")
+# plt.xlabel("Year-Month")
+# plt.ylabel("APT price per 1.8m*1.8m")
+# plt.legend()
+# plt.show()
 
 
 # # 잔차 분석 : 잘 안 됨...
@@ -152,7 +171,6 @@ resi = np.array(Jongro[Jongro.yymm>=start_index].price) - np.array(forecast)
 
 # # 성능 확인
 from sklearn import metrics
-
 def score_check(y_true, y_pred):
     r2 = round(metrics.r2_score(y_true, y_pred) * 100, 3)
     #     mae = round(metrices.mean_absolute_error(y_true, y_pred),3)
@@ -160,7 +178,7 @@ def score_check(y_true, y_pred):
     mape = round(
         metrics.mean_absolute_percentage_error(y_true, y_pred) * 100, 3)
     rmse = round(metrics.mean_squared_error(y_true, y_pred, squared=False), 3)
-    
+
     df = pd.DataFrame({
         'R2':r2,
         'Corr':corr,
@@ -170,8 +188,10 @@ def score_check(y_true, y_pred):
                     index=[0])
     return df
 
-score_check(np.array(Jongro[Jongro.yymm>=start_index].price), np.array(forecast))
-
+# score_check(np.array(Jongro[Jongro.yymm>=start_index].price), np.array(forecast))
+print(score_check(np.array(Jongro[Jongro.yymm>=start_index].price), np.array(forecast)))
+# ==>        R2   Corr     RMSE    MAPE
+# ==> 0  -0.777  0.366  268.541   6.086
 
 
 
