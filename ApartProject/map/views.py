@@ -44,7 +44,7 @@ def importData(request):
         df = pd.DataFrame(datas)
         df.set_index(df['num'], inplace=True)
         df = df.drop(['num'], axis=1)
-        
+        df = df.sort_values(by = 'ymd')
         
         print(df)
         
