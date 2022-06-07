@@ -109,6 +109,9 @@
 		//클릭한 요소 가져오기
 		let dv = event.currentTarget;
 		clickApt = dv.innerText;
+		
+		deletePolygon(polygons);
+
 		//아파트 이름으로 주소 받아오기
 		map1(ajaxResult.aptJusoJson[clickApt]);
 	} 
@@ -375,9 +378,7 @@ function displayGu(coordinates, name) {
 		deletePolygon(polygons);
 		
 		var clickName = name;
-		
-		console.log(clickName)
-
+		console.log(name)
 		$.getJSON("map/Dpolygon", function(geojson){
 			var data = geojson.Dpolygon.features;
 			var coordinates = []; // 좌표 저장할 배열
@@ -393,16 +394,6 @@ function displayGu(coordinates, name) {
 					displayDong(coordinates, name);
 				}
 			}
-			/*
-			$.each(data, function(index, val){
-				
-				coordinates = val.geometry.coordinates;
-				name = val.properties.SIGUNGU_NM;
-				console.log(clickName)
-
-				displayDong(coordinates, name);
-			})
-			*/
 		})
 	});
 }
@@ -469,6 +460,21 @@ function displayDong(coordinates, name) {
         polygon.setOptions({fillColor: '#fff'});
         customOverlay.setMap(null);
     }); 
+    
+    kakao.maps.event.addListener(polygon, 'mousedown', function(){
+		var level = map.getLevel()-1;
+		console.log(name)
+		let dv = event.currentTarget;
+		clickApt = dv.innerText;
+		
+		console.log(dv)
+		console.log(clickApt)
+		// 지도를 클릭된 폴리곤의 중앙 위치를 기준으로 확대합니다
+		map.setLevel(level, {anchor: centroid(points), animate: {
+			duration: 350
+		}});
+		deletePolygon(polygons);
+    });
 }
 
 </script>
