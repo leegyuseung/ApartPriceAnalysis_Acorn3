@@ -108,18 +108,89 @@ result = adfuller(ts_diff[1:])
           10%: -2.580            '''
 
 
+# # auto_arima로 최적의 모형 탐색하기
+import pmdarima as pm
+train = cpi['cpi(abs)'][:120]
+
+model = pm.auto_arima(y = train        # 데이터
+                      , d = 1            # 차분 차수, ndiffs 결과!
+                      , start_p = 0 
+                      , max_p = 5   
+                      , start_q = 0 
+                      , max_q = 5   
+                      , m = 1       
+                      , seasonal = False # 계절성 ARIMA가 아니라면 필수!
+                      , stepwise = True
+                      , trace=True
+                      )
+'''  Performing stepwise search to minimize aic
+     ARIMA(0,1,0)(0,0,0)[0] intercept   : AIC=63.976, Time=0.03 sec
+     ARIMA(1,1,0)(0,0,0)[0] intercept   : AIC=63.335, Time=0.03 sec
+     ARIMA(0,1,1)(0,0,0)[0] intercept   : AIC=59.873, Time=0.03 sec
+     ARIMA(0,1,0)(0,0,0)[0]             : AIC=73.925, Time=0.01 sec
+     ARIMA(1,1,1)(0,0,0)[0] intercept   : AIC=61.000, Time=0.04 sec
+     ARIMA(0,1,2)(0,0,0)[0] intercept   : AIC=52.982, Time=0.06 sec
+     ARIMA(1,1,2)(0,0,0)[0] intercept   : AIC=50.098, Time=0.11 sec
+     ARIMA(2,1,2)(0,0,0)[0] intercept   : AIC=41.369, Time=0.09 sec
+     ARIMA(2,1,1)(0,0,0)[0] intercept   : AIC=40.230, Time=0.15 sec
+     ARIMA(2,1,0)(0,0,0)[0] intercept   : AIC=44.819, Time=0.04 sec
+     ARIMA(3,1,1)(0,0,0)[0] intercept   : AIC=37.107, Time=0.11 sec
+     ARIMA(3,1,0)(0,0,0)[0] intercept   : AIC=38.143, Time=0.05 sec
+     ARIMA(4,1,1)(0,0,0)[0] intercept   : AIC=39.057, Time=0.15 sec
+     ARIMA(3,1,2)(0,0,0)[0] intercept   : AIC=38.932, Time=0.18 sec
+     ARIMA(4,1,0)(0,0,0)[0] intercept   : AIC=39.604, Time=0.07 sec
+     ARIMA(4,1,2)(0,0,0)[0] intercept   : AIC=40.544, Time=0.23 sec
+     ARIMA(3,1,1)(0,0,0)[0]             : AIC=57.437, Time=0.05 sec
+    
+    Best model:  ARIMA(3,1,1)(0,0,0)[0] intercept
+    Total fit time: 1.448 seconds
+'''
+model_fit = model.fit(train)
+
+
+# # 잔차 검정
+print(model.summary())
+'''                                SARIMAX Results                                
+    ==============================================================================
+    Dep. Variable:                      y   No. Observations:                  120
+    Model:               SARIMAX(3, 1, 1)   Log Likelihood                 -12.553
+    Date:                Tue, 07 Jun 2022   AIC                             37.107
+    Time:                        18:37:21   BIC                             53.781
+    Sample:                             0   HQIC                            43.878
+                                    - 120                                         
+    Covariance Type:                  opg                                         
+    ==============================================================================
+                     coef    std err          z      P>|z|      [0.025      0.975]
+    ------------------------------------------------------------------------------
+    intercept      0.2136      0.043      4.985      0.000       0.130       0.298
+    ar.L1         -0.4126      0.165     -2.498      0.012      -0.736      -0.089
+    ar.L2         -0.2435      0.092     -2.635      0.008      -0.425      -0.062
+    ar.L3         -0.4704      0.104     -4.538      0.000      -0.674      -0.267
+    ma.L1          0.5711      0.196      2.908      0.004       0.186       0.956
+    sigma2         0.0719      0.009      7.892      0.000       0.054       0.090
+    ===================================================================================
+    Ljung-Box (L1) (Q):                   0.00   Jarque-Bera (JB):                 0.25
+    Prob(Q):                              0.94   Prob(JB):                         0.88
+    Heteroskedasticity (H):               2.58   Skew:                             0.00
+    Prob(H) (two-sided):                  0.00   Kurtosis:                         3.22
+    ===================================================================================
+    Warnings:
+    [1] Covariance matrix calculated using the outer product of gradients (complex-step).
+'''
+
+
 # # 1차 차분 데이터로 ACF, PACF 그려서 ARIMA 모형의 p, q 결정
-fig = plt.figure(figsize=(18, 10))
-ax1 = fig.add_subplot(211)
-ax2 = fig.add_subplot(212)
-fig = plot_acf(ts_diff[1:], ax = ax1)
-ax1.set_title("ACF_cpi(abs) diff1")
-fig = plot_pacf(ts_diff[1:], ax = ax2)
-ax2.set_title("PACF_cpi(abs) diff1")
-plt.show()
+# fig = plt.figure(figsize=(18, 10))
+# ax1 = fig.add_subplot(211)
+# ax2 = fig.add_subplot(212)
+# fig = plot_acf(ts_diff[1:], ax = ax1)
+# ax1.set_title("ACF_cpi(abs) diff1")
+# fig = plot_pacf(ts_diff[1:], ax = ax2)
+# ax2.set_title("PACF_cpi(abs) diff1")
+# plt.show()
 # # ==> ACF는 1 이후로 0에 수렴, PACF도 1 이후로 0에 수렴.
 
-"""
+
 # # ARIMA 모델 만들기
 from statsmodels.tsa.arima.model import ARIMA
 # fit model
@@ -162,28 +233,28 @@ forecast = model_fit.predict(start=start_index, end=end_index, typ='levels')
 
 # # 성능 확인
 from sklearn import metrics
-def score_check(y_true, y_pred):
-    r2 = round(metrics.r2_score(y_true, y_pred) * 100, 3)
-    #     mae = round(metrices.mean_absolute_error(y_true, y_pred),3)
-    corr = round(np.corrcoef(y_true, y_pred)[0, 1], 3)
-    mape = round(
-        metrics.mean_absolute_percentage_error(y_true, y_pred) * 100, 3)
-    rmse = round(metrics.mean_squared_error(y_true, y_pred, squared=False), 3)
-
-    df = pd.DataFrame({
-        'R2':r2,
-        'Corr':corr,
-        'RMSE':rmse,
-        'MAPE':mape
-    },
-                    index=[0])
-    return df
-
-# score_check(np.array(cpi[cpi.yymm>=start_index].cpi(%)), np.array(forecast))
-print(score_check(np.array(cpi[cpi.yymm>=start_index]['cpi(%)']), np.array(forecast)))
+# def score_check(y_true, y_pred):
+#     r2 = round(metrics.r2_score(y_true, y_pred) * 100, 3)
+#     #     mae = round(metrices.mean_absolute_error(y_true, y_pred),3)
+#     corr = round(np.corrcoef(y_true, y_pred)[0, 1], 3)
+#     mape = round(
+#         metrics.mean_absolute_percentage_error(y_true, y_pred) * 100, 3)
+#     rmse = round(metrics.mean_squared_error(y_true, y_pred, squared=False), 3)
+#
+#     df = pd.DataFrame({
+#         'R2':r2,
+#         'Corr':corr,
+#         'RMSE':rmse,
+#         'MAPE':mape
+#     },
+#                     index=[0])
+#     return df
+#
+# # score_check(np.array(cpi[cpi.yymm>=start_index].cpi(%)), np.array(forecast))
+# print(score_check(np.array(cpi[cpi.yymm>=start_index]['cpi(%)']), np.array(forecast)))
 # ==>        R2   Corr   RMSE   MAPE
 # ==> 0  77.244  0.915  0.468  3.241
-"""
+
 
 
 

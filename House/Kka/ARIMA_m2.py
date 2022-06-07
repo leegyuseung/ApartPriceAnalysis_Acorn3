@@ -14,29 +14,30 @@ m2 = pd.DataFrame()
 yymm = []
 yymm = pd.date_range("2011-01", "2022-01", freq="M")
 m2['yymm'] = yymm
-m2['m2(%)'] = data['m2(%)']
-# Jongro.set_index('yymm', inplace=True)
-# print(m2.head(3), m2.tail(3), m2.shape)
-'''         yymm    m2                  yymm     m2
-    0 2011-01-31  6.49        129 2021-10-31  12.39
-    1 2011-02-28  4.95        130 2021-11-30  12.92
-    2 2011-03-31  4.33        131 2021-12-31  13.21    (132, 2)  '''
+m2['m2(abs)'] = data['m2(abs)']
+# m2.set_index('yymm', inplace=True)
+print(m2.head(3), m2.tail(3), m2.shape)
+'''         yymm     m2(abs)                  yymm       m2(abs)
+    0 2011-01-31  1676448.8        129 2021-10-31      3543363.8
+    1 2011-02-28  1674390.5        130 2021-11-30      3594723.2
+    2 2011-03-31  1677475.9        131 2021-12-31      3620057.5    (132, 2)  '''
 
 
 print(m2.info())
-timeSeries = m2.loc[:, ['yymm', 'm2(%)']]
+timeSeries = m2.loc[:, ['yymm', 'm2(abs)']]
 timeSeries.index = timeSeries.yymm
 ts = timeSeries.drop("yymm", axis=1)
-'''             m2(%)
+print(ts)
+'''                 m2(abs)
     yymm             
-    2011-01-31   6.49
-    2011-02-28   4.95
-    ...           ...
-    2021-11-30  12.92
-    2021-12-31  13.21    [132 rows x 1 columns]  '''
+    2011-01-31   1676448.8
+    2011-02-28   1674390.5
+    ...          ...
+    2021-11-30   3594723.2
+    2021-12-31   3620057.5    [132 rows x 1 columns]  '''
 
 
-# # 2011-01부터 2021-12 까지 m2(%) 그래프
+# # 2011-01부터 2021-12 까지 m2(abs) 그래프
 # plt.figure(figsize=(15, 8))
 # plt.plot(ts)
 # plt.title("m2(%) 2011-01 ~ 2021-12")
@@ -103,9 +104,71 @@ for key, value in result[4].items():
 ''' ADF Statistic : -2.810977
     p-value : 0.056723
     Critical Values : 
-        1%: -3.487
-        5%: -2.886
+        1%:  -3.487
+        5%:  -2.886
         10%: -2.580            '''
+
+
+# # auto_arima로 최적의 모형 탐색하기
+import pmdarima as pm
+train = m2['m2(abs)'][:120]
+
+model = pm.auto_arima(y = train        # 데이터
+                      , d = 1            # 차분 차수, ndiffs 결과!
+                      , start_p = 0 
+                      , max_p = 5   
+                      , start_q = 0 
+                      , max_q = 5   
+                      , m = 1       
+                      , seasonal = False # 계절성 ARIMA가 아니라면 필수!
+                      , stepwise = True
+                      , trace=True
+                      )
+
+model_fit = model.fit(train)
+''' >> 결과
+    Performing stepwise search to minimize aic
+     ARIMA(0,1,0)(0,0,0)[0] intercept   : AIC=2484.382, Time=0.01 sec
+     ARIMA(1,1,0)(0,0,0)[0] intercept   : AIC=2496.954, Time=0.07 sec
+     ARIMA(0,1,1)(0,0,0)[0] intercept   : AIC=2483.783, Time=0.02 sec
+     ARIMA(0,1,0)(0,0,0)[0]             : AIC=2630.603, Time=0.00 sec
+     ARIMA(1,1,1)(0,0,0)[0] intercept   : AIC=2484.869, Time=0.08 sec
+     ARIMA(0,1,2)(0,0,0)[0] intercept   : AIC=2484.567, Time=0.03 sec
+     ARIMA(1,1,2)(0,0,0)[0] intercept   : AIC=2488.500, Time=0.16 sec
+     ARIMA(0,1,1)(0,0,0)[0]             : AIC=2632.160, Time=0.02 sec
+    
+    Best model:  ARIMA(0,1,1)(0,0,0)[0] intercept
+    Total fit time: 0.390 seconds
+'''
+
+# # 잔차 검정
+print(model.summary())
+'''                                SARIMAX Results                                                              
+    ==============================================================================
+    Dep. Variable:                      y   No. Observations:                  120
+    Model:               SARIMAX(0, 1, 1)   Log Likelihood               -1238.892
+    Date:                Tue, 07 Jun 2022   AIC                           2483.783
+    Time:                        18:33:18   BIC                           2492.121
+    Sample:                             0   HQIC                          2487.169
+                                    - 120                                         
+    Covariance Type:                  opg                                         
+    ==============================================================================
+                     coef    std err          z      P>|z|      [0.025      0.975]
+    ------------------------------------------------------------------------------
+    intercept   1.274e+04    719.339     17.716      0.000    1.13e+04    1.42e+04
+    ma.L1         -0.0081      0.023     -0.354      0.723      -0.053       0.037
+    sigma2      6.302e+07      0.032   1.99e+09      0.000     6.3e+07     6.3e+07
+    ===================================================================================
+    Ljung-Box (L1) (Q):                  15.92   Jarque-Bera (JB):                 9.53
+    Prob(Q):                              0.00   Prob(JB):                         0.01
+    Heteroskedasticity (H):               2.29   Skew:                             0.69
+    Prob(H) (two-sided):                  0.01   Kurtosis:                         3.09
+    ===================================================================================
+    
+    Warnings:
+    [1] Covariance matrix calculated using the outer product of gradients (complex-step).
+    [2] Covariance matrix is singular or near-singular, with condition number 2.02e+24. Standard errors may be unstable.
+'''
 
 
 # # 1차 차분 데이터로 ACF, PACF 그려서 ARIMA 모형의 p, q 결정
@@ -113,9 +176,9 @@ for key, value in result[4].items():
 # ax1 = fig.add_subplot(211)
 # ax2 = fig.add_subplot(212)
 # fig = plot_acf(ts_diff[1:], ax = ax1)
-# ax1.set_title("ACF_m2(%) diff1")
+# ax1.set_title("ACF_m2(abs) diff1")
 # fig = plot_pacf(ts_diff[1:], ax = ax2)
-# ax2.set_title("PACF_m2(%) diff1")
+# ax2.set_title("PACF_m2(abs) diff1")
 # plt.show()
 # # ==> ACF는 1 이후로 0에 수렴, PACF도 1 이후로 0에 수렴.
 
@@ -152,9 +215,9 @@ forecast = model_fit.predict(start=start_index, end=end_index, typ='levels')
 # plt.figure(figsize=(15, 8))
 # plt.plot(m2.yymm, m2['m2(%)'], label="original")
 # plt.plot(forecast, label='predicted')
-# plt.title("m2(%) Forecast")
+# plt.title("m2(abs) Forecast")
 # plt.xlabel("Year-Month")
-# plt.ylabel("m2(%)")
+# plt.ylabel("m2(abs)")
 # plt.legend()
 # plt.show()
 
@@ -180,9 +243,9 @@ def score_check(y_true, y_pred):
     return df
 
 # score_check(np.array(Jongro[Jongro.yymm>=start_index].price), np.array(forecast))
-print(score_check(np.array(m2[m2.yymm>=start_index]['m2(%)']), np.array(forecast)))
-# ==>        R2   Corr   RMSE   MAPE
-# ==> 0  77.244  0.915  0.468  3.241
+print(score_check(np.array(m2[m2.yymm>=start_index]['m2(abs)']), np.array(forecast)))
+# #           R2   Corr       RMSE   MAPE
+# # => 0  91.089  0.997  36146.723  1.016
 
 
 
