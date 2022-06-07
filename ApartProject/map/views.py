@@ -59,7 +59,7 @@ def importData(request):
         df = pd.DataFrame(datas)
         df.set_index(df['num'], inplace=True)
         df = df.drop(['num'], axis=1)
-        
+        df = df.sort_values(by = 'ymd')
         
         print(df)
         
@@ -76,24 +76,43 @@ def importData(request):
         for i in ymd:
             condition = (df['ymd']== (i)) # 조건식 작성
         
-            a = list(df[df['ymd']== (i)].price)
+            mp = list(df[condition].price) # 월 별 거래가격 리스트
             
-            if len(a) == 0:
+            if len(mp) == 0:
                 mean.append(0)
         
             else: 
-                mm = round(sum(a)/len(a))
-                mean.append(mm)
+                mv = round(sum(mp)/len(mp))
+                mean.append(mv)
+
+
+
+        for i in range(len(mean)):
+            if mean[i] == 0:
+                ymd[i] = '0' # 리스트 mean이 0인 인덱스에 똑같이 0 넣기
+                
+                        
+        while 0 in mean:    # mean에서 값이 0인것 빼기
+            mean.remove(0)
+            
+        while '0' in ymd:    # ymd에서 값이 '0'인것 빼기
+            ymd.remove('0')
         
-        print(mean)
+        for i in range(len(ymd)):
+            ymd[i] = int(ymd[i])
+
+   
         
-        print(len(mean))
-        
-    return render(request, 'graph.html', {'addr':detailaddr, 'datas':df.to_html(), 'mean':mean})
+    return render(request, 'graph.html', {'addr':detailaddr, 'datas':df.to_html(), 'mean':mean, 'ymd':ymd})
 
 
+@csrf_exempt
+def polygun(request):
+    import json
+    with open ("C:/Users/SAMSUNG/OneDrive/바탕 화면/프로젝트 데이터/시구분데이터/polygunData.json", "r", encoding='utf-8') as f:
+        polygun = json.load(f)
 
-
+    return JsonResponse({'polygun':polygun})
 
 
 
