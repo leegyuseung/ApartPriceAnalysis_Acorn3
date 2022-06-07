@@ -48,6 +48,26 @@ def apart(request):
     # json으로 리턴
     return JsonResponse({'juso':juso, 'apartdata':apt, 'aptJusoJson':aptJusoJson, 'apt_lists':tojson})
 
+
+
+@csrf_exempt
+def polygon(request):
+    import json
+    with open ("C:/Users/SAMSUNG/OneDrive/바탕 화면/프로젝트 데이터/시구분데이터/polygonData.json", "r", encoding='utf-8') as f:
+        Gpolygon = json.load(f)
+    
+    
+    return JsonResponse({'polygon':Gpolygon})
+
+@csrf_exempt
+def Dpolygon(request):
+    import json
+    
+    with open ("C:/Users/SAMSUNG/OneDrive/바탕 화면/프로젝트 데이터/동구분데이터/polygonDong.json", "r", encoding='utf-8') as f:
+        Dpolygon = json.load(f)
+    
+    return JsonResponse({'Dpolygon':Dpolygon})
+
 def importData(request):
     # 클릭한 마커의 데이터 불러오기
     if request.method == 'GET':
@@ -104,15 +124,6 @@ def importData(request):
    
         
     return render(request, 'graph.html', {'addr':detailaddr, 'datas':df.to_html(), 'mean':mean, 'ymd':ymd})
-
-
-@csrf_exempt
-def polygun(request):
-    import json
-    with open ("C:/Users/SAMSUNG/OneDrive/바탕 화면/프로젝트 데이터/시구분데이터/polygunData.json", "r", encoding='utf-8') as f:
-        polygun = json.load(f)
-
-    return JsonResponse({'polygun':polygun})
 
 
 
