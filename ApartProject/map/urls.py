@@ -6,5 +6,6 @@ urlpatterns = [
     path('graph', views.importData),
     path('polygon', views.polygon),
     path('Dpolygon', views.Dpolygon), 
-
+    path('pred',views.pred),
+    
 ]
