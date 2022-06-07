@@ -117,10 +117,10 @@ def polygun(request):
 @csrf_exempt
 def pred(request):
     year = request.POST['year']
-    new_val = pd.DataFrame({'year':[year]})
-    print(new_val)
+    # new_val = pd.DataFrame({'year':[year]})
+    print(year)
 
-    return JsonResponse({'new_val:':new_val})
+    return JsonResponse({'new_val':year})
 
 
 

@@ -23,6 +23,7 @@ function pred(){
 	     dataType:"json",
 	     success:function(data){
 	     	//alert(data);
+	     	console.log(data);
 	     	$(".pred").append(data.new_val);
 	     },
 	  	error:function(){
@@ -36,7 +37,7 @@ function pred(){
 <body>
 {{addr}} 의 <input type="text" id="year" /> 년 &nbsp;&nbsp;
 <button onclick="pred()">입력</button> 후 집값 확인
-<div class="predictPay"></div>
+<div class="pred"></div>
 <br />
 
 <div class="container">
