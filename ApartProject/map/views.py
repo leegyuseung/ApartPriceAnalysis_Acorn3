@@ -114,8 +114,13 @@ def polygun(request):
 
     return JsonResponse({'polygun':polygun})
 
+@csrf_exempt
+def pred(request):
+    year = request.POST['year']
+    new_val = pd.DataFrame({'year':[year]})
+    print(new_val)
 
-
+    return JsonResponse({'new_val:':new_val})
 
 
 
