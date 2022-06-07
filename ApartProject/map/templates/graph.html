@@ -1,6 +1,11 @@
 <!DOCTYPE html>
 <html>
 <head>
+	<style>
+		body{
+         padding-top: 40px 
+      	}
+	</style>
 <meta charset="UTF-8">
 <title>Insert title here</title>
 <script src='https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.8.0/chart.min.js'></script>
@@ -23,7 +28,6 @@ function pred(){
 	     dataType:"json",
 	     success:function(data){
 	     	//alert(data);
-	     	console.log(data);
 	     	$(".pred").append(data.new_val);
 	     },
 	  	error:function(){
@@ -32,9 +36,10 @@ function pred(){
 	  });
 }
 </script>
-
+{% include 'head.html' %}
 </head>
-<body>
+<body >
+<br>
 {{addr}} 의 <input type="text" id="year" /> 년 &nbsp;&nbsp;
 <button onclick="pred()">입력</button> 후 집값 확인
 <div class="pred"></div>
