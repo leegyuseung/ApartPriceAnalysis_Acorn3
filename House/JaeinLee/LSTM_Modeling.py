@@ -13,7 +13,8 @@ data = pd.read_csv('https://raw.githubusercontent.com/Loyce0805/test333/jain/Hou
 
 #시계열 데이터형 변형
 data['ymd']= pd.to_datetime(data['ymd'],format='%Y%m')
-data['ymd']=data['ymd'].dt.strftime('%Y%m')
+date= pd.to_datetime(data['ymd'],format='%Y%m')
+# data['ymd']=data['ymd'].dt.strftime('%Y%m')
 # print(data.head(5))
 
 # 집값 데이터 추가( 강남구)

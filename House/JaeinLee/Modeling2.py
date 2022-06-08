@@ -15,11 +15,9 @@ data = pd.read_csv('https://raw.githubusercontent.com/Loyce0805/test333/jain/Hou
 #시계열 데이터형 변형
 print(data.info())
 data['ymd']= pd.to_datetime(data['ymd'],format='%Y%m')
-print(data.head())
-print(data.info())
-data['ymd']=data['ymd'].dt.strftime('%Y%m')
-print(data.head(5))
-print(data.info())
+date= pd.to_datetime(data['ymd'],format='%Y%m')
+# data['ymd']=data['ymd'].dt.strftime('%Y%m')
+
 
 # 집값 데이터 추가( 강남구)
 apt = pd.read_csv('..\datas\구별,월별 평당가격_jain.csv', encoding='utf-8')
@@ -43,120 +41,127 @@ trading = pd.read_csv('../datas/거래량.csv', encoding='cp949')
 data['trading']= trading['강남구']
 # print(data.head(5))
 
-# 데이터 shape 파악
-data.shape
-# 데이터 통계량 파악
-data.describe()
-data.info()
-# 데이터 null값 파악
-# data.isnull().sum()
+# ymd column을 index로 지정
+data = data.set_index('ymd')
+print(data.index)
+
+# 연도, 월을 칼럼에 추가
+# data['year'] = data.index.year
+# data['month'] = data.index.month
+# print(data.head(3))
+
+# 종소세율을 tax_jongso로 컬럼명 변경
+data.rename(columns = {'종소세율' : 'tax_jongso'}, inplace = True)
+print(data.head(3))
+
 # Null값 있는 행 제거
 data1 = data.drop(data.index[131])
-print(data1)
-
-# 데이터 분포 시각화
-sns.pairplot(data1)
-plt.title("Data의 Pair Plot")
-plt.show()
-
-# 집값 변화 시각화
-def plot_data(data, x, y, xlabel='Date', ylabel='Value'):
-    plt.figure(figsize=(16, 5))
-    plt.plot(x, y)
-    plt.gca().set(xlabel=xlabel, ylabel=ylabel)
-    plt.show()
-
-plot_data(data1, x=data['ymd'], y=data['price'])
-
-# 표준 상관계수(피어슨 상관계수)
-data1.corr() # m2(abs) : 0.962813, cpi(abs)    : 0.911707, 종소세율 : 0.891248, popul : -0.895664    
 
 # train test split
 from sklearn.model_selection import train_test_split
 
-train_set, test_set = train_test_split(data1, test_size = 0.2, random_state = 42)
-print(train_set.shape, test_set.shape) # (105, 10) (27, 10)
+train_data, test_data = train_test_split(data1, test_size = 0.2, shuffle = True)
 
 # feature, label 분리
-data_feature_train = train_set.loc[:, ['m2(abs)','cpi(abs)','종소세율','popul']]
-data_label_train = train_set.loc[:, "price"]
-print(data_feature_train, data_label_train)
+train_data = train_data.loc[:, ['m2(abs)','cpi(abs)', 'tax_jongso','popul', 'marry','interest rating', 'price']]
+test_data = test_data.loc[:, ['m2(abs)','cpi(abs)', 'tax_jongso','popul', 'marry', 'interest rating', 'price']]
+train_data.columns = ['m2_abs', 'cpi_abs', 'tax_jongso', 'popul', 'marry','interest_rating', 'price']
+test_data.columns = ['m2_abs', 'cpi_abs', 'tax_jongso', 'popul', 'marry','interest_rating', 'price']
 
-data_feature_test = test_set.loc[:, ['m2(abs)','cpi(abs)','종소세율','popul']]
-data_label_test = test_set.loc[:, "price"]
-print(data_feature_test, data_label_test)
-
-data.plot(subplots=True, figsize = (12, 20))
-
-# 수치형 특성별 히스토그램
-data.hist(bins=50, figsize=(20,15))
-plt.show()
-
-# train test 데이터를 정규화
-from sklearn.preprocessing import OneHotEncoder, StandardScaler, MinMaxScaler
-pd.set_option('display.max_columns', None)
-scaler = MinMaxScaler()
-data_feature_train_scale = scaler.fit_transform(data_feature_train)
-data_label_train_scale = scaler.fit_transform(data_label_train.values.reshape(-1, 1))
-print('MinMaxScaler : ', data_feature_train_scale[:10])
-print('MinMaxScaler : ', data_label_train_scale[:10])
-
-# 1. 선형회귀
+from statsmodels.regression.linear_model import RegressionModel
+from statsmodels import formula
 from sklearn.linear_model import LinearRegression
+# 1-1 ols(최소자승법)을 이용한 선형회귀
+# !pip install statsmodels
 
-lin_reg = LinearRegression()
-lin_reg.fit(data_feature_train_scale, data_label_train)
-lin_pred = lin_reg.predict(data_feature_train_scale)
-print('예측값 : ', lin_pred[:5])   # 예측값은 test data를 넣어야 하는거 아닌가? 왜 train 정규화 값을 넣어야 제대로 된 값이 나오는가?
-print('실제값 : ', data_label_test[:5])
-# RMSE 값
-from sklearn.metrics import mean_squared_error
-lin_mse = mean_squared_error(data_label_train, lin_pred)   # mse : 평균 제곱 오차. 예측값과 실제값의 차이를 모두 더해 평균을 낸다. 회귀에서 자주 사용되는 손실 함수. 정확도 X
-lin_rmse = np.sqrt(lin_mse)
-print('RMSE : ', lin_rmse)
+import statsmodels.api as sm
 
-# MAE 값
-from sklearn.metrics import mean_absolute_error
+result = sm.OLS.from_formula('price ~ m2_abs + tax_jongso + cpi_abs + marry + popul', data = train_data).fit()  # interesting rate를 feature로 넣으니 cpi의 pvalue값이 0.05를 넘음. 그래서 뺐음.
+ols_pred = result.predict(test_data)
+print('price : ', ols_pred)
+print('예측값 : ', ols_pred[:10])
+print('실제값 : ', test_data['price'][:10])
 
-lin_mae = mean_absolute_error(data_label_train, lin_pred)   # mae : 평균 절대 오차. 모든 절대 오차의 평균. 일반적인 회귀 지표
-print('MAE : ', lin_mae)
+df = pd.DataFrame()
 
-# 시각화
+df['m2_abs'] = [3633169.1173565 , 3647923.56079389, 3662678.00423128,
+       3677432.44766867, 3692186.89110606, 3706941.33454346,
+       3721695.77798085, 3736450.22141824, 3751204.66485563,
+       3765959.10829302, 3780713.55173041, 3795467.9951678 ,
+       3810222.4386052 , 3824976.88204259, 3839731.32547998,
+       3854485.76891737, 3869240.21235476, 3883994.65579215,
+       3898749.09922954, 3913503.54266694, 3928257.98610433,
+       3943012.42954172, 3957766.87297911, 3972521.3164165 ,
+       3987275.75985389, 4002030.20329128, 4016784.64672868,
+       4031539.09016607, 4046293.53360346, 4061047.97704085,
+       4075802.42047824, 4090556.86391563, 4105311.30735302,
+       4120065.75079042, 4134820.19422781, 4149574.6376652 ,
+       4164329.08110259, 4179083.52453998, 4193837.96797737,
+       4208592.41141476, 4223346.85485215, 4238101.29828955,
+       4252855.74172694, 4267610.18516433, 4282364.62860172,
+       4297119.07203911, 4311873.5154765 , 4326627.95891389,
+       4341382.40235128, 4356136.84578867, 4370891.28922606,
+       4385645.73266346, 4400400.17610085, 4415154.61953824,
+       4429909.06297563, 4444663.50641302, 4459417.94985041,
+       4474172.3932878 , 4488926.83672519, 4503681.28016258]
+df['cpi_abs'] = [104.05130087, 104.02293198, 104.19138319, 104.36221861,
+       104.51521816, 104.58789579, 104.69300972, 104.8077501 ,
+       104.94854305, 105.06352354, 105.17947214, 105.28809655,
+       105.41068472, 105.52884722, 105.64946696, 105.76378368,
+       105.8820024 , 105.99876564, 106.11817208, 106.23511571,
+       106.3531693 , 106.47007001, 106.58829685, 106.70573514,
+       106.82374735, 106.94109656, 107.05894329, 107.17646513,
+       107.29431473, 107.41187816, 107.52963554, 107.6472253 ,
+       107.76497053, 107.88260089, 108.0003213 , 108.11795929,
+       108.23566328, 108.35331708, 108.4710146 , 108.58867531,
+       108.70636439, 108.82402993, 108.94171562, 109.05938531,
+       109.1770679 , 109.29473953, 109.41242009, 109.53009352,
+       109.6477729 , 109.76544735, 109.88312577, 110.00080092,
+       110.11847879, 110.23615446, 110.35383192, 110.47150789,
+       110.58918508, 110.70686128, 110.82453829, 110.94221464]
+df['tax_jongso'] = [0.00313509, 0.00314526, 0.00315543, 0.0031656 , 0.00317577,
+       0.00318593, 0.0031961 , 0.00320627, 0.00321644, 0.00322661,
+       0.00323677, 0.00324694, 0.00325711, 0.00326728, 0.00327745,
+       0.00328761, 0.00329778, 0.00330795, 0.00331812, 0.00332829,
+       0.00333845, 0.00334862, 0.00335879, 0.00336896, 0.00337913,
+       0.00338929, 0.00339946, 0.00340963, 0.0034198 , 0.00342997,
+       0.00344013, 0.0034503 , 0.00346047, 0.00347064, 0.0034808 ,
+       0.00349097, 0.00350114, 0.00351131, 0.00352148, 0.00353164,
+       0.00354181, 0.00355198, 0.00356215, 0.00357232, 0.00358248,
+       0.00359265, 0.00360282, 0.00361299, 0.00362316, 0.00363332,
+       0.00364349, 0.00365366, 0.00366383, 0.003674  , 0.00368416,
+       0.00369433, 0.0037045 , 0.00371467, 0.00372484, 0.003735]
+df['marry'] = [145.69479929, 123.99287391, 109.88747274, 119.64249671,
+       137.59343452, 143.21111189, 137.16221972, 123.29591118,
+       115.25225635, 117.33138298, 123.81026375, 128.0089453 ,
+       125.3276657 , 118.75511998, 113.64025938, 112.72635332,
+       114.94310842, 116.57075739, 115.3758368 , 111.96053146,
+       108.59887892, 107.07486145, 107.17652866, 107.40967161,
+       106.50604065, 104.4227705 , 102.12755717, 100.53462128,
+        99.7693383 ,  99.23722731,  98.28081224,  96.74935795,
+        95.00451821,  93.50520185,  92.4013577 ,  91.47784851,
+        90.41827922,  89.09118433,  87.61857071,  86.21645848,
+        84.99286507,  83.88231179,  82.73961538,  81.47936639,
+        80.13374893,  78.79895374,  77.54036525,  76.34486145,
+        75.14958407,  73.90573177,  72.61614039,  71.32122794,
+        70.05669852,  68.82477998,  67.59994768,  66.35653711,
+        65.09022311,  63.81679755,  62.55441676,  61.30789509]
+df['popul'] = [533547.46002647, 533272.59966628, 532997.7393061 , 532722.87894591,
+       532448.01858572, 532173.15822553, 531898.29786534, 531623.43750515,
+       531348.57714496, 531073.71678477, 530798.85642458, 530523.99606439,
+       530249.13570421, 529974.27534402, 529699.41498383, 529424.55462364,
+       529149.69426345, 528874.83390326, 528599.97354307, 528325.11318288,
+       528050.25282269, 527775.3924625 , 527500.53210232, 527225.67174213,
+       526950.81138194, 526675.95102175, 526401.09066156, 526126.23030137,
+       525851.36994118, 525576.50958099, 525301.6492208 , 525026.78886061,
+       524751.92850043, 524477.06814024, 524202.20778005, 523927.34741986,
+       523652.48705967, 523377.62669948, 523102.76633929, 522827.9059791 ,
+       522553.04561891, 522278.18525873, 522003.32489854, 521728.46453835,
+       521453.60417816, 521178.74381797, 520903.88345778, 520629.02309759,
+       520354.1627374 , 520079.30237721, 519804.44201702, 519529.58165684,
+       519254.72129665, 518979.86093646, 518705.00057627, 518430.14021608,
+       518155.27985589, 517880.4194957 , 517605.55913551, 517330.69877532]
 
-# 2. Decision Tree
-from sklearn.tree import DecisionTreeRegressor
-
-tree_reg = DecisionTreeRegressor()
-tree_reg.fit(data_feature_train_scale, data_label_train)
-tree_pred = tree_reg.predict(data_feature_train_scale)
-print('예측값 : ', tree_pred[:5])
-print('실제값 : ', data_label_test[:5])
-
-# RMSE 값
-tree_mse = mean_squared_error(tree_pred, data_label_train)
-tree_rmse = np.sqrt(tree_mse)
-print('RMSE : ', tree_rmse)  # 예측값과 실제값은 차이가 심한데 RMSE는 0. 모델 예측값과 실제값의 차이를 다를 때 사용하는 측도.
-
-# 시각화
-
-# 3. Random Forest Regressor
-from sklearn.ensemble import RandomForestRegressor
-
-forest_reg = RandomForestRegressor()
-forest_reg.fit(data_feature_train_scale, data_label_train)
-forest_pred = forest_reg.predict(data_feature_train_scale)
-print('예측값 : ', forest_pred[:5])
-print('실제값 : ', data_label_test[:5])
-
-# RMSE 값
-forest_mse = mean_squared_error(forest_pred, data_label_train)
-forest_rmse = np.sqrt(forest_mse)
-print('RMSE : ', forest_rmse)
-
-# 4. XG Boost
-import xgboost as xgb
-
-xgb_model = xgb.XGBRegressor(booster = 'gblinear', max_depth = 6, n_estimators=100).fit(data_feature_train_scale, data_label_train)
-xgb_pred = xgb_model.predict(data_feature_train_scale)
-print('예측값 : ', xgb_pred[:5])
-print('실제값 : ', data_label_test[:5])
+predict_math = result.predict(pd.DataFrame({'m2_abs':df['m2_abs'], 'tax_jongso': df['tax_jongso'], 'cpi_abs': df['cpi_abs'], 'marry': df['marry'], 'popul': df['popul']}))
+pd.options.display.float_format = '{:.5f}'.format
+print('예상 집값 : ', predict_math)
