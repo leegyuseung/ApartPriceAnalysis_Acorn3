@@ -395,7 +395,7 @@ function displayGu(coordinates, name) {
 
 					coordinates = data[i]['geometry']['coordinates']
 					
-					name = data[i]['properties']['ADM_DR_NM']
+					name = data[i]['properties']['EMD_NM']
 					
 					displayDong(coordinates, name);
 				}
@@ -492,9 +492,9 @@ function displayDong(coordinates, name) {
 			console.log(clickName)
 			
 			for(var i = 0; i < data.length; i++){
-				if(data[i]['properties']['ADM_DR_NM'] == clickName){
+				if(data[i]['properties']['EMD_NM'] == clickName){
 
-					name = data[i]['properties']['ADM_DR_NM']
+					name = data[i]['properties']['EMD_NM']
 					coordinates = data[i]['geometry']['coordinates']
 					
 					console.log(name)
