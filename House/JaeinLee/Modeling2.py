@@ -75,13 +75,14 @@ from sklearn.linear_model import LinearRegression
 # !pip install statsmodels
 
 import statsmodels.api as sm
-
+print('testdata:',test_data)
 result = sm.OLS.from_formula('price ~ m2_abs + tax_jongso + cpi_abs + marry + popul', data = train_data).fit()  # interesting rate를 feature로 넣으니 cpi의 pvalue값이 0.05를 넘음. 그래서 뺐음.
 ols_pred = result.predict(test_data)
 print('price : ', ols_pred)
 print('예측값 : ', ols_pred[:10])
 print('실제값 : ', test_data['price'][:10])
-
+print('-----'*10)
+print('ols_pred:',ols_pred)
 gangnamgu = pd.read_csv('https://raw.githubusercontent.com/Loyce0805/forecast-Dataset/main/Gangnamgu.csv')
 
 predict_math = result.predict(gangnamgu)
