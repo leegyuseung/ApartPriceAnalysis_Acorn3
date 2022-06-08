@@ -6,7 +6,7 @@ from django.http.response import JsonResponse
 from django.core.paginator import Paginator
 import requests
 import json
-
+import numpy as np
 
 def Main(request):
     return render(request,'index.html')
