@@ -13,10 +13,10 @@ pd.set_option('display.max_columns', None)
 data = pd.read_csv('https://raw.githubusercontent.com/Loyce0805/test333/jain/House/datas/%EC%8B%9C%EA%B0%84%EB%B3%84%20%EB%8D%B0%EC%9D%B4%ED%84%B0%20%ED%95%A9.csv', encoding='cp949')
 
 #시계열 데이터형 변형
-print(data.info())
+# print(data.info())
 data['ymd']= pd.to_datetime(data['ymd'],format='%Y%m')
 date= pd.to_datetime(data['ymd'],format='%Y%m')
-# data['ymd']=data['ymd'].dt.strftime('%Y%m')
+data['ymd']=data['ymd'].dt.strftime('%Y%m')
 
 
 # 집값 데이터 추가( 강남구)
@@ -75,16 +75,30 @@ from sklearn.linear_model import LinearRegression
 # !pip install statsmodels
 
 import statsmodels.api as sm
-print('testdata:',test_data)
+
 result = sm.OLS.from_formula('price ~ m2_abs + tax_jongso + cpi_abs + marry + popul', data = train_data).fit()  # interesting rate를 feature로 넣으니 cpi의 pvalue값이 0.05를 넘음. 그래서 뺐음.
 ols_pred = result.predict(test_data)
 print('price : ', ols_pred)
 print('예측값 : ', ols_pred[:10])
 print('실제값 : ', test_data['price'][:10])
-print('-----'*10)
-print('ols_pred:',ols_pred)
+
+
+
 gangnamgu = pd.read_csv('https://raw.githubusercontent.com/Loyce0805/forecast-Dataset/main/Gangnamgu.csv')
 
 predict_math = result.predict(gangnamgu)
 pd.options.display.float_format = '{:.5f}'.format
 print('예상 집값 : ', predict_math)
+
+
+index = []
+for i in list(range(2022, 2027, 1)):
+    for j in list(range(1, 13, 1)):
+        print(str(i)+str(j).zfill(2))
+        index.append(str(i)+'-'+str(j).zfill(2))
+
+predict_math = pd.DataFrame(predict_math)
+predict_math['ymd'] = index
+predict_math = predict_math.set_index(['ymd'])
+predict_math.columns = ['Gangnam price']
+print(predict_math)
