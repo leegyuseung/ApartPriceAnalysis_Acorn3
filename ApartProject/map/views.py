@@ -139,3 +139,5 @@ def importData(request):
    
         
     return render(request, 'graph.html', {'addr':detailaddr, 'datas':df.to_html(), 'mean':mean, 'ymd':ymd})
+
+
