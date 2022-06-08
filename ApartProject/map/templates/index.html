@@ -5,9 +5,10 @@
 	<!-- 지도 화면 채우기-->
 	<style>
 		/* font */
-		* {
+		body {
 		 margin : 0; font-family: 'Noto Serif KR', serif;
 		}
+		
 	</style>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
@@ -58,7 +59,7 @@
   <!-- Navbar -->
   {% include 'head.html' %}
   <!-- Navbar -->
-<header>
+</header>
 <!--Main Navigation-->
 <!--Main layout-->
 <main style="margin-top: 72px;padding-left: 389px;">
@@ -109,6 +110,9 @@
 		//클릭한 요소 가져오기
 		let dv = event.currentTarget;
 		clickApt = dv.innerText;
+		
+		console.log(clickApt)
+		console.log(ajaxResult.aptJusoJson[clickApt])
 		
 		deletePolygon(polygons);
 
@@ -368,7 +372,7 @@ function displayGu(coordinates, name) {
 
 
 	kakao.maps.event.addListener(polygon, 'mousedown', function(){
-		var level = map.getLevel()-1;
+		var level = map.getLevel()-2;
 
 		// 지도를 클릭된 폴리곤의 중앙 위치를 기준으로 확대합니다
 		map.setLevel(level, {anchor: centroid(points), animate: {
@@ -378,7 +382,9 @@ function displayGu(coordinates, name) {
 		deletePolygon(polygons);
 		
 		var clickName = name;
-		console.log(name)
+		
+		console.log(clickName)
+		
 		$.getJSON("map/Dpolygon", function(geojson){
 			var data = geojson.Dpolygon.features;
 			var coordinates = []; // 좌표 저장할 배열
@@ -463,20 +469,69 @@ function displayDong(coordinates, name) {
     
     kakao.maps.event.addListener(polygon, 'mousedown', function(){
 		var level = map.getLevel()-1;
-		console.log(name)
+		
 		let dv = event.currentTarget;
 		clickApt = dv.innerText;
-		
-		console.log(dv)
-		console.log(clickApt)
+
+
 		// 지도를 클릭된 폴리곤의 중앙 위치를 기준으로 확대합니다
 		map.setLevel(level, {anchor: centroid(points), animate: {
 			duration: 350
 		}});
 		deletePolygon(polygons);
+		
+		// 클릭한 동의 아파트 장소로 좌표찍기
+		
+		var clickName = name;
+		
+		$.getJSON("map/Dpolygon", function(geojson){
+			var data = geojson.Dpolygon.features;
+			var coordinates = []; // 좌표 저장할 배열
+			var name = ""; // 행정 구 이름
+			
+			console.log(clickName)
+			
+			for(var i = 0; i < data.length; i++){
+				if(data[i]['properties']['ADM_DR_NM'] == clickName){
+
+					name = data[i]['properties']['ADM_DR_NM']
+					coordinates = data[i]['geometry']['coordinates']
+					
+					console.log(name)
+					console.log(coordinates)
+					
+					displayDD(coordinates, name);
+				}
+			}
+		})
     });
 }
 
+function displayDD(coordinates, name) {
+
+	var path = [];     // 폴리곤 그려줄 path
+	var points = [];   // 중심좌표 구하기 위한 지역구 좌표들
+
+	$.each(coordinates[0], function(index, coordinate){
+		var point = new Object();
+		point.x = coordinate[1];
+		point.y = coordinate[0];
+		points.push(point);
+		path.push(new kakao.maps.LatLng(coordinate[1], coordinate[0]))
+	})
+	
+    // 다각형을 생성합니다 
+    var polygon = new kakao.maps.Polygon({
+    	map: map, // 다각형을 표시할 지도 객체
+        path: path,
+        strokeWeight: 3,
+        strokeColor: 'black',
+        strokeOpacity: 0.8,
+    });
+	
+	polygons.push(polygon)
+
+}
 </script>
 <!-- MDB -->
 <script type="text/javascript" src="../static/js/mdb.min.js"></script>

@@ -45,6 +45,7 @@ def apart(request):
         nextNum = apt_lists.next_page_number()
         tojson['nextNum']=nextNum
     print(tojson)
+
     # json으로 리턴
     return JsonResponse({'juso':juso, 'apartdata':apt, 'aptJusoJson':aptJusoJson, 'apt_lists':tojson})
 
@@ -67,6 +68,11 @@ def Dpolygon(request):
         Dpolygon = json.load(f)
     
     return JsonResponse({'Dpolygon':Dpolygon})
+
+@csrf_exempt
+def dongmaker(request):
+    datas = Addrapt.objects.all.values()
+    df = pd.DataFrame(datas)
 
 @csrf_exempt
 def pred(request):
