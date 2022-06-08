@@ -4,6 +4,9 @@ import pandas as pd
 from django.views.decorators.csrf import csrf_exempt
 from django.http.response import JsonResponse
 from django.core.paginator import Paginator
+import requests
+import json
+
 
 def Main(request):
     return render(request,'index.html')
@@ -49,15 +52,10 @@ def apart(request):
     # json으로 리턴
     return JsonResponse({'juso':juso, 'apartdata':apt, 'aptJusoJson':aptJusoJson, 'apt_lists':tojson})
 
-import requests
-#https://raw.githubusercontent.com/xerathul/python/master/polygonDong.json
-import json
-
-
 @csrf_exempt
 def polygon(request):
   
-    open('Gpolygon.json','wb').write(requests.get('https://raw.githubusercontent.com/xerathul/python/master/polygonData.json').content)
+    open('Gpolygon.json','wb').write(requests.get('https://github.com/xerathul/FinalProject3/tree/master/ApartProject/map/static/resources/polygonData.json').content)
 
     with open ('Gpolygon.json',encoding='utf-8') as f:
         Gpolygon = json.load(f)
@@ -67,7 +65,7 @@ def polygon(request):
 @csrf_exempt
 def Dpolygon(request):
    
-    open('Dpolygon.json','wb').write(requests.get('https://raw.githubusercontent.com/xerathul/python/master/polygonDong.json').content)
+    open('Dpolygon.json','wb').write(requests.get('https://github.com/xerathul/FinalProject3/tree/master/ApartProject/map/static/resources/polygonDong.json').content)
 
     with open ('Dpolygon.json',encoding='utf-8') as f:
         Dpolygon = json.load(f)
