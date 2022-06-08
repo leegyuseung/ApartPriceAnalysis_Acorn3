@@ -124,8 +124,6 @@ def importData(request):
                 mv = round(sum(mp)/len(mp))
                 mean.append(mv)
 
-
-
         for i in range(len(mean)):
             if mean[i] == 0:
                 ymd[i] = '0' # 리스트 mean이 0인 인덱스에 똑같이 0 넣기
@@ -139,8 +137,6 @@ def importData(request):
         
         for i in range(len(ymd)):
             ymd[i] = int(ymd[i])
-
-   
         
     return render(request, 'graph.html', {'addr':detailaddr, 'datas':df.to_html(), 'mean':mean, 'ymd':ymd,'apt':apt})
 
