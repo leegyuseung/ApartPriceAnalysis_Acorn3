@@ -45,8 +45,43 @@ def apart(request):
         nextNum = apt_lists.next_page_number()
         tojson['nextNum']=nextNum
     print(tojson)
+
     # json으로 리턴
     return JsonResponse({'juso':juso, 'apartdata':apt, 'aptJusoJson':aptJusoJson, 'apt_lists':tojson})
+
+
+
+@csrf_exempt
+def polygon(request):
+    import json
+    with open ("C:/Users/SAMSUNG/OneDrive/바탕 화면/프로젝트 데이터/시구분데이터/polygonData.json", "r", encoding='utf-8') as f:
+        Gpolygon = json.load(f)
+    
+    
+    return JsonResponse({'polygon':Gpolygon})
+
+@csrf_exempt
+def Dpolygon(request):
+    import json
+    
+    with open ("C:/Users/SAMSUNG/OneDrive/바탕 화면/프로젝트 데이터/동구분데이터/polygonDong.json", "r", encoding='utf-8') as f:
+        Dpolygon = json.load(f)
+    
+    return JsonResponse({'Dpolygon':Dpolygon})
+
+@csrf_exempt
+def dongmaker(request):
+    datas = Addrapt.objects.all.values()
+    df = pd.DataFrame(datas)
+
+@csrf_exempt
+def pred(request):
+    year = request.POST['year']
+    # new_val = pd.DataFrame({'year':[year]})
+    print(year)
+
+    return JsonResponse({'new_val':year})
+
 
 def importData(request):
     # 클릭한 마커의 데이터 불러오기
@@ -106,36 +141,3 @@ def importData(request):
     return render(request, 'graph.html', {'addr':detailaddr, 'datas':df.to_html(), 'mean':mean, 'ymd':ymd})
 
 
-@csrf_exempt
-def polygun(request):
-    import requests
-    #https://raw.githubusercontent.com/xerathul/python/master/polygonDong.json
-    open('polygun.json','wb').write(requests.get('https://raw.githubusercontent.com/xerathul/python/master/polygonData.json').content)
-    import json
-    with open ('polygun.json',encoding='utf-8') as f:
-        polygun = json.load(f)
-
-    return JsonResponse({'polygun':polygun})
-
-@csrf_exempt
-def pred(request):
-    year = request.POST['year']
-    # new_val = pd.DataFrame({'year':[year]})
-    print(year)
-
-    return JsonResponse({'new_val':year})
-
-
-
-'''
-def modeling(request):
-    importData(request) # db에서 특정 아파트 정보 불러오기
-    
-    
-    
-    return redirect('')
-
-def graph(request):
-    
-    return render(request, 'graph.html')
-'''

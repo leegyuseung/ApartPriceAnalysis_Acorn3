@@ -4,7 +4,8 @@ from map import views
 urlpatterns = [
     path('apart', views.apart),  
     path('graph', views.importData),
-    path('polygun', views.polygun),
+    path('polygon', views.polygon),
+    path('Dpolygon', views.Dpolygon), 
     path('pred',views.pred),
     
 ]
