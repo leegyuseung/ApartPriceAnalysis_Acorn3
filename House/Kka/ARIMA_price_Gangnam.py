@@ -8,7 +8,7 @@ from IPython.core.pylabtools import figsize
 warnings.filterwarnings("ignore")
 plt.style.use('ggplot')
 ## auto-arima
-from pmdarima.arima import auto_arima
+# from pmdarima.arima import auto_arima
 
 # 데이터 불러오기
 data = pd.read_csv('구별,월별 평당가격.csv', parse_dates=['ymd'])
