@@ -108,44 +108,106 @@ result = adfuller(ts_diff[1:])
           10%: -2.580            '''
 
 
-# # 1차 차분 데이터로 ACF, PACF 그려서 ARIMA 모형의 p, q 결정
-# fig = plt.figure(figsize=(18, 10))
-# ax1 = fig.add_subplot(211)
-# ax2 = fig.add_subplot(212)
-# fig = plot_acf(ts_diff[1:], ax = ax1)
-# ax1.set_title("ACF_Marriage-Jongro diff1")
-# fig = plot_pacf(ts_diff[1:], ax = ax2)
-# ax2.set_title("PACF_Marriage-Jongro diff1")
-# plt.show()
-# # ==> ACF는 1 이후로 0에 수렴, PACF도 1 이후로 0에 수렴.
+# # auto_arima로 최적의 모형 탐색하기
+import pmdarima as pm
+train = marry_JR['marry'][:120]
+
+model = pm.auto_arima(y = train        # 데이터
+                      , d = 1            # 차분 차수, ndiffs 결과!
+                      , start_p = 0 
+                      , max_p = 5   
+                      , start_q = 0 
+                      , max_q = 5   
+                      , m = 1       
+                      , seasonal = False # 계절성 ARIMA가 아니라면 필수!
+                      , stepwise = True
+                      , trace=True
+                      )
+''' Performing stepwise search to minimize aic
+     ARIMA(0,1,0)(0,0,0)[0] intercept   : AIC=1014.427, Time=0.01 sec
+     ARIMA(1,1,0)(0,0,0)[0] intercept   : AIC=987.749, Time=0.05 sec
+     ARIMA(0,1,1)(0,0,0)[0] intercept   : AIC=inf, Time=0.08 sec
+     ARIMA(0,1,0)(0,0,0)[0]             : AIC=1012.452, Time=0.01 sec
+     ARIMA(2,1,0)(0,0,0)[0] intercept   : AIC=984.854, Time=0.05 sec
+     ARIMA(3,1,0)(0,0,0)[0] intercept   : AIC=979.489, Time=0.07 sec
+     ARIMA(4,1,0)(0,0,0)[0] intercept   : AIC=962.948, Time=0.09 sec
+     ARIMA(5,1,0)(0,0,0)[0] intercept   : AIC=956.292, Time=0.13 sec
+     ARIMA(5,1,1)(0,0,0)[0] intercept   : AIC=inf, Time=0.28 sec
+     ARIMA(4,1,1)(0,0,0)[0] intercept   : AIC=inf, Time=0.24 sec
+     ARIMA(5,1,0)(0,0,0)[0]             : AIC=955.727, Time=0.03 sec
+     ARIMA(4,1,0)(0,0,0)[0]             : AIC=961.696, Time=0.03 sec
+     ARIMA(5,1,1)(0,0,0)[0]             : AIC=951.573, Time=0.12 sec
+     ARIMA(4,1,1)(0,0,0)[0]             : AIC=949.587, Time=0.07 sec
+     ARIMA(3,1,1)(0,0,0)[0]             : AIC=952.651, Time=0.04 sec
+     ARIMA(4,1,2)(0,0,0)[0]             : AIC=951.577, Time=0.09 sec
+     ARIMA(3,1,0)(0,0,0)[0]             : AIC=977.759, Time=0.02 sec
+     ARIMA(3,1,2)(0,0,0)[0]             : AIC=951.509, Time=0.08 sec
+     ARIMA(5,1,2)(0,0,0)[0]             : AIC=953.535, Time=0.20 sec
+    
+    Best model:  ARIMA(4,1,1)(0,0,0)[0]          
+    Total fit time: 1.712 seconds
+'''
+model_fit = model.fit(train)
+
+
+# # 잔차 검정
+print(model.summary())
+'''                                SARIMAX Results                                
+    ==============================================================================
+    Dep. Variable:                      y   No. Observations:                  120
+    Model:               SARIMAX(4, 1, 1)   Log Likelihood                -468.794
+    Date:                Tue, 07 Jun 2022   AIC                            949.587
+    Time:                        18:40:01   BIC                            966.262
+    Sample:                             0   HQIC                           956.358
+                                    - 120                                         
+    Covariance Type:                  opg                                         
+    ==============================================================================
+                     coef    std err          z      P>|z|      [0.025      0.975]
+    ------------------------------------------------------------------------------
+    ar.L1         -0.1354      0.164     -0.827      0.408      -0.456       0.185
+    ar.L2         -0.1189      0.116     -1.025      0.306      -0.346       0.108
+    ar.L3         -0.2760      0.137     -2.014      0.044      -0.545      -0.007
+    ar.L4         -0.2331      0.126     -1.852      0.064      -0.480       0.014
+    ma.L1         -0.7442      0.121     -6.126      0.000      -0.982      -0.506
+    sigma2       152.2348     23.075      6.597      0.000     107.009     197.460
+    ===================================================================================
+    Ljung-Box (L1) (Q):                   0.18   Jarque-Bera (JB):                11.69
+    Prob(Q):                              0.67   Prob(JB):                         0.00
+    Heteroskedasticity (H):               0.61   Skew:                             0.74
+    Prob(H) (two-sided):                  0.12   Kurtosis:                         3.44
+    ===================================================================================
+    
+    Warnings:
+    [1] Covariance matrix calculated using the outer product of gradients (complex-step).
+'''
 
 
 # # ARIMA 모델 만들기
 from statsmodels.tsa.arima.model import ARIMA
 # fit model
-model = ARIMA(ts, order=(1, 1, 0))
+model = ARIMA(ts, order=(4, 1, 1))
 model_fit = model.fit()
 # predict
 start_index = yymm[120] # 2021-01-31 00:00:00
 end_index = yymm[131]   # 2021-12-31 00:00:00
 forecast = model_fit.predict(start=start_index, end=end_index, typ='levels')
 # # 실제값이랑 비교하기
-# print(marry_JR.tail(12))
-# print(forecast)
+print(marry_JR.tail(12))
+print(forecast)
 '''        - 실제값 -       - forecast -
           yymm    marry        marry
-    2021-01-31     40.0    48.788501
-    2021-02-28     45.0    46.083276
-    2021-03-31     41.0    42.660278
-    2021-04-30     40.0    42.871777
-    2021-05-31     45.0    40.467944
-    2021-06-30     38.0    42.660278
-    2021-07-31     38.0    41.275610
-    2021-08-31     40.0    38.000000
-    2021-09-30     38.0    39.064111
-    2021-10-31     44.0    38.935889
-    2021-11-30     29.0    41.192334
-    2021-12-31     40.0    36.019165
+    2021-01-31     40.0    46.167663
+    2021-02-28     45.0    46.095590
+    2021-03-31     41.0    44.361179
+    2021-04-30     40.0    44.887139
+    2021-05-31     45.0    45.940871
+    2021-06-30     38.0    44.934832
+    2021-07-31     38.0    44.707719
+    2021-08-31     40.0    42.549521
+    2021-09-30     38.0    42.281913
+    2021-10-31     44.0    42.848020
+    2021-11-30     29.0    41.923161
+    2021-12-31     40.0    39.959259
 '''
 
 # # 시각화
@@ -179,10 +241,9 @@ from sklearn import metrics
 #                     index=[0])
 #     return df
 #
-# # score_check(np.array(taxJ[taxJ.yymm>=start_index].tax_jongso), np.array(forecast))
 # print(score_check(np.array(marry_JR[marry_JR.yymm>=start_index]['marry']), np.array(forecast)))
 # ==>         R2   Corr   RMSE    MAPE
-# ==>  0 -69.122  0.092  5.305  11.489
+# ==>  0 -81.084  0.423  5.489  11.766
 
 
 
