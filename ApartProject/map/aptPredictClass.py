@@ -8,14 +8,16 @@ from statsmodels import formula
 from sklearn.linear_model import LinearRegression
 import statsmodels.api as sm
 from sklearn.model_selection import train_test_split
+from map.models import Addrdata
 plt.rc('font', family='malgun gothic')
+import django
+django.setup()
 
 class AptPred:
     def __init__(self):
         pass
+
     
-    def mariaDbConnect(self, addr):
-        pass
     def predictModel(self, gu, ym):
         pd.set_option('display.max_columns', None)
         data = pd.read_csv('https://raw.githubusercontent.com/Loyce0805/test333/jain/House/datas/%EC%8B%9C%EA%B0%84%EB%B3%84%20%EB%8D%B0%EC%9D%B4%ED%84%B0%20%ED%95%A9.csv', encoding='cp949')
@@ -97,3 +99,4 @@ class AptPred:
     
 a = AptPred()
 a.predictModel(gu='강남구',ym='2022-01')
+a.mariaDbConnect('서울시 도곡동 91-5')
