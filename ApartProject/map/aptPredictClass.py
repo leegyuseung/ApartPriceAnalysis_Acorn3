@@ -8,17 +8,16 @@ from statsmodels import formula
 from sklearn.linear_model import LinearRegression
 import statsmodels.api as sm
 from sklearn.model_selection import train_test_split
-from map.models import Addrdata
+from sklearn.metrics import r2_score
 plt.rc('font', family='malgun gothic')
-import django
-django.setup()
+
 
 class AptPred:
     def __init__(self):
         pass
 
     
-    def predictModel(self, gu, ym):
+    def predictModel(self, gu, ym, df):
         pd.set_option('display.max_columns', None)
         data = pd.read_csv('https://raw.githubusercontent.com/Loyce0805/test333/jain/House/datas/%EC%8B%9C%EA%B0%84%EB%B3%84%20%EB%8D%B0%EC%9D%B4%ED%84%B0%20%ED%95%A9.csv', encoding='cp949')
         
@@ -28,9 +27,9 @@ class AptPred:
         data['ymd']=data['ymd'].dt.strftime('%Y%m')
         
         # 여기를 우리 db price로 바꿔야댐
-        apt = pd.read_csv('https://raw.githubusercontent.com/Loyce0805/test333/master/House/datas/%EA%B5%AC%EB%B3%84%2C%EC%9B%94%EB%B3%84%20%ED%8F%89%EB%8B%B9%EA%B0%80%EA%B2%A9_jain.csv')
-        data['price']=apt[gu]
         
+        data['price']=df['price']
+        # print(data.head())
         # 행정구별 인구수 데이터 추가
         popul = pd.read_csv('https://raw.githubusercontent.com/Loyce0805/test333/master/House/datas/%ED%96%89%EC%A0%95%EA%B5%AC%EB%B3%84_%EC%9D%B8%EA%B5%AC%EC%88%98.csv', encoding='cp949')
         data['popul']=popul[gu]
@@ -91,12 +90,13 @@ class AptPred:
         predict_math = pd.DataFrame(predict_math)
         predict_math['ymd'] = index
         predict_math = predict_math.set_index(['ymd'])
-        predict_math.columns = ['Gangnam price']
+        predict_math.columns = ['Predict price']
         
+        r2 = r2_score(test_data['price'], ols_pred)
+        print(r2)
         resultPredict = predict_math.loc[ym].values[0]
         print(resultPredict)
+        
         return resultPredict
     
-a = AptPred()
-a.predictModel(gu='강남구',ym='2022-01')
-a.mariaDbConnect('서울시 도곡동 91-5')
+

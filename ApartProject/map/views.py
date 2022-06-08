@@ -7,6 +7,7 @@ from django.core.paginator import Paginator
 import requests
 import json
 import numpy as np
+from map.aptPredictClass import AptPred
 
 
 def Main(request):
@@ -80,9 +81,13 @@ def dongmaker(request):
 
 @csrf_exempt
 def pred(request):
-    year = request.POST['year']
-    # new_val = pd.DataFrame({'year':[year]})
-    print(year)
+    year = request.POST.get('year')
+    gu = request.POST.get('gu')
+    addr = request.POST.get('addr')
+    df = createPredDf(addr)
+    pred = AptPred()
+    pred.predictModel(gu=gu, ym=year, df=df)
+    
     
     return JsonResponse({'new_val':year})
 
@@ -121,9 +126,11 @@ def createPredDf(addr):
                 mean.append(mv)
        
         ddf = pd.DataFrame({'날짜':ymd})
-        ddff = pd.DataFrame({'월 평균 가격':mean})
+        ddff = pd.DataFrame({'price':mean})
         dfdf = pd.concat([ddf, ddff], axis=1)
-        print(dfdf)
+        # print(dfdf)
+        
+        return dfdf
 
     
         
@@ -141,7 +148,7 @@ def importData(request):
         df = df.sort_values(by = 'ymd')
         
         # print(df)
-        print(df['apt'][:1].values[0])
+        print(df['gu'][:1].values[0])
         apt = df['apt'][:1].values[0]
         year = ['2011', '2012', '2013', '2014', '2015', '2016', '2017', '2018', '2019', '2020', '2021']
         mon = ['01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12']
@@ -168,8 +175,7 @@ def importData(request):
         for i in range(len(mean)):
             if mean[i] == 0:
                 ymd[i] = '0' # 리스트 mean이 0인 인덱스에 똑같이 0 넣기
-                
-                        
+                                       
         while 0 in mean:    # mean에서 값이 0인것 빼기
             mean.remove(0)
             
@@ -178,12 +184,12 @@ def importData(request):
         
         for i in range(len(ymd)):
             ymd[i] = int(ymd[i])
-            
-        createPredDf(detailaddr)
+        
+        gu = df['gu'][:1].values[0]
     # print(df)
        
         
-    return render(request, 'graph.html', {'addr':detailaddr, 'datas':df.to_html(), 'mean':mean, 'ymd':ymd,'apt':apt})
+    return render(request, 'graph.html', {'addr':detailaddr, 'datas':df.to_html(), 'mean':mean, 'ymd':ymd,'apt':apt,'gu':gu})
 
 
 

@@ -19,8 +19,11 @@
 function pred(){
 	  let send_data = {};
 	  let year = document.getElementById("year").value;
+	  let gu = document.getElementById("gu").innerHTML;
 	  send_data['year'] = year;
-	  //alert(send_data)
+	  send_data['gu']= gu;
+	  send_data['addr']=document.getElementById("addr").innerHTML;
+	  console.log(send_data);
 	  
 	  $(".pred").empty();
 	  
@@ -31,7 +34,7 @@ function pred(){
 	     data:send_data,
 	     dataType:"json",
 	     success:function(data){
-	     	//alert(data);
+	     	//alert(data)
 	     	$(".pred").append(data.new_val);
 	     },
 	  	error:function(){
@@ -48,6 +51,8 @@ function pred(){
 
 </head>
 <body >
+<div id='gu' style='display:None'>{{gu}}</div>
+<div id='addr' style='display:None'>{{addr}}</div>
 <br>
 {{apt}} 의 <input type="month" id="year" /> 년 &nbsp;&nbsp;
 <button onclick="pred()">입력</button> 후 집값 확인
