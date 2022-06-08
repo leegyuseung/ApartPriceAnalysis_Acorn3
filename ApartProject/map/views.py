@@ -108,8 +108,11 @@ def importData(request):
 
 @csrf_exempt
 def polygun(request):
+    import requests
+    #https://raw.githubusercontent.com/xerathul/python/master/polygonDong.json
+    open('polygun.json','wb').write(requests.get('https://raw.githubusercontent.com/xerathul/python/master/polygonData.json').content)
     import json
-    with open ("C:/Users/SAMSUNG/OneDrive/바탕 화면/프로젝트 데이터/시구분데이터/polygunData.json", "r", encoding='utf-8') as f:
+    with open ('polygun.json',encoding='utf-8') as f:
         polygun = json.load(f)
 
     return JsonResponse({'polygun':polygun})
