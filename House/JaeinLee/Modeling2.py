@@ -78,10 +78,10 @@ import statsmodels.api as sm
 
 result = sm.OLS.from_formula('price ~ m2_abs + tax_jongso + cpi_abs + marry + popul', data = train_data).fit()  # interesting rate를 feature로 넣으니 cpi의 pvalue값이 0.05를 넘음. 그래서 뺐음.
 ols_pred = result.predict(test_data)
-print('price : ', ols_pred)
-print('예측값 : ', ols_pred[:10])
-print('실제값 : ', test_data['price'][:10])
-
+# print('price : ', ols_pred)
+# print('예측값 : ', ols_pred[:10])
+# print('실제값 : ', test_data['price'][:10])
+# print(ols_pred.index)
 
 
 gangnamgu = pd.read_csv('https://raw.githubusercontent.com/Loyce0805/forecast-Dataset/main/Gangnamgu.csv')
@@ -94,7 +94,7 @@ print('예상 집값 : ', predict_math)
 index = []
 for i in list(range(2022, 2027, 1)):
     for j in list(range(1, 13, 1)):
-        print(str(i)+str(j).zfill(2))
+        # print(str(i)+str(j).zfill(2))
         index.append(str(i)+'-'+str(j).zfill(2))
 
 predict_math = pd.DataFrame(predict_math)
@@ -102,3 +102,4 @@ predict_math['ymd'] = index
 predict_math = predict_math.set_index(['ymd'])
 predict_math.columns = ['Gangnam price']
 print(predict_math)
+print(predict_math.loc['2022-01'].values[0])
