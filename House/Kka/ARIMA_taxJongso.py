@@ -36,7 +36,7 @@ ts = timeSeries.drop("yymm", axis=1)
     2021-12-31      0.003125    [132 rows x 1 columns]  '''
 
 
-# # 2011-01부터 2021-12 까지 cpi(%) 그래프
+# # 2011-01부터 2021-12 까지 종소세율 그래프
 # plt.figure(figsize=(15, 8))
 # plt.plot(ts)
 # plt.title("tax_jongso 2011-01 ~ 2021-12")
@@ -108,16 +108,60 @@ result = adfuller(ts_diff[1:])
           10%: -2.579            '''
 
 
-# # 1차 차분 데이터로 ACF, PACF 그려서 ARIMA 모형의 p, q 결정
-# fig = plt.figure(figsize=(18, 10))
-# ax1 = fig.add_subplot(211)
-# ax2 = fig.add_subplot(212)
-# fig = plot_acf(ts_diff[1:], ax = ax1)
-# ax1.set_title("ACF_tax_jongso diff1")
-# fig = plot_pacf(ts_diff[1:], ax = ax2)
-# ax2.set_title("PACF_tax_jongso diff1")
-# plt.show()
-# # ==> ACF는 1 이후로 0에 수렴, PACF도 1 이후로 0에 수렴.
+# # auto_arima로 최적의 모형 탐색하기
+import pmdarima as pm
+train = taxJ['tax_jongso'][:120]
+
+model = pm.auto_arima(y = train        # 데이터
+                      , d = 1            # 차분 차수, ndiffs 결과!
+                      , start_p = 0 
+                      , max_p = 5   
+                      , start_q = 0 
+                      , max_q = 5   
+                      , m = 1       
+                      , seasonal = False # 계절성 ARIMA가 아니라면 필수!
+                      , stepwise = True
+                      , trace=True
+                      )
+''' Performing stepwise search to minimize aic
+     ARIMA(0,1,0)(0,0,0)[0] intercept   : AIC=-1858.460, Time=0.03 sec
+     ARIMA(1,1,0)(0,0,0)[0] intercept   : AIC=-1856.483, Time=0.07 sec
+     ARIMA(0,1,1)(0,0,0)[0] intercept   : AIC=-1856.483, Time=0.11 sec
+     ARIMA(0,1,0)(0,0,0)[0]             : AIC=-1858.979, Time=0.02 sec
+     ARIMA(1,1,1)(0,0,0)[0] intercept   : AIC=-1854.482, Time=0.15 sec
+    
+    Best model:  ARIMA(0,1,0)(0,0,0)[0]          
+    Total fit time: 0.384 seconds
+'''
+
+model_fit = model.fit(train)
+
+
+# # 잔차 검정
+print(model.summary())
+'''                                SARIMAX Results                                
+    ==============================================================================
+    Dep. Variable:                      y   No. Observations:                  120
+    Model:               SARIMAX(0, 1, 0)   Log Likelihood                 930.489
+    Date:                Tue, 07 Jun 2022   AIC                          -1858.979
+    Time:                        18:47:13   BIC                          -1856.200
+    Sample:                             0   HQIC                         -1857.850
+                                    - 120                                         
+    Covariance Type:                  opg                                         
+    ==============================================================================
+                     coef    std err          z      P>|z|      [0.025      0.975]
+    ------------------------------------------------------------------------------
+    sigma2      9.379e-09   1.68e-10     55.846      0.000    9.05e-09    9.71e-09
+    ====================================================================================================
+    Ljung-Box (L1) (Q):                                    0.02   Jarque-Bera (JB):             53135.13
+    Prob(Q):                                               0.89   Prob(JB):                         0.00
+    Heteroskedasticity (H): 23935659052991623234136943099904.00   Skew:                            10.01
+    Prob(H) (two-sided):                                   0.00   Kurtosis:                       104.57
+    ====================================================================================================
+    
+    Warnings:
+    [1] Covariance matrix calculated using the outer product of gradients (complex-step).
+'''
 
 
 # # ARIMA 모델 만들기

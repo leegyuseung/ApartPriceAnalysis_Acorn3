@@ -13,7 +13,7 @@ import pmdarima as pm
 data = pd.read_csv('../datas/행정구별_인구수.csv', parse_dates=['시점'], encoding='cp949')
 popul_JR = pd.DataFrame()
 yymm = []
-yymm = pd.date_range("2011-01", "2022-01", freq="M")
+yymm = pd.date_range("2011-01", "2023-01", freq="M")
 popul_JR['yymm'] = yymm[:132]
 popul_JR['popul'] = data['종로구']
 popul_JR['popul'][131] = popul_JR['popul'][130]
@@ -123,6 +123,7 @@ result = adfuller(ts_diff[1:])
 
 # # auto_arima로 최적의 모형 탐색하기
 train = popul_JR.popul[:120]
+
 model = pm.auto_arima(y = train        # 데이터
                       , d = 1            # 차분 차수, ndiffs 결과!
                       , start_p = 0 
@@ -135,8 +136,7 @@ model = pm.auto_arima(y = train        # 데이터
                       , trace=True
                       )
 
-model = pm.auto_arima (train, d = 1, seasonal = False, trace = True)
-model.fit(train)
+model_fit = model.fit(train)
 ''' >> 결과
     Performing stepwise search to minimize aic
      ARIMA(2,1,2)(0,0,0)[0] intercept   : AIC=1650.326, Time=0.12 sec
@@ -153,65 +153,43 @@ model.fit(train)
     Total fit time: 0.606 seconds
 '''
 
-
-
-# # 1차 차분 데이터로 ACF, PACF 그려서 ARIMA 모형의 p, q 결정
-# fig = plt.figure(figsize=(18, 10))
-# ax1 = fig.add_subplot(211)
-# ax2 = fig.add_subplot(212)
-# fig = plot_acf(ts_diff[1:], ax = ax1)
-# ax1.set_title("ACF_Population-Jongro diff1")
-# fig = plot_pacf(ts_diff[1:], ax = ax2)
-# ax2.set_title("PACF_Population-Jongro diff1")
-# plt.show()
-# # ==> ACF는 1 이후로 0에 수렴, PACF도 1 이후로 0에 수렴.
-
-
-# # ARIMA 모델 만들기
-from statsmodels.tsa.arima_model import ARIMA
-# fit model
-model = ARIMA(ts, order=(1, 1, 0))
-model_fit = model.fit()
-# # predict
-start_index = yymm[120] # 2021-01-31 00:00:00
-end_index = yymm[131]   # 2022-12-31 00:00:00
-# forecast = model_fit.predict(start=start_index, end=end_index, typ='levels')
-# # 실제값이랑 비교하기
-# print(popul_JR.tail(12))
-# print(forecast)
-'''            - 실제값 -           - forecast -
-              yymm     popul            popul
-        2021-01-31  149125.0    149377.976102
-        2021-02-28  148884.0    149115.544306
-        2021-03-31  147296.0    148875.201459
-        2021-04-30  147113.0    147238.024549
-        2021-05-31  146377.0    147106.318950
-        2021-06-30  146029.0    146350.129766
-        2021-07-31  145692.0    146016.295052
-        2021-08-31  145551.0    145679.696645
-        2021-09-30  145512.0    145545.852306
-        2021-10-31  145346.0    145510.576170
-        2021-11-30  145073.0    145339.939594
-        2021-12-31  145073.0    145063.033188
-'''
 # # 잔차 검정
-print(model.summary())
+# print(model.summary())
+'''                                SARIMAX Results                                
+    ==============================================================================
+    Dep. Variable:                      y   No. Observations:                  120
+    Model:               SARIMAX(0, 1, 1)   Log Likelihood                -819.391
+    Date:                Tue, 07 Jun 2022   AIC                           1644.783
+    Time:                        17:04:06   BIC                           1653.120
+    Sample:                             0   HQIC                          1648.168
+                                    - 120                                         
+    Covariance Type:                  opg                                         
+    ==============================================================================
+                     coef    std err          z      P>|z|      [0.025      0.975]
+    ------------------------------------------------------------------------------
+    intercept   -183.8261     23.232     -7.912      0.000    -229.361    -138.291
+    ma.L1          0.0780      0.015      5.284      0.000       0.049       0.107
+    sigma2      5.162e+04   2820.379     18.302      0.000    4.61e+04    5.71e+04
+    ===================================================================================
+    Ljung-Box (L1) (Q):                  34.72   Jarque-Bera (JB):               484.51
+    Prob(Q):                              0.00   Prob(JB):                         0.00
+    Heteroskedasticity (H):               0.20   Skew:                             1.13
+    Prob(H) (two-sided):                  0.00   Kurtosis:                        12.62
+    ===================================================================================
+    
+    Warnings:
+    [1] Covariance matrix calculated using the outer product of gradients (complex-step).
+'''
 
 # # 그래프
-model.plot_diagnostics(figsize=(16, 8))
-plt.show()
-
-
-
-# # 시각화
-# plt.figure(figsize=(15, 8))
-# plt.plot(popul_JR.yymm, popul_JR['popul'], label="original")
-# plt.plot(forecast, label='predicted')
-# plt.title("Population-Jongro Forecast")
-# plt.xlabel("Year-Month")
-# plt.ylabel("popul")
-# plt.legend()
+# model.plot_diagnostics(figsize=(16, 8))
 # plt.show()
+
+
+# # 미래값 예측
+fore = model_fit.forecast(steps=12)
+print(fore)
+
 
 
 
