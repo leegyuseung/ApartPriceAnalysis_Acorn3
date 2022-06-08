@@ -57,23 +57,20 @@ import json
 @csrf_exempt
 def polygon(request):
   
-    open('polygun.json','wb').write(requests.get('https://raw.githubusercontent.com/xerathul/python/master/polygonData.json').content)
+    open('Gpolygon.json','wb').write(requests.get('https://raw.githubusercontent.com/xerathul/python/master/polygonData.json').content)
 
-    with open ('polygun.json',encoding='utf-8') as f:
+    with open ('Gpolygon.json',encoding='utf-8') as f:
         Gpolygon = json.load(f)
-
-    
     
     return JsonResponse({'polygon':Gpolygon})
 
 @csrf_exempt
 def Dpolygon(request):
    
-    
-    open('polygun.json','wb').write(requests.get('https://raw.githubusercontent.com/xerathul/python/master/polygonDong.json').content)
+    open('Dpolygon.json','wb').write(requests.get('https://raw.githubusercontent.com/xerathul/python/master/polygonDong.json').content)
 
-    with open ('polygun.json',encoding='utf-8') as f:
-        Dpolygun = json.load(f)
+    with open ('Dpolygon.json',encoding='utf-8') as f:
+        Dpolygon = json.load(f)
     
     return JsonResponse({'Dpolygon':Dpolygon})
 
