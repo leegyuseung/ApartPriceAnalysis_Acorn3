@@ -6,6 +6,7 @@ from django.http.response import JsonResponse
 from django.core.paginator import Paginator
 import requests
 import json
+import numpy as np
 
 
 def Main(request):
@@ -55,7 +56,7 @@ def apart(request):
 @csrf_exempt
 def polygon(request):
   
-    open('Gpolygon.json','wb').write(requests.get('https://github.com/xerathul/FinalProject3/tree/master/ApartProject/map/static/resources/polygonData.json').content)
+    open('Gpolygon.json','wb').write(requests.get('https://raw.githubusercontent.com/xerathul/FinalProject3/master/ApartProject/map/static/resources/polygonData.json').content)
 
     with open ('Gpolygon.json',encoding='utf-8') as f:
         Gpolygon = json.load(f)
@@ -65,7 +66,7 @@ def polygon(request):
 @csrf_exempt
 def Dpolygon(request):
    
-    open('Dpolygon.json','wb').write(requests.get('https://github.com/xerathul/FinalProject3/tree/master/ApartProject/map/static/resources/polygonDong.json').content)
+    open('Dpolygon.json','wb').write(requests.get('https://raw.githubusercontent.com/xerathul/FinalProject3/master/ApartProject/map/static/resources/polygonDong.json').content)
 
     with open ('Dpolygon.json',encoding='utf-8') as f:
         Dpolygon = json.load(f)
@@ -82,10 +83,50 @@ def pred(request):
     year = request.POST['year']
     # new_val = pd.DataFrame({'year':[year]})
     print(year)
-
+    
     return JsonResponse({'new_val':year})
 
+def createPredDf(addr):
 
+        datas = Addrdata.objects.filter(addr__contains=addr).values()
+        
+        df = pd.DataFrame(datas)
+        df.set_index(df['num'], inplace=True)
+        df = df.drop(['num'], axis=1)
+        df = df.sort_values(by = 'ymd')
+        
+        # print(df)
+        print(df['apt'][:1].values[0])
+        apt = df['apt'][:1].values[0]
+        year = ['2011', '2012', '2013', '2014', '2015', '2016', '2017', '2018', '2019', '2020', '2021']
+        mon = ['01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12']
+        
+        ymd = []  # ['201101', '201102', '201103', '201104' ...
+        
+        for i in range(len(year)):
+            for j in range(len(mon)):
+                ymd.append(year[i] + mon[j])
+        
+        mean = []
+        for i in ymd:
+            condition = (df['ymd']== (i)) # 조건식 작성
+        
+            mp = list(df[condition].price) # 월 별 거래가격 리스트
+            
+            if len(mp) == 0:
+                mean.append(np.nan)
+        
+            else: 
+                mv = round(sum(mp)/len(mp))
+                mean.append(mv)
+       
+        ddf = pd.DataFrame({'날짜':ymd})
+        ddff = pd.DataFrame({'월 평균 가격':mean})
+        dfdf = pd.concat([ddf, ddff], axis=1)
+        print(dfdf)
+
+    
+        
 def importData(request):
     # 클릭한 마커의 데이터 불러오기
     if request.method == 'GET':
@@ -99,7 +140,7 @@ def importData(request):
         df = df.drop(['num'], axis=1)
         df = df.sort_values(by = 'ymd')
         
-        print(df)
+        # print(df)
         print(df['apt'][:1].values[0])
         apt = df['apt'][:1].values[0]
         year = ['2011', '2012', '2013', '2014', '2015', '2016', '2017', '2018', '2019', '2020', '2021']
@@ -139,8 +180,10 @@ def importData(request):
         
         for i in range(len(ymd)):
             ymd[i] = int(ymd[i])
-
-   
+            
+        createPredDf(detailaddr)
+    # print(df)
+       
         
     return render(request, 'graph.html', {'addr':detailaddr, 'datas':df.to_html(), 'mean':mean, 'ymd':ymd,'apt':apt})
 
