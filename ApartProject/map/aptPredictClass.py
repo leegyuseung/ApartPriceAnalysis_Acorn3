@@ -26,8 +26,7 @@ class AptPred:
         date= pd.to_datetime(data['ymd'],format='%Y%m')
         data['ymd']=data['ymd'].dt.strftime('%Y%m')
         
-        # 여기를 우리 db price로 바꿔야댐
-        
+        # 우리db price로 바꾸기
         data['price']=df['price']
         # print(data.head())
         # 행정구별 인구수 데이터 추가
@@ -92,6 +91,7 @@ class AptPred:
         predict_math = predict_math.set_index(['ymd'])
         predict_math.columns = ['Predict price']
         
+        print(predict_math)
         r2 = r2_score(test_data['price'], ols_pred)
         print(r2)
         resultPredict = predict_math.loc[ym].values[0]
