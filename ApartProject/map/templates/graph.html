@@ -15,7 +15,71 @@
 <script src='https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.8.0/chart.min.js'></script>
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
 <script src="http://code.jquery.com/jquery-latest.min.js"></script>
-<script type="text/javascript">
+<header>
+{% include 'head.html' %}
+ <!-- Sidebar -->
+  <nav id="sidebarMenu"class="collapse d-lg-block sidebar collapse bg-white" style = 'width:400px;'>
+    <div class="position-sticky">
+      <div class="list-group list-group-flush mx-3" >
+      {{apt}}<input type="month" id="year" value="2022-01" min="2011-01" max="2026-12" /> &nbsp;&nbsp;
+	  <button onclick="pred()">가격 예측 하기</button>
+      </div>
+    </div>
+  </nav>
+  <!-- Sidebar -->
+</header>
+</head>
+
+<body>
+<!-- 자료보내기-->
+<div id='gu' style='display:None'>{{gu}}</div>
+<div id='addr' style='display:None'>{{addr}}</div>
+<div class="pred"></div>
+
+<div class="container">
+	<div class="row">
+		<div class="col-md-10">
+			<canvas id = 'chart'>{{mean}}</canvas>
+			
+			<div id='ymd' style='display:None'>{{ymd}}</div>
+		</div>
+	</div>
+</div>
+
+<script>
+// graph 변수
+
+let chart = document.getElementById('chart').getContext('2d');
+
+var tdata = document.getElementById('chart').innerHTML;
+var tdata = JSON.parse(tdata);
+
+
+var ymd = document.getElementById('ymd').innerHTML;
+var ymd = JSON.parse(ymd);
+
+// graph ajax
+function graphs(tdata, ymd){
+	
+	let linechart = new Chart(chart, {
+		type : 'line',
+		data : {
+			labels : ymd,
+										  
+			datasets : [{
+				label : '월 평균 거래금액',
+				backgroundColor : 'skyblue',
+				borderWidth : 1,
+				borderColor : 'black',
+				data : tdata
+	
+			}]
+		}
+	})
+}
+
+graphs(tdata, ymd)
+// 예측 ajax
 function pred(){
 	  let send_data = {};
 	  let year = document.getElementById("year").value;
@@ -44,68 +108,5 @@ function pred(){
 }
 
 </script>
-
-<header>
-{% include 'head.html' %}
-</header>
-
-</head>
-<body >
-<div id='gu' style='display:None'>{{gu}}</div>
-<div id='addr' style='display:None'>{{addr}}</div>
-<br>
-{{apt}} 의 <input type="month" id="year" /> 년 &nbsp;&nbsp;
-<button onclick="pred()">입력</button> 후 집값 확인
-<div class="pred"></div>
-<br />
-
-<div class="container">
-	<div class="row">
-		<div class="col-md-10">
-			<canvas id = 'chart'>{{mean}}</canvas>
-			
-			<div id='ymd' style='display:None'>{{ymd}}</div>
-		</div>
-	</div>
-</div>
-<script>
-let chart = document.getElementById('chart').getContext('2d');
-
-var tdata = document.getElementById('chart').innerHTML;
-var tdata = JSON.parse(tdata);
-
-
-var ymd = document.getElementById('ymd').innerHTML;
-var ymd = JSON.parse(ymd);
-
-
-function graphs(tdata, ymd){
-	
-	let linechart = new Chart(chart, {
-		type : 'line',
-		data : {
-			labels : ymd,
-										  
-			datasets : [{
-				label : '월 평균 거래금액',
-				backgroundColor : 'skyblue',
-				borderWidth : 1,
-				borderColor : 'black',
-				data : tdata
-	
-			}]
-		}
-	})
-}
-
-graphs(tdata, ymd)
-</script>
-
-<p>최근 10년 거래 데이터</p>
-
-{% if datas %}
-	{{datas | safe}}
-{% endif %}
-
 </body>
 </html>
