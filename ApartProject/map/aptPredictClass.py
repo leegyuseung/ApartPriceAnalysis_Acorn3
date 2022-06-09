@@ -91,10 +91,12 @@ class AptPred:
         predict_math = predict_math.set_index(['ymd'])
         predict_math.columns = ['Predict price']
         
-        print(predict_math)
+        # print(predict_math)
         r2 = r2_score(test_data['price'], ols_pred)
         print(r2)
-        resultPredict = predict_math.loc[ym].values[0]
+        resultPredict = {'r2':round(r2*100,2), 'predPrice': round(predict_math.loc[ym].values[0])}
+        
+        # resultPredict = predict_math.loc[ym].values[0]
         print(resultPredict)
         
         return resultPredict

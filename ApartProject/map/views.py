@@ -79,6 +79,7 @@ def dongmaker(request):
     datas = Addrapt.objects.all.values()
     df = pd.DataFrame(datas)
 
+# graph predict ajax Function
 @csrf_exempt
 def pred(request):
     year = request.POST.get('year')
@@ -86,10 +87,11 @@ def pred(request):
     addr = request.POST.get('addr')
     df = createPredDf(addr)
     pred = AptPred()
-    pred.predictModel(gu=gu, ym=year, df=df)
+    #Model fitting
+    json=pred.predictModel(gu=gu, ym=year, df=df)
     
     
-    return JsonResponse({'new_val':year})
+    return JsonResponse(json)
 
 def createPredDf(addr):
 

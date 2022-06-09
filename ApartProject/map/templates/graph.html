@@ -24,12 +24,31 @@
  <!-- Sidebar -->
 <div class="container-fluid">
 	<div class="row flex-xl-nowrap">
-		<div class=" col-md-3">
-		  <nav id="sidebarMenu" class="collapse d-lg-block sidebar collapse bg-white col-md-3">
+		<div class=" col-md-2">
+		  <nav id="sidebarMenu" class="collapse d-lg-block sidebar collapse bg-white col-md-2">
 		    <div class="position-sticky">
 		      <div class="list-group list-group-flush mx-3" >
-		      {{apt}}<input type="month" id="year" value="2022-01" min="2011-01" max="2026-12" /> &nbsp;&nbsp;
-			  <button onclick="pred()">가격 예측 하기</button>
+			      {{apt}}<input type="month" id="year" value="2022-01" min="2011-01" max="2026-12" /> &nbsp;&nbsp;
+				  <button onclick="pred()">가격 예측 하기</button>
+				  <br /><br />
+				  <table class="table">
+				  	<thead>
+				  		<tr>
+				  			<th scope="col" colspan="2">{{apt}}</th>
+				  		</tr>
+				  	</thead>
+				  	 <tbody class="table-group-divider">
+					    <tr>
+					      <th scope="row">예측값</th>
+					      <td id=predPrice></td>				      
+					    </tr>
+					    <tr>
+					      <th scope="row">결정계수</th>
+					      <td id=r2></td>				      
+					    </tr>
+				  </table>
+				  
+				  
 		      </div>
 		    </div>
 		  </nav>
@@ -40,9 +59,9 @@
 		<div id='gu' style='display:None'>{{gu}}</div>
 		<div id='addr' style='display:None'>{{addr}}</div>
 		
-		<main class='col-md-9' style="margin-top:58px">
+		<main class='col-md-10' style="margin-top:58px">
 			<div class="container">
-				<div class="pred"></div>
+				
 				<div class="row">
 					<div class="col-md-10">
 						<canvas id = 'chart'>{{mean}}</canvas>
@@ -99,8 +118,8 @@ function pred(){
 	  send_data['addr']=document.getElementById("addr").innerHTML;
 	  console.log(send_data);
 	  
-	  $(".pred").empty();
-	  
+	  $("#predPrice").empty();
+	  $("#r2").empty();
 	  
 	  $.ajax({
 	     url: "pred",
@@ -109,7 +128,8 @@ function pred(){
 	     dataType:"json",
 	     success:function(data){
 	     	//alert(data)
-	     	$(".pred").append(data.new_val);
+	     	$("#predPrice").append(data.predPrice+' 만원');
+	     	$("#r2").append(data.r2+'%');
 	     },
 	  	error:function(){
 	  		alert('1~ 10년만 입력 가능!')
