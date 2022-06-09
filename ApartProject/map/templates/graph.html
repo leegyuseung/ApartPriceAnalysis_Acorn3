@@ -17,34 +17,44 @@
 <script src="http://code.jquery.com/jquery-latest.min.js"></script>
 <header>
 {% include 'head.html' %}
- <!-- Sidebar -->
-  <nav id="sidebarMenu"class="collapse d-lg-block sidebar collapse bg-white" style = 'width:400px;'>
-    <div class="position-sticky">
-      <div class="list-group list-group-flush mx-3" >
-      {{apt}}<input type="month" id="year" value="2022-01" min="2011-01" max="2026-12" /> &nbsp;&nbsp;
-	  <button onclick="pred()">가격 예측 하기</button>
-      </div>
-    </div>
-  </nav>
-  <!-- Sidebar -->
 </header>
 </head>
 
 <body>
-<!-- 자료보내기-->
-<div id='gu' style='display:None'>{{gu}}</div>
-<div id='addr' style='display:None'>{{addr}}</div>
-<div class="pred"></div>
-
-<div class="container">
-	<div class="row">
-		<div class="col-md-10">
-			<canvas id = 'chart'>{{mean}}</canvas>
-			
-			<div id='ymd' style='display:None'>{{ymd}}</div>
-		</div>
+ <!-- Sidebar -->
+<div class="container-fluid">
+	<div class="row flex-xl-nowrap">
+		<div class=" col-md-3">
+		  <nav id="sidebarMenu" class="collapse d-lg-block sidebar collapse bg-white">
+		    <div class="position-sticky">
+		      <div class="list-group list-group-flush mx-3" >
+		      {{apt}}<input type="month" id="year" value="2022-01" min="2011-01" max="2026-12" /> &nbsp;&nbsp;
+			  <button onclick="pred()">가격 예측 하기</button>
+		      </div>
+		    </div>
+		  </nav>
+	  	</div>
+	
+	  <!-- Sidebar -->
+	<!-- 자료보내기-->
+		<div id='gu' style='display:None'>{{gu}}</div>
+		<div id='addr' style='display:None'>{{addr}}</div>
+		
+		<main class='col-md-9' style="margin-top:58px">
+			<div class="container">
+				<div class="pred"></div>
+				<div class="row">
+					<div class="col-md-10">
+						<canvas id = 'chart'>{{mean}}</canvas>
+						
+						<div id='ymd' style='display:None'>{{ymd}}</div>
+					</div>
+				</div>
+			</div>
+		</main>
 	</div>
 </div>
+
 
 <script>
 // graph 변수
