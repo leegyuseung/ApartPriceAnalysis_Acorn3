@@ -49,7 +49,6 @@ def apart(request):
     if apt_lists.has_next() == True:
         nextNum = apt_lists.next_page_number()
         tojson['nextNum']=nextNum
-    print(tojson)
 
     # json으로 리턴
     return JsonResponse({'juso':juso, 'apartdata':apt, 'aptJusoJson':aptJusoJson, 'apt_lists':tojson})
@@ -118,7 +117,6 @@ def createPredDf(addr):
         df = df.drop(['num'], axis=1)
         df = df.sort_values(by = 'ymd')
         
-        # print(df)
         print(df['apt'][:1].values[0])
         apt = df['apt'][:1].values[0]
         year = ['2011', '2012', '2013', '2014', '2015', '2016', '2017', '2018', '2019', '2020', '2021']
@@ -148,7 +146,7 @@ def createPredDf(addr):
         dfdf = pd.concat([ddf, ddff], axis=1)
         
         return dfdf
-        
+      
 def importData(request):
     # 클릭한 마커의 데이터 불러오기
     if request.method == 'GET':

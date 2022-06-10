@@ -92,26 +92,23 @@ var ymd = document.getElementById('ymd').innerHTML;
 var ymd = JSON.parse(ymd);
 
 // graph ajax
-function graphs(tdata, ymd){
-	
-	let linechart = new Chart(chart, {
-		type : 'line',
-		data : {
-			labels : ymd,
-										  
-			datasets : [{
-				label : '월 평균 거래금액',
-				backgroundColor : '#FFCB9C',
-				borderWidth : 2,
-				borderColor : 'black',
-				data : tdata
-	
-			}]
-		}
-	})
-}
 
-graphs(tdata, ymd)
+let linechart = new Chart(chart, {
+	type : 'line',
+	data : {
+		labels : ymd,
+									  
+		datasets : [{
+			label : '월 평균 거래금액',
+			backgroundColor : '#FFCB9C',
+			borderWidth : 2,
+			borderColor : 'black',
+			data : tdata
+
+		}]
+	}
+})
+
 
 function pred(){
 	let send_data = {};
@@ -123,7 +120,7 @@ function pred(){
 	send_data['mean']=document.getElementById("chart").innerHTML;
 	send_data['ymd']=document.getElementById("ymd").innerHTML;
 	
-	console.log(send_data);
+	
    	  
 	$("#predPrice").empty();
 	$("#r2").empty();
@@ -134,31 +131,29 @@ function pred(){
 	    data:send_data,
 	    dataType:"json",
 	    success:function(data){
-	    	$("#predPrice").append(data.predictL+' 만원');
+	    	const pred = data.predictL.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",");
+	    	$("#predPrice").append(pred+' 만원');
 	     	$("#r2").append(data.r2+'%');
 	    
 	    	let chart = document.getElementById('chart2').getContext('2d');
 			
-			var tdata = send_data.mean+data.predict
-
-			var ymd = send_data.ymd + data.ymd2
-	
-			console.log(typeof(send_data.ymd))
-			console.log((send_data.ymd))
-			console.log(typeof((data.ymd2)))
-			console.log(((data.ymd2)))
-			
+	    	send_data['predict'] = data.predict;
+	    	send_data['ymd2'] = data.ymd2;
+	    	
+	    	tdata = tdata.concat(send_data['predict']); // 기존 가격와 예측 가격 합치기
+	    	ymd = ymd.concat(send_data['ymd2']); // 기존 날짜와 예측 날짜 합치기
+	    	
 			let linechart = new Chart(chart, {
 				type : 'line',
      			data : {
-     				labels :  data.ymd2,
+     				labels :  ymd,
      				
      				datasets : [{
      					label : '예측 값',
      					backgroundColor : 'yellow',
-     					borderWidth : 1,
-     					borderColor : 'orange',
-     					data : data.predict
+     					borderWidth : 2,
+     					borderColor : 'black',
+     					data : tdata
      				}]
      			}
      		})
