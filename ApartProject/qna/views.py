@@ -21,8 +21,16 @@ def listFunc(request):
 
 
 def insertFunc(request):
+    try:
+        userId = request.session.get('user')
+        
+        print(userId)
+    except Exception as e:
+        print('수정자료 읽기 오류',e)
+        return render(request,'error.html')
     
-    return render(request, 'insert.html')
+    
+    return render(request, 'insert.html',{'data': userId})
 
 def insertOkFunc(request):
     if request.method == 'POST':
@@ -33,9 +41,7 @@ def insertOkFunc(request):
                 gbun = BoardTab.objects.latest('id').id + 1
                 
             BoardTab(
-                name = request.POST.get('name'),
-                passwd = request.POST.get('passwd'),
-                mail = request.POST.get('mail'),
+                
                 title = request.POST.get('title'),
                 cont = request.POST.get('cont'),
                 bip = request.META['REMOTE_ADDR'],

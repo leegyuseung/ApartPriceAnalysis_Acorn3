@@ -1,11 +1,11 @@
 from django.db import models
+from users.models import Users
 
 # Create your models here.
+
 class BoardTab(models.Model):
 
-    name = models.CharField(max_length = 20)
-    passwd = models.CharField(max_length = 20)
-    mail = models.CharField(max_length = 30)
+    userId = models.ForeignKey(Users, on_delete = models.CASCADE)
     title = models.CharField(max_length = 100)
     cont = models.TextField()
     bip = models.GenericIPAddressField()
