@@ -72,6 +72,7 @@
 		    </em>
 		</p>
 		<div id="map" style="width:100vw;height:100vh;"></div>
+	
   </div>
 </main>
 <!--Main layout-->
@@ -346,7 +347,7 @@ function displayGu(coordinates, name) {
         path: path,
         strokeWeight: 2,
         strokeColor: '#004c80',
-        strokeOpacity: 0.8,
+        strokeOpacity: 0.5,
         fillColor: '#fff',
         fillOpacity: 0.7 
     });
@@ -445,7 +446,7 @@ function displayDong(coordinates, name) {
         path: path,
         strokeWeight: 2,
         strokeColor: '#004c80',
-        strokeOpacity: 0.8,
+        strokeOpacity: 0.5,
         fillColor: '#fff',
         fillOpacity: 0.7 
     });
@@ -483,22 +484,18 @@ function displayDong(coordinates, name) {
 		// 클릭한 동의 아파트 장소로 좌표찍기
 		
 		var clickName = name;
-		
+		console.log(clickName)
+				
 		$.getJSON("map/Dpolygon", function(geojson){
 			var data = geojson.Dpolygon.features;
 			var coordinates = []; // 좌표 저장할 배열
 			var name = ""; // 행정 구 이름
-			
-			console.log(clickName)
 			
 			for(var i = 0; i < data.length; i++){
 				if(data[i]['properties']['EMD_NM'] == clickName){
 
 					name = data[i]['properties']['EMD_NM']
 					coordinates = data[i]['geometry']['coordinates']
-					
-					console.log(name)
-					console.log(coordinates)
 					
 					displayDD(coordinates, name);
 				}
@@ -524,14 +521,15 @@ function displayDD(coordinates, name) {
     var polygon = new kakao.maps.Polygon({
     	map: map, // 다각형을 표시할 지도 객체
         path: path,
-        strokeWeight: 3,
-        strokeColor: 'black',
-        strokeOpacity: 0.8,
+        strokeWeight: 2,
+        strokeColor: '#004c80',
+        strokeOpacity: 0.5,
     });
 	
 	polygons.push(polygon)
 
 }
+
 </script>
 <!-- MDB -->
 <script type="text/javascript" src="../static/js/mdb.min.js"></script>

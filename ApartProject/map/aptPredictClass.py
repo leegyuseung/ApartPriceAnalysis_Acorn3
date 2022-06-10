@@ -19,6 +19,7 @@ class AptPred:
     
     def predictModel(self, gu, ym, df):
         pd.set_option('display.max_columns', None)
+        # 시간별 데이터.csv 합 불러오기
         data = pd.read_csv('https://raw.githubusercontent.com/Loyce0805/test333/jain/House/datas/%EC%8B%9C%EA%B0%84%EB%B3%84%20%EB%8D%B0%EC%9D%B4%ED%84%B0%20%ED%95%A9.csv', encoding='cp949')
         
         #시계열 데이터형 변형
@@ -30,7 +31,7 @@ class AptPred:
         
         data['price']=df['price']
         # print(data.head())
-        # 행정구별 인구수 데이터 추가
+        # 행정구별_인구수.csv 데이터 추가
         popul = pd.read_csv('https://raw.githubusercontent.com/Loyce0805/test333/master/House/datas/%ED%96%89%EC%A0%95%EA%B5%AC%EB%B3%84_%EC%9D%B8%EA%B5%AC%EC%88%98.csv', encoding='cp949')
         data['popul']=popul[gu]
         
@@ -84,7 +85,6 @@ class AptPred:
         index = []
         for i in list(range(2022, 2027, 1)):
             for j in list(range(1, 13, 1)):
-                # print(str(i)+str(j).zfill(2))
                 index.append(str(i)+'-'+str(j).zfill(2))
         
         predict_math = pd.DataFrame(predict_math)
@@ -93,10 +93,11 @@ class AptPred:
         predict_math.columns = ['Predict price']
         
         r2 = r2_score(test_data['price'], ols_pred)
-        print(r2)
-        resultPredict = predict_math.loc[ym].values[0]
-        print(resultPredict)
-        
+
+        # print(r2)
+        resultPredict = predict_math.loc[:ym]
+        # print(resultPredict)
+        # print(predict_math)
         return resultPredict
     
 
