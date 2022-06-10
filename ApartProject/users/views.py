@@ -8,19 +8,27 @@ def signUp(request):
 
 def signUpOk(request):
     if request.method == "POST":
-        try:            
-            Users(
-                id = request.POST.get('id'),
-                pw = request.POST.get('pw'),
-                email = request.POST.get('email'),
-                name = request.POST.get('name'),
-                phone = request.POST.get('phone'),
-                addr = request.POST.get('addr'),
-            ).save()
+        idcheck = request.POST.get('id')
+        id2 = Users.objects.filter(id=idcheck)
         
-        except Exception as e:
-            # print('추가 에러:',e)
-            return render(request,'error.html')
+        if id2.count() != 0:
+            
+            errors = '존재하는 아이디입니다.'
+            return render(request, 'signup.html', {'msg':errors})
+        else:
+            try:            
+                Users(
+                    id = request.POST.get('id'),
+                    pw = request.POST.get('pw'),
+                    email = request.POST.get('email'),
+                    name = request.POST.get('name'),
+                    phone = request.POST.get('phone'),
+                    addr = request.POST.get('addr'),
+                ).save()
+            
+            except Exception as e:
+                print('추가 에러:',e)
+                return render(request,'error.html')
         
     return redirect('/')
 def login(request):
@@ -47,3 +55,10 @@ def logout(request):
     if request.session['user']:
         del(request.session['user'])
     return render(request, 'logout.html')
+
+def myPage(request):
+    if request.session['user']:
+        id = request.session['user']
+        id2 = Users.objects.get(id = id)
+
+    return render(request, 'mypage.html', {'data':id2})

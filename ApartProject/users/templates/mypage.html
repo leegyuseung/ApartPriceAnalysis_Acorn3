@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>mypage</title>
+</head>
+<body>
+{% include 'head.html' %}
+<body class="text-center" style="background-color: #FDF5E6">
+<div class="container">
+    <div class="row"  style="margin-top: 300px;" >
+      <div class="col-sm-9 col-md-7 col-lg-5 mx-auto">
+        <div class="card card-signin my-5">
+         <div class="card-body" style="background-color: #FFCB9C; border-color: #FFCB9C" >
+			<form action="/users/signupok" name="signup" method="post">{% csrf_token %}
+			<div class="form-floating">
+			<input class="form-control" type="text" name="id" placeholder="{{datas.id}}">
+			</div>
+			<div class="form-floating">
+			<input class="form-control" type="password" name="pw"placeholder="PW">
+			<label for="pw" style="color: black;">PW</label>
+            </div>
+			<div class="form-floating">
+			<input class="form-control" type="password" name="pw2"placeholder="PW 확인">
+			<label for="pw2" style="color: black;">PW 확인</label>
+            </div>
+            <div class="form-floating">
+            <input class="form-control" type="text" name="name"placeholder="이름">
+			<label for="name" style="color: black;">이름</label>
+			</div>
+			<div class="form-floating">
+			<input class="form-control" type="email" name="email"placeholder="이메일">
+			<label for="email" style="color: black;">이메일</label>
+			</div>
+			<div class="form-floating">
+			<input class="form-control" type="tel" name="phone" placeholder="전화번호">
+			<label for="tel" style="color: black;">전화번호</label>
+			</div>
+			<div class="form-floating">
+			<label for="addr" style="color: black;">서울관심지역</label>
+			</div>
+			<br><br>
+			<button class="w-100 btn btn-lg btn-outline-dark" type="button" id="btnsignup">가입</button>
+			<br><br>
+			<button class="w-100 btn btn-lg btn-outline-dark" type="button" onclick="history.back()" >홈</button>
+			</form>
+		  </div>
+         </div>
+        </div>
+      </div>
+     </div>
+</body>
+<!-- MDB -->
+<script type="text/javascript" src="../static/js/mdb.min.js"></script>
+<!-- Custom scripts -->
+<script type="text/javascript" src="../static/js/script.js"></script>
+</html>

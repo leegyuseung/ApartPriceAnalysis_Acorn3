@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <title>회원가입</title>
+<link href="/docs/5.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
 </head>
 <body>
 <script type="text/javascript">
@@ -41,71 +42,103 @@ function chkFunc(){
 		signup.addr.focus();
 		return;
 	}
+	if(signup.pw.value !== signup.pw2.value){
+		alert('비밀번호와 비밀번호확인이 다릅니다');
+		signup.id2.focus();
+		return;
+	}
 	signup.submit();
 	
 }
 </script>
-<form action="/users/signupok" name="signup" method="post">{% csrf_token %}
-<table>
-	<tr>
-		<td>ID</td>
-		<td><input type="text" name="id"></td>
-	</tr>
-	<tr>
-		<td>PW</td>
-		<td><input type="password" name="pw"></td>
-	</tr>
-	<tr>
-		<td>이름</td>
-		<td><input type="text" name="name"></td>
-	</tr>
-	<tr>
-		<td>이메일</td>
-		<td><input type="email" name="email"></td>
-	</tr>
-	<tr>
-		<td>전화번호</td>
-		<td><input type="tel" name="phone"></td>
-	</tr>
-	<tr>
-		<td>서울관심지역</td>
-		<td>
-		<select name="addr">
-		<option value="마포구" selected>마포구</option>
-	    <option value="서대문구">서대문구</option>
-	    <option value="은평구">은평구</option>
-	    <option value="성동구">성동구</option>
-	    <option value="광진구">광진구</option>
-	    <option value="동대문구">동대문구</option>
-	    <option value="성북구">성북구</option>
-	    <option value="노원구">노원구</option>
-	    <option value="도봉구">도봉구</option>
-	    <option value="중랑구">중랑구</option>
-	    <option value="강북구">강북구</option>
-	    <option value="용산구">용산구</option>
-	    <option value="종로구">종로구</option>
-	    <option value="중구">중구</option>
-	    <option value="영등포구">영등포구</option>
-	    <option value="동작구">동작구</option>
-	    <option value="양천구">양천구</option>
-	    <option value="강서구">강서구</option>
-	    <option value="구로구">구로구</option>
-	    <option value="관악구">관악구</option>
-	    <option value="금천구">금천구</option>
-	    <option value="서초구">서초구</option>
-	    <option value="강남구">강남구</option>
-	    <option value="송파구">송파구</option>
-	    <option value="강동구">강동구</option>
-		</select>
-		</td>
-	</tr>
-	<tr>
-		<td colspan="2">
-			<input type="button" value="가입" id="btnsignup">
-			<input type="button" value="취소" onclick="history.back()">
-		</td>
-	</tr>
-</table>
-</form>
+{% include 'head.html' %}
+<body class="text-center" style="background-color: #FDF5E6">
+<div class="container">
+    <div class="row"  style="margin-top: 300px;" >
+      <div class="col-sm-9 col-md-7 col-lg-5 mx-auto">
+        <div class="card card-signin my-5">
+         <div class="card-body" style="background-color: #FFCB9C; border-color: #FFCB9C" >
+			<form action="/users/signupok" name="signup" method="post">{% csrf_token %}
+			<div class="form-floating">
+			<input class="form-control" type="text" name="id" placeholder="ID">
+			<label for="id" style="color: black;">ID</label>
+			</div>
+			<div class="form-floating">
+			<input class="form-control" type="password" name="pw"placeholder="PW">
+			<label for="pw" style="color: black;">PW</label>
+            </div>
+			<div class="form-floating">
+			<input class="form-control" type="password" name="pw2"placeholder="PW 확인">
+			<label for="pw2" style="color: black;">PW 확인</label>
+            </div>
+            <div class="form-floating">
+            <input class="form-control" type="text" name="name"placeholder="이름">
+			<label for="name" style="color: black;">이름</label>
+			</div>
+			<div class="form-floating">
+			<input class="form-control" type="email" name="email"placeholder="이메일">
+			<label for="email" style="color: black;">이메일</label>
+			</div>
+			<div class="form-floating">
+			<input class="form-control" type="tel" name="phone" placeholder="전화번호">
+			<label for="tel" style="color: black;">전화번호</label>
+			</div>
+			<div class="form-floating">
+			<select name="addr" class="form-select">
+			<option value="마포구" selected>마포구</option>
+		    <option value="서대문구">서대문구</option>
+		    <option value="은평구">은평구</option>
+		    <option value="성동구">성동구</option>
+		    <option value="광진구">광진구</option>
+		    <option value="동대문구">동대문구</option>
+		    <option value="성북구">성북구</option>
+		    <option value="노원구">노원구</option>
+		    <option value="도봉구">도봉구</option>
+		    <option value="중랑구">중랑구</option>
+		    <option value="강북구">강북구</option>
+		    <option value="용산구">용산구</option>
+		    <option value="종로구">종로구</option>
+		    <option value="중구">중구</option>
+		    <option value="영등포구">영등포구</option>
+		    <option value="동작구">동작구</option>
+		    <option value="양천구">양천구</option>
+		    <option value="강서구">강서구</option>
+		    <option value="구로구">구로구</option>
+		    <option value="관악구">관악구</option>
+		    <option value="금천구">금천구</option>
+		    <option value="서초구">서초구</option>
+		    <option value="강남구">강남구</option>
+		    <option value="송파구">송파구</option>
+		    <option value="강동구">강동구</option>
+			</select>
+			<label for="addr" style="color: black;">서울관심지역</label>
+			</div>
+			<br><br>
+			<button class="w-100 btn btn-lg btn-outline-dark" type="button" id="btnsignup">가입</button>
+			<br><br>
+			<button class="w-100 btn btn-lg btn-outline-dark" type="button" onclick="history.back()" >취소</button>
+			</form>
+		  </div>
+         </div>
+        </div>
+      </div>
+     </div>
+{% if msg %}
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+  <symbol id="exclamation-triangle-fill" fill="currentColor" viewBox="0 0 16 16">
+    <path d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5zm.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"/>
+  </symbol>
+</svg>
+<div class="alert alert-danger d-flex align-items-center" role="alert">
+  <svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Warning:"><use xlink:href="#exclamation-triangle-fill"/></svg>
+  <div>
+    {{msg}}
+  </div>
+</div>
+{% endif %}
 </body>
+<!-- MDB -->
+<script type="text/javascript" src="../static/js/mdb.min.js"></script>
+<!-- Custom scripts -->
+<script type="text/javascript" src="../static/js/script.js"></script>
 </html>
