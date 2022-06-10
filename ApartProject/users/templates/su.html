@@ -2,56 +2,33 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>회원가입</title>
-<link href="/docs/5.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
+<title>수정</title>
 </head>
-<body>
 <script type="text/javascript">
 window.onload= function(){
-	document.querySelector("#btnsignup").onclick = chkFunc;
-}
-
-function chkFunc(){
-	if(signup.id.value === ""){
-		alert('ID를 입력하시오');
-		signup.id.focus();
-		return;
-	}
-	if(signup.name.value === ""){
+	document.getElementById("btnsuok").onclick = function(){
+	if(suok.name.value == ""){
 		alert('이름 입력하시오');
-		signup.name.focus();
+		suok.name.focus();
 		return;
 	}
-	if(signup.pw.value === ""){
+	if(suok.pw.value == ""){
 		alert('PW를 입력하시오');
-		signup.pw.focus();
+		suok.pw.focus();
 		return;
 	}
-	if(signup.email.value === ""){
+	if(suok.email.value == ""){
 		alert('이메일을 입력하시오');
-		signup.email.focus();
+		suok.email.focus();
 		return;
 	}
-	if(signup.phone.value === ""){
+	if(suok.phone.value == ""){
 		alert('전화번호를 입력하시오');
-		signup.phone.focus();
+		suok.phone.focus();
 		return;
 	}
-	if(signup.addr.value === ""){
-		alert('서울관심지역 입력하시오');
-		signup.addr.focus();
-		return;
+	suok.submit();	
 	}
-	if(signup.pw.value !== signup.pw2.value){
-		alert('비밀번호와 비밀번호확인이 다릅니다');
-		signup.id2.focus();
-		return;
-	}
-	signup.submit();
-	
-}
-function gohome(){
-	location.href='/';
 }
 </script>
 {% include 'head.html' %}
@@ -61,29 +38,25 @@ function gohome(){
       <div class="col-sm-9 col-md-7 col-lg-5 mx-auto">
         <div class="card card-signin my-5">
          <div class="card-body" style="background-color: #FFCB9C; border-color: #FFCB9C" >
-			<form action="/users/signupok" name="signup" method="post">{% csrf_token %}
+			<form action="/users/suok" name="suok" method="post">{% csrf_token %}
 			<div class="form-floating">
-			<input class="form-control" type="text" name="id" placeholder="ID">
+			<input class="form-control" type="text" name="id" value="{{data.id}}" disabled>
 			<label for="id" style="color: black;">ID</label>
 			</div>
 			<div class="form-floating">
-			<input class="form-control" type="password" name="pw"placeholder="PW">
-			<label for="pw" style="color: black;">PW</label>
-            </div>
-			<div class="form-floating">
-			<input class="form-control" type="password" name="pw2"placeholder="PW 확인">
-			<label for="pw2" style="color: black;">PW 확인</label>
+			<input class="form-control" type="password" name="pw" placeholder="비밀번호를 입력하세요">
+			<label for="pw" style="color: black;">비밀번호를 입력하세요</label>
             </div>
             <div class="form-floating">
-            <input class="form-control" type="text" name="name"placeholder="이름">
+            <input class="form-control" type="text" name="name" value="{{data.name}}">
 			<label for="name" style="color: black;">이름</label>
 			</div>
 			<div class="form-floating">
-			<input class="form-control" type="email" name="email"placeholder="이메일">
+			<input class="form-control" type="email" name="email" value="{{data.email}}">
 			<label for="email" style="color: black;">이메일</label>
 			</div>
 			<div class="form-floating">
-			<input class="form-control" type="tel" name="phone" placeholder="전화번호">
+			<input class="form-control" type="tel" name="phone" value="{{data.phone}}">
 			<label for="tel" style="color: black;">전화번호</label>
 			</div>
 			<div class="form-floating">
@@ -117,15 +90,19 @@ function gohome(){
 			<label for="addr" style="color: black;">서울관심지역</label>
 			</div>
 			<br><br>
-			<button class="w-100 btn btn-lg btn-outline-dark" type="button" id="btnsignup">가입</button>
+			<button class="w-100 btn btn-lg btn-outline-dark" type="button" id="btnsuok">수정</button>
 			<br><br>
-			<button class="w-100 btn btn-lg btn-outline-dark" type="button" onclick="gohome()" >취소</button>
+			<button class="w-100 btn btn-lg btn-outline-dark" type="button" onclick="history.back()" >취소</button>
 			</form>
 		  </div>
          </div>
         </div>
       </div>
      </div>
+<!-- MDB -->
+<script type="text/javascript" src="../static/js/mdb.min.js"></script>
+<!-- Custom scripts -->
+<script type="text/javascript" src="../static/js/script.js"></script>
 {% if msg %}
 <svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
   <symbol id="exclamation-triangle-fill" fill="currentColor" viewBox="0 0 16 16">
@@ -140,8 +117,4 @@ function gohome(){
 </div>
 {% endif %}
 </body>
-<!-- MDB -->
-<script type="text/javascript" src="../static/js/mdb.min.js"></script>
-<!-- Custom scripts -->
-<script type="text/javascript" src="../static/js/script.js"></script>
 </html>

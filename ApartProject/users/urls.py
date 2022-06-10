@@ -8,4 +8,9 @@ urlpatterns = [
     path('loginok', views.loginOk), 
     path('logout', views.logout),  
     path('mypage', views.myPage), 
-]  
+    path('su', views.su), 
+    path('suok', views.suOk),  
+    path('tal', views.tal),  
+    path('pw', views.pwC),   
+    path('pwchange', views.pwChange),  
+]   

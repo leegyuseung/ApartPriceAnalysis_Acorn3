@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>비밀번호 변경</title>
+</head>
+<script>
+window.onload= function(){
+	document.getElementById("btnpwchange").onclick = function(){
+	if(pwchange.newpw.value == ""){
+		alert('새 비밀번호를 입력하시오');
+		pwchange.newpw.focus();
+		return;
+	}
+	if(pwchange.newpw2.value == ""){
+		alert('새 비밀번호 확인을 입력하시오');
+		pwchange.newpw2.focus();
+		return;
+	}
+	if(pwchange.pw.value == ""){
+		alert('비밀번호를 입력하시오');
+		pwchange.pw.focus();
+		return;
+	}
+	if(pwchange.newpw2.value != pwchange.newpw.value){
+		alert('비밀번호와 비밀번호 확인이 다릅니다.');
+		pwchange.pw.focus();
+		return;
+	}
+	pwchange.submit();	
+	}
+}
+</script>
+{% include 'head.html' %}
+<body class="text-center" style="background-color: #FDF5E6">
+<div class="container">
+    <div class="row"  style="margin-top: 300px;" >
+      <div class="col-sm-9 col-md-7 col-lg-5 mx-auto">
+        <div class="card card-signin my-5">
+         <div class="card-body" style="background-color: #FFCB9C; border-color: #FFCB9C" >
+			<form action="/users/pwchange" name="pwchange" method="post">{% csrf_token %}
+			<div class="form-floating">
+			<input class="form-control" type="text" name="id" value="{{data.id}}" disabled>
+			<label for="id" style="color: black;">ID</label>
+			</div>
+			<div class="form-floating">
+			<input class="form-control" type="password" name="pw" placeholder="현재 비밀번호를 입력하세요">
+			<label for="pw" style="color: black;">현재 비밀번호를 입력하세요</label>
+            </div>
+            <div class="form-floating">
+			<input class="form-control" type="password" name="newpw" placeholder="새 비밀번호를 입력하세요">
+			<label for="pw" style="color: black;">새 비밀번호를 입력하세요</label>
+            </div>
+            <div class="form-floating">
+			<input class="form-control" type="password" name="newpw2" placeholder="새 비밀번호를 다시 입력하세요">
+			<label for="pw" style="color: black;">새 비밀번호를 다시 입력하세요</label>
+            </div>
+			<br><br>
+			<button class="w-100 btn btn-lg btn-outline-dark" type="button" id="btnpwchange">수정</button>
+			<br><br>
+			<button class="w-100 btn btn-lg btn-outline-dark" type="button" onclick="history.back()" >취소</button>
+			</form>
+		  </div>
+         </div>
+        </div>
+      </div>
+     </div>
+<!-- MDB -->
+<script type="text/javascript" src="../static/js/mdb.min.js"></script>
+<!-- Custom scripts -->
+<script type="text/javascript" src="../static/js/script.js"></script>
+</body>
+</html>
