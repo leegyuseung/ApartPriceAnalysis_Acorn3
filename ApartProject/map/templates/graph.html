@@ -140,6 +140,10 @@ function pred(){
 	    	send_data['predict'] = data.predict;
 	    	send_data['ymd2'] = data.ymd2;
 	    	
+	    	for (let i = 0; i < tdata.length; i++) {
+	    		tdata[i] = NaN;
+	    	}
+	    	
 	    	tdata = tdata.concat(send_data['predict']); // 기존 가격와 예측 가격 합치기
 	    	ymd = ymd.concat(send_data['ymd2']); // 기존 날짜와 예측 날짜 합치기
 	    	
