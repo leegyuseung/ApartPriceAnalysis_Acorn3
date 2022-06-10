@@ -49,7 +49,6 @@ def apart(request):
     if apt_lists.has_next() == True:
         nextNum = apt_lists.next_page_number()
         tojson['nextNum']=nextNum
-    print(tojson)
 
     # json으로 리턴
     return JsonResponse({'juso':juso, 'apartdata':apt, 'aptJusoJson':aptJusoJson, 'apt_lists':tojson})
@@ -74,11 +73,6 @@ def Dpolygon(request):
     
     return JsonResponse({'Dpolygon':Dpolygon})
 
-@csrf_exempt
-def dongmaker(request):
-    datas = Addrapt.objects.all.values()
-    df = pd.DataFrame(datas)
-
 # graph predict ajax Function
 @csrf_exempt
 def pred(request):
@@ -87,11 +81,32 @@ def pred(request):
     addr = request.POST.get('addr')
     df = createPredDf(addr)
     pred = AptPred()
-    #Model fitting
-    json=pred.predictModel(gu=gu, ym=year, df=df)
     
+    predict = pred.predictModel(gu=gu, ym=year, df=df)['predPrice']
+    predict = predict
+
+    predict1 = []
+    predictlist = predict['Predict price'].values
+    for i in range(len(predictlist)):
+        predict1.append(predictlist[i])
     
-    return JsonResponse(json)
+    ymd2 = []
+    for i in range(len(predict.index)):
+        ymd2.append(predict.index[i])
+            
+    for i in range(len(ymd2)):
+            ymd2[i] = ymd2[i].replace('-','')
+        
+    for i in range(len(ymd2)):
+            ymd2[i] = int(ymd2[i])
+    
+    print(ymd2)
+    print(predict1)
+    
+    r2 = pred.predictModel(gu=gu, ym=year, df=df)['r2']
+    predictL = round(predict1[-1])
+    return JsonResponse({'new_val':year, 'predict':predict1, 'ymd2':ymd2, 'r2':r2, 'predictL':predictL})
+
 
 def createPredDf(addr):
 
@@ -102,7 +117,6 @@ def createPredDf(addr):
         df = df.drop(['num'], axis=1)
         df = df.sort_values(by = 'ymd')
         
-        # print(df)
         print(df['apt'][:1].values[0])
         apt = df['apt'][:1].values[0]
         year = ['2011', '2012', '2013', '2014', '2015', '2016', '2017', '2018', '2019', '2020', '2021']
@@ -130,12 +144,9 @@ def createPredDf(addr):
         ddf = pd.DataFrame({'날짜':ymd})
         ddff = pd.DataFrame({'price':mean})
         dfdf = pd.concat([ddf, ddff], axis=1)
-        # print(dfdf)
         
         return dfdf
-
-    
-        
+      
 def importData(request):
     # 클릭한 마커의 데이터 불러오기
     if request.method == 'GET':
@@ -149,17 +160,32 @@ def importData(request):
         df = df.drop(['num'], axis=1)
         df = df.sort_values(by = 'ymd')
         
-        # print(df)
         print(df['gu'][:1].values[0])
         apt = df['apt'][:1].values[0]
         year = ['2011', '2012', '2013', '2014', '2015', '2016', '2017', '2018', '2019', '2020', '2021']
         mon = ['01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12']
         
-        ymd = []  # ['201101', '201102', '201103', '201104' ...
+        ymd = []  # ['2011-01', '2011-02', '2011-03', '2011-04' ...
         
         for i in range(len(year)):
             for j in range(len(mon)):
                 ymd.append(year[i] + mon[j])
+                
+        
+        # ymdInt = []  # ['2011-01', '2011-02', '2011-03', '2011-04' ...
+        #
+        # for i in range(len(year)):
+        #     for j in range(len(mon)):
+        #         ymdInt.append(year[i] + mon[j])
+                
+        # print(ymd)
+        # print(ymdInt)
+        
+        # for i in range(len(df)):
+        #
+        #     for j in range(len(ymd)):
+        #         pass
+
         
         mean = []
         for i in ymd:
