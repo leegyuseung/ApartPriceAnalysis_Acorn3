@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect
 from qna.models import BoardTab
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from datetime import datetime
+from users.models import Users
 
 # Create your views here.
 
@@ -21,8 +22,22 @@ def listFunc(request):
 
 
 def insertFunc(request):
+    try:
+        if request.session['user']:
+            userId = request.session['user']
+            print(userId)
+            data = Users.objects.get(id=userId)
+            return render(request, 'insert.html',{'data': data})
+        else:
+            return render(request, '/users/login')
+        
+        
+    except Exception as e:
+        print('수정자료 읽기 오류',e)
+        return render(request,'error.html')
     
-    return render(request, 'insert.html')
+    
+    return render(request, 'insert.html',{'data': userId})
 
 def insertOkFunc(request):
     if request.method == 'POST':
@@ -31,11 +46,10 @@ def insertOkFunc(request):
             datas = BoardTab.objects.all()
             if datas.count() != 0:
                 gbun = BoardTab.objects.latest('id').id + 1
-                
+            
+            userId = Users.objects.get(id = request.session['user'])
             BoardTab(
-                name = request.POST.get('name'),
-                passwd = request.POST.get('passwd'),
-                mail = request.POST.get('mail'),
+                userId = userId,
                 title = request.POST.get('title'),
                 cont = request.POST.get('cont'),
                 bip = request.META['REMOTE_ADDR'],

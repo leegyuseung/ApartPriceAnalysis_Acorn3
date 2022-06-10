@@ -27,24 +27,20 @@
 	<table style="width: 95%" class="table">
 		<tr>
 			<td>작성자</td>
-			<td><input type="text" name="name" value="이슬" /></td>
-		</tr>
-		<tr>
-			<td>비밀번호</td>
-			<td><input type="text" name="passwd" value="123" /></td>
+			<td><input type="text" name="name" value="{{data.id}}" /></td>
 		</tr>
 		<tr>
 			<td>e-mail</td>
-			<td><input type="email" name="mail" value="abc@abc.com"/></td>
+			<td><input type="email" name="mail" value="{{data.email}}"/></td>
 		</tr>
 		<tr>
 			<td>title</td>
-			<td><input type="text" name="title" style="width: 99%" value="test"/></td>
+			<td><input type="text" name="title" style="width: 99%" /></td>
 		</tr>
 		<tr>
 			<td>content</td>
 			<td>
-				<textarea name="cont" rows="5" style="width: 99%" value='뽀잉'></textarea>
+				<textarea name="cont" rows="5" style="width: 99%"></textarea>
 			</td>
 		</tr>
 		<tr>
@@ -53,7 +49,6 @@
 			</td>
 		</tr>
 	</table>
-	
 	</form>
 </div>
 </body>

@@ -9,9 +9,11 @@
 <div class="container" style="width:95%; text-align: center">
 	<h1>Q&A</h1>
 </div>
-
+{% if request.session.user %}
 <a href="/qna/insert">글쓰기</a>
-
+{% else %}
+<a href="/users/login">로그인하고 글쓰러 가기</a>
+{% endif %}
 <table style="width: 95%" class="table">
 	<tr>
 		<th>번호</th><th>제목</th><th>작성자</th><th>작성일</th><th>조회수</th>
@@ -21,7 +23,7 @@
 	<tr>
 		<td>{{d.id}}</td>
 		<td><a href="/qna/content?id={{d.id}}&page={{datas.number}}">{{d.title}}</a></td>
-		<td>{{d.name}}</td>
+		<td>{{d.userId.id}}</td>
 		<td>{{d.bdate.year}}.{{d.bdate.month}}{{d.bdate.day}}</td>
 		<td>{{d.readcnt}}</td>
 	</tr>
