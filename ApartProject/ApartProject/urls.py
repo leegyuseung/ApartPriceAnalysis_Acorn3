@@ -17,10 +17,11 @@ from django.contrib import admin
 from django.urls import path
 from map import views
 from django.urls.conf import include
-
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('',views.Main),  
     path('map/',include('map.urls')),
-    path('qna/',include('qna.urls'))
+    path('users/', include('users.urls')),
+    path('qna/',include('qna.urls')),
+
 ]
