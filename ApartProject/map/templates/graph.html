@@ -32,7 +32,7 @@
 						<div id='addr' style='display:None'>{{addr}}</div>
 						<div id='ymd' style='display:None'>{{ymd}}</div>
 			      		{{apt}}<input type="month" id="year" value="2022-01" min="2011-01" max="2026-12" /> &nbsp;&nbsp;
-				  		<button onclick="pred()" style="border-color: #FFCB9C; background-color: #FFCB9C">가격 예측 하기</button>
+				  		<button id="predbtn" onclick="pred()" style="border-color: #FFCB9C; background-color: #FFCB9C">가격 예측 하기</button>
 				  		<br />
 				  		<br />
 				  		<table class="table">
@@ -63,17 +63,6 @@
 				<div class="row">
 					<div class="col-md-10">
 						<canvas id = 'chart'>{{mean}}</canvas>
-						<canvas id = 'chart2'></canvas>
-						<div id='ymd' style='display:None'>{{ymd}}</div>
-					</div>
-				</div>
-			</div>
-			<div class="container">
-				
-				<div class="row">
-					<div class="col-md-10">
-						<canvas id = 'chart'>{{mean}}</canvas>
-						<canvas id = 'chart2'>{{mean}}</canvas>						
 					</div>
 				</div>
 			</div>
@@ -82,7 +71,8 @@
 </div>
 <script type="text/javascript">
 // graph 변수
-let chart = document.getElementById('chart').getContext('2d');
+//let chart = document.getElementById('chart').getContext('2d');
+var ctx = document.getElementById('chart');
 
 var tdata = document.getElementById('chart').innerHTML;
 var tdata = JSON.parse(tdata);
@@ -91,8 +81,8 @@ var tdata = JSON.parse(tdata);
 var ymd = document.getElementById('ymd').innerHTML;
 var ymd = JSON.parse(ymd);
 
-// graph ajax
 
+/*
 let linechart = new Chart(chart, {
 	type : 'line',
 	data : {
@@ -108,6 +98,25 @@ let linechart = new Chart(chart, {
 		}]
 	}
 })
+*/
+
+var config = {
+	type: 'line',
+	data: {
+		labels: ymd,
+		
+		datasets: [{
+			label: '월 평균 거래금액',
+			backgroundColor: '#FFCB9C',
+			borderWidth : 2,
+			borderColor: 'black',
+			data: tdata,
+		}]
+	}
+};
+ 
+//차트 그리기
+var myChart = new Chart(ctx, config);
 
 
 function pred(){
@@ -125,6 +134,7 @@ function pred(){
 	$("#predPrice").empty();
 	$("#r2").empty();
 	
+
 	$.ajax({
 		url: "pred",
 	    type:"post",
@@ -134,38 +144,53 @@ function pred(){
 	    	const pred = data.predictL.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",");
 	    	$("#predPrice").append(pred+' 만원');
 	     	$("#r2").append(data.r2+'%');
-	    
-	    	let chart = document.getElementById('chart2').getContext('2d');
-			
+	    			
 	    	send_data['predict'] = data.predict;
 	    	send_data['ymd2'] = data.ymd2;
 	    	
-	    	for (let i = 0; i < tdata.length; i++) {
-	    		tdata[i] = NaN;
-	    	}
+	    	//for (let i = 0; i < tdata.length; i++) {
+	    	//	tdata[i] = NaN;
+	    	//}
 	    	
 	    	tdata = tdata.concat(send_data['predict']); // 기존 가격와 예측 가격 합치기
-	    	ymd = ymd.concat(send_data['ymd2']); // 기존 날짜와 예측 날짜 합치기
 	    	
-			let linechart = new Chart(chart, {
-				type : 'line',
-     			data : {
-     				labels :  ymd,
-     				
-     				datasets : [{
-     					label : '예측 값',
-     					backgroundColor : 'yellow',
-     					borderWidth : 2,
-     					borderColor : 'black',
-     					data : tdata
-     				}]
-     			}
-     		})
+	    	//ymd2 = ymd.concat(send_data['ymd2']); // 기존 날짜와 예측 날짜 합치기
+	    	ymd2 = send_data['ymd2']
+	    		
+	    	//라벨추가
+	    	for (let i = 0; i < ymd2.length; i++) {
+	    		config.data.labels.push(ymd2[i])
+	    	}
+	    		
+	    	//데이터셋 수 만큼 반복
+	    	//var dataset = config.data.datasets;
+	    	//for(var i=0; i<dataset.length; i++){
+	    	//	//데이터셋의 데이터 추가
+	    	//	dataset[i].data.push(Math.floor(Math.random() * 50));
+	    	//}
+    		var newDataset = {
+    			label: '예측 값',
+    			borderColor : 'black',
+    			backgroundColor : 'yellow',
+	    		data: [],
+	    	}
+    		tdata3 = tdata
+    		
+    		// newDataset에 데이터 삽입
+    		for (var i=0; i< tdata3.length; i++){
+    			newDataset.data.push(tdata3[i]);
+    		}
+	    		
+    		// chart에 newDataset 푸쉬
+    		config.data.datasets.push(newDataset);
+
+    		myChart.update();	//차트 업데이트   	
 	     },
 	     error:function(){
 	    	 alert('1 ~ 5년만 입력 가능!')
 	     }
 	});
+	
 }
 
 

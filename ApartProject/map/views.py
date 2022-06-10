@@ -217,7 +217,7 @@ def importData(request):
     # print(df)
        
         
-    return render(request, 'graph.html', {'addr':detailaddr, 'datas':df.to_html(), 'mean':mean, 'ymd':ymd,'apt':apt,'gu':gu})
+    return render(request, 'graph.html', {'addr':detailaddr, 'mean':mean, 'ymd':ymd,'apt':apt,'gu':gu})
 
 
 
