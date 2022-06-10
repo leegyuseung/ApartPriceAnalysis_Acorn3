@@ -21,52 +21,43 @@
 <header>
 {% include 'head.html' %}
 </header>
-<div id='gu' style='display:None'>{{gu}}</div>
-<div id='addr' style='display:None'>{{addr}}</div>
-<br>
-{{apt}} 의 <input type="month" id="year" /> 년 &nbsp;&nbsp;
-<button onclick="pred()">입력</button> 후 집값 확인
-<div class="pred"></div>
-<br />
-
  <!-- Sidebar -->
 <div class="container-fluid">
 	<div class="row flex-xl-nowrap">
 		<div class=" col-md-2">
-		  <nav id="sidebarMenu" class="collapse d-lg-block sidebar collapse col-md-2" style='background-color: #FDF5E6; border-right: 2px solid #FFCB9C'>
-		    <div class="position-sticky">
-		      <div class="list-group list-group-flush mx-3" >
-			      {{apt}}<input type="month" id="year" value="2022-01" min="2011-01" max="2026-12" /> &nbsp;&nbsp;
-				  <button onclick="pred()" style="border-color: #FFCB9C; background-color: #FFCB9C">가격 예측 하기</button>
-				  <br /><br />
-				  <table class="table">
-				  	<thead>
-				  		<tr>
-				  			<th scope="col" colspan="2">{{apt}}</th>
-				  		</tr>
-				  	</thead>
-				  	 <tbody class="table-group-divider">
-					    <tr>
-					      <th scope="row">예측값</th>
-					      <td id=predPrice></td>				      
-					    </tr>
-					    <tr>
-					      <th scope="row">결정계수</th>
-					      <td id=r2></td>				      
-					    </tr>
-				  </table>
-				  
-				  
-		      </div>
-		    </div>
-		  </nav>
-	  	</div>
-	
-	  <!-- Sidebar -->
-	<!-- 자료보내기-->
-		<div id='gu' style='display:None'>{{gu}}</div>
-		<div id='addr' style='display:None'>{{addr}}</div>
-		<div id='ymd' style='display:None'>{{ymd}}</div>
+			<nav id="sidebarMenu" class="collapse d-lg-block sidebar collapse col-md-2" style='background-color: #FDF5E6; border-right: 2px solid #FFCB9C'>
+		    	<div class="position-sticky">
+		      		<div class="list-group list-group-flush mx-3" >
+		      			<div id='gu' style='display:None'>{{gu}}</div>
+						<div id='addr' style='display:None'>{{addr}}</div>
+						<div id='ymd' style='display:None'>{{ymd}}</div>
+			      		{{apt}}<input type="month" id="year" value="2022-01" min="2011-01" max="2026-12" /> &nbsp;&nbsp;
+				  		<button onclick="pred()" style="border-color: #FFCB9C; background-color: #FFCB9C">가격 예측 하기</button>
+				  		<br />
+				  		<br />
+				  		<table class="table">
+				  			<thead>
+						  		<tr>
+						  			<th scope="col" colspan="2">{{apt}}</th>
+						  		</tr>
+				  			</thead>
+						  	<tbody class="table-group-divider">
+								<tr>
+							    	<th scope="row">예측값</th>
+							      	<td id=predPrice></td>				      
+							   	</tr>
+					    		<tr>
+					      			<th scope="row">결정계수</th>
+					      			<td id=r2></td>				      
+					    		</tr>
+				  		</table>
+					</div>
+		  		</div>
+			</nav>
+		</div>
+		<!-- Sidebar -->
+		<!-- 자료보내기-->
+		
 		<main class='col-md-10' style="margin-top:58px">
 			<div class="container">
 				<div class="row">
@@ -82,8 +73,7 @@
 				<div class="row">
 					<div class="col-md-10">
 						<canvas id = 'chart'>{{mean}}</canvas>
-						
-						
+						<canvas id = 'chart2'>{{mean}}</canvas>						
 					</div>
 				</div>
 			</div>
@@ -135,7 +125,7 @@ function pred(){
 	
 	console.log(send_data);
    	  
-	$(".pred").empty();
+	$("#predPrice").empty();
 	$("#r2").empty();
 	
 	$.ajax({
@@ -144,7 +134,7 @@ function pred(){
 	    data:send_data,
 	    dataType:"json",
 	    success:function(data){
-	    	$("#predPrice").append(data.predPrice+' 만원');
+	    	$("#predPrice").append(data.predictL+' 만원');
 	     	$("#r2").append(data.r2+'%');
 	    
 	    	let chart = document.getElementById('chart2').getContext('2d');

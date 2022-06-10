@@ -82,10 +82,10 @@ def pred(request):
     addr = request.POST.get('addr')
     df = createPredDf(addr)
     pred = AptPred()
-
-    predict = pred.predictModel(gu=gu, ym=year, df=df)
-
     
+    predict = pred.predictModel(gu=gu, ym=year, df=df)['predPrice']
+    predict = predict
+
     predict1 = []
     predictlist = predict['Predict price'].values
     for i in range(len(predictlist)):
@@ -104,7 +104,9 @@ def pred(request):
     print(ymd2)
     print(predict1)
     
-    return JsonResponse({'new_val':year, 'predict':predict1, 'ymd2':ymd2})
+    r2 = pred.predictModel(gu=gu, ym=year, df=df)['r2']
+    predictL = round(predict1[-1])
+    return JsonResponse({'new_val':year, 'predict':predict1, 'ymd2':ymd2, 'r2':r2, 'predictL':predictL})
 
 
 def createPredDf(addr):
@@ -144,7 +146,6 @@ def createPredDf(addr):
         ddf = pd.DataFrame({'날짜':ymd})
         ddff = pd.DataFrame({'price':mean})
         dfdf = pd.concat([ddf, ddff], axis=1)
-        # print(dfdf)
         
         return dfdf
         
