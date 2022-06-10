@@ -74,6 +74,7 @@ def Dpolygon(request):
     
     return JsonResponse({'Dpolygon':Dpolygon})
 
+# graph predict ajax Function
 @csrf_exempt
 def pred(request):
     year = request.POST.get('year')
@@ -81,7 +82,9 @@ def pred(request):
     addr = request.POST.get('addr')
     df = createPredDf(addr)
     pred = AptPred()
+
     predict = pred.predictModel(gu=gu, ym=year, df=df)
+
     
     predict1 = []
     predictlist = predict['Predict price'].values
@@ -102,6 +105,7 @@ def pred(request):
     print(predict1)
     
     return JsonResponse({'new_val':year, 'predict':predict1, 'ymd2':ymd2})
+
 
 def createPredDf(addr):
 

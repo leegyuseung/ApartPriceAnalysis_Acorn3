@@ -17,7 +17,8 @@
 	<!-- Navbar -->
   <nav
        id="main-navbar"
-       class="navbar navbar-expand-lg navbar-light bg-white fixed-top"
+       class="navbar navbar-expand-lg navbar-light fixed-top"
+       style='background-color: #FFCB9C'
        >
     <!-- Container wrapper -->
     <div class="container-fluid">
@@ -40,7 +41,7 @@
   		<path fill-rule="evenodd" d="M2 13.5V7h1v6.5a.5.5 0 0 0 .5.5h9a.5.5 0 0 0 .5-.5V7h1v6.5a1.5 1.5 0 0 1-1.5 1.5h-9A1.5 1.5 0 0 1 2 13.5zm11-11V6l-2-2V2.5a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5z"/>
   		<path fill-rule="evenodd" d="M7.293 1.5a1 1 0 0 1 1.414 0l6.647 6.646a.5.5 0 0 1-.708.708L8 2.207 1.354 8.854a.5.5 0 1 1-.708-.708L7.293 1.5z"/>
 		</svg>
-		&nbsp; BUDONGSAN
+		&nbsp; 까다롭다
       </a>
       
 
@@ -49,7 +50,7 @@
         
 		<!-- Map & home -->
         <li class="nav-item me-3 me-lg-0">
-          <a class="nav-link" href="">
+          <a class="nav-link" href="/">
 			<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-geo-alt-fill" viewBox="0 0 16 16">
 			  <path d="M8 16s6-5.686 6-10A6 6 0 0 0 2 6c0 4.314 6 10 6 10zm0-7a3 3 0 1 1 0-6 3 3 0 0 1 0 6z"/>
 			</svg>
@@ -64,7 +65,16 @@
 			</svg>
           </a>
         </li>
-        
+        <!-- sign up -->
+        <li class="nav-item me-3 me-lg-0">
+          <a class="nav-link" href="/users/signup">
+            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-person-plus-fill" viewBox="0 0 16 16">
+      		<path d="M1 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H1zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/>
+  			<path fill-rule="evenodd" d="M13.5 5a.5.5 0 0 1 .5.5V7h1.5a.5.5 0 0 1 0 1H14v1.5a.5.5 0 0 1-1 0V8h-1.5a.5.5 0 0 1 0-1H13V5.5a.5.5 0 0 1 .5-.5z"/>
+			</svg>
+          </a>
+        </li>
+
         <!-- Avatar -->
         <li class="nav-item dropdown">
           <a
@@ -75,21 +85,22 @@
              data-mdb-toggle="dropdown"
              aria-expanded="false"
              >
-            <img
-                 src="https://mdbootstrap.com/img/Photos/Avatars/img (31).jpg"
-                 class="rounded-circle"
-                 height="32"
-                 alt=""
-                 loading="lazy"
-                 />
+			<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-person-circle" viewBox="0 0 16 16">
+  			<path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0z"/>
+  			<path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8zm8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1z"/>
+			</svg>
           </a>
           <ul
               class="dropdown-menu dropdown-menu-end"
               aria-labelledby="navbarDropdownMenuLink"
               >
-            <li><a class="dropdown-item" href="#">My profile</a></li>
+            <li><a class="dropdown-item" href="/qna/list">Q&A</a></li>
             <li><a class="dropdown-item" href="#">Settings</a></li>
-            <li><a class="dropdown-item" href="#">Logout</a></li>
+            {% if request.session.user %}
+            <li><a class="dropdown-item" href="users/logout">Logout</a></li>
+            {% else %}
+           	<li><a class="dropdown-item" href="users/login">Login</a></li>
+           	{% endif %}
           </ul>
         </li>
       </ul>

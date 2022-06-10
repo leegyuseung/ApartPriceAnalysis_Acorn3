@@ -39,3 +39,4 @@ class Addrapt(models.Model):
     class Meta:
         managed = False
         db_table = 'addrapt'
+        

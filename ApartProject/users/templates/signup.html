@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>회원가입</title>
+</head>
+<body>
+<script type="text/javascript">
+window.onload= function(){
+	document.querySelector("#btnsignup").onclick = chkFunc;
+}
+
+function chkFunc(){
+	if(signup.id.value === ""){
+		alert('ID를 입력하시오');
+		signup.id.focus();
+		return;
+	}
+	if(signup.name.value === ""){
+		alert('이름 입력하시오');
+		signup.name.focus();
+		return;
+	}
+	if(signup.pw.value === ""){
+		alert('PW를 입력하시오');
+		signup.pw.focus();
+		return;
+	}
+	if(signup.email.value === ""){
+		alert('이메일을 입력하시오');
+		signup.email.focus();
+		return;
+	}
+	if(signup.phone.value === ""){
+		alert('전화번호를 입력하시오');
+		signup.phone.focus();
+		return;
+	}
+	if(signup.addr.value === ""){
+		alert('서울관심지역 입력하시오');
+		signup.addr.focus();
+		return;
+	}
+	signup.submit();
+	
+}
+</script>
+<form action="/users/signupok" name="signup" method="post">{% csrf_token %}
+<table>
+	<tr>
+		<td>ID</td>
+		<td><input type="text" name="id"></td>
+	</tr>
+	<tr>
+		<td>PW</td>
+		<td><input type="password" name="pw"></td>
+	</tr>
+	<tr>
+		<td>이름</td>
+		<td><input type="text" name="name"></td>
+	</tr>
+	<tr>
+		<td>이메일</td>
+		<td><input type="email" name="email"></td>
+	</tr>
+	<tr>
+		<td>전화번호</td>
+		<td><input type="tel" name="phone"></td>
+	</tr>
+	<tr>
+		<td>서울관심지역</td>
+		<td>
+		<select name="addr">
+		<option value="마포구" selected>마포구</option>
+	    <option value="서대문구">서대문구</option>
+	    <option value="은평구">은평구</option>
+	    <option value="성동구">성동구</option>
+	    <option value="광진구">광진구</option>
+	    <option value="동대문구">동대문구</option>
+	    <option value="성북구">성북구</option>
+	    <option value="노원구">노원구</option>
+	    <option value="도봉구">도봉구</option>
+	    <option value="중랑구">중랑구</option>
+	    <option value="강북구">강북구</option>
+	    <option value="용산구">용산구</option>
+	    <option value="종로구">종로구</option>
+	    <option value="중구">중구</option>
+	    <option value="영등포구">영등포구</option>
+	    <option value="동작구">동작구</option>
+	    <option value="양천구">양천구</option>
+	    <option value="강서구">강서구</option>
+	    <option value="구로구">구로구</option>
+	    <option value="관악구">관악구</option>
+	    <option value="금천구">금천구</option>
+	    <option value="서초구">서초구</option>
+	    <option value="강남구">강남구</option>
+	    <option value="송파구">송파구</option>
+	    <option value="강동구">강동구</option>
+		</select>
+		</td>
+	</tr>
+	<tr>
+		<td colspan="2">
+			<input type="button" value="가입" id="btnsignup">
+			<input type="button" value="취소" onclick="history.back()">
+		</td>
+	</tr>
+</table>
+</form>
+</body>
+</html>
