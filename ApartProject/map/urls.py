@@ -7,5 +7,6 @@ urlpatterns = [
     path('polygon', views.polygon),
     path('Dpolygon', views.Dpolygon), 
     path('pred',views.pred),
-    
+    path('dongmaker', views.dongmaker),
+
 ]

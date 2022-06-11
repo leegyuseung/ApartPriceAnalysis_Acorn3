@@ -18,6 +18,7 @@ def Main(request):
 def apart(request):
     # 데이터 검색 받기
     search = request.GET['search']
+    
     # DB에 검색
     datas = Addrapt.objects.filter(apt__contains=search).values()
     df = pd.DataFrame(datas)
@@ -171,23 +172,8 @@ def importData(request):
             for j in range(len(mon)):
                 ymd.append(year[i] + mon[j])
                 
-        
-        # ymdInt = []  # ['2011-01', '2011-02', '2011-03', '2011-04' ...
-        #
-        # for i in range(len(year)):
-        #     for j in range(len(mon)):
-        #         ymdInt.append(year[i] + mon[j])
-                
-        # print(ymd)
-        # print(ymdInt)
-        
-        # for i in range(len(df)):
-        #
-        #     for j in range(len(ymd)):
-        #         pass
-
-        
         mean = []
+        
         for i in ymd:
             condition = (df['ymd']== (i)) # 조건식 작성
         
@@ -216,9 +202,17 @@ def importData(request):
         gu = df['gu'][:1].values[0]
     # print(df)
        
-        
     return render(request, 'graph.html', {'addr':detailaddr, 'mean':mean, 'ymd':ymd,'apt':apt,'gu':gu})
 
+@csrf_exempt
+def dongmaker(request):
+    dong = request.POST.get('clickedDong')
+    datas = Addrapt.objects.filter(dong__contains=dong).values()
+    df = pd.DataFrame(datas)
+    
+    dong = list(df['addr']) # 동으로 데이터 불러와서 아파트 주소 가져오기
+    apt = list(df['apt']) # 불러온 아파트 이름 가져오기
 
+    return JsonResponse({'dong':dong, 'apt':apt, 'df':df.to_html()})
 
     

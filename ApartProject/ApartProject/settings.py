@@ -82,7 +82,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'acorn',
         'USER': 'acorn',
-        'PASSWORD': '1234',
+        'PASSWORD': 'acorn1234',
         'HOST': 'acorn3-1.cqjirndgiwgh.us-west-2.rds.amazonaws.com',
         'PORT': '3306',
     }
