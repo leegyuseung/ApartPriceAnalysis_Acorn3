@@ -74,6 +74,8 @@
 			</svg>
           </a>
         </li>
+        {%if request.session.user%}
+        {% else %}
         <!-- sign up -->
         <li class="nav-item me-3 me-lg-0">
           <a class="nav-link" href="/users/signup">
@@ -83,7 +85,7 @@
 			</svg>
           </a>
         </li>
-
+		{% endif%}
         <!-- Avatar -->
         <li class="nav-item dropdown">
           <a
@@ -104,10 +106,10 @@
               aria-labelledby="navbarDropdownMenuLink"
               >
             {% if request.session.user %}
-            <li><a class="dropdown-item" href="users/mypage">Mypage</a></li>
-            <li><a class="dropdown-item" href="users/logout">Logout</a></li>
+            <li><a class="dropdown-item" href="/users/mypage">Mypage</a></li>
+            <li><a class="dropdown-item" href="/users/logout">Logout</a></li>
             {% else %}
-           	<li><a class="dropdown-item" href="users/login">Login</a></li>
+           	<li><a class="dropdown-item" href="/users/login">Login</a></li>
            	{% endif %}
            	<li><a class="dropdown-item" href="/qna/list">Q&A</a></li>
             <li><a class="dropdown-item" href="#">Settings</a></li>
