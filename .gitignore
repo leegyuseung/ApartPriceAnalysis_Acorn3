@@ -2,6 +2,9 @@
 # Created by https://www.toptal.com/developers/gitignore/api/windows,python,pydev,django
 # Edit at https://www.toptal.com/developers/gitignore?templates=windows,python,pydev,django
 
+# 서버 DB 보안
+settings.py
+
 ### Django ###
 *.log
 *.pot

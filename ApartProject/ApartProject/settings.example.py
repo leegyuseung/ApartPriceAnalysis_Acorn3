@@ -81,8 +81,9 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'acorn',
+        # 비밀번호를 입력하세요
         'USER': 'acorn',
-        'PASSWORD': 'acorn1234',
+        'PASSWORD': '',
         'HOST': 'acorn3-1.cqjirndgiwgh.us-west-2.rds.amazonaws.com',
         'PORT': '3306',
     }
