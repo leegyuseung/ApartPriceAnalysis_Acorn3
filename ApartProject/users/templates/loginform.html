@@ -12,13 +12,20 @@ window.onload= function(){
 
 function chkFunc(){
 	//alert("a");
-	if(loginok.name.value === ""){
-		alert('작성자를 입력하시오');
-		loginok.name.focus();
+	if(loginok.id.value === ""){
+		alert('아이디를 입력하시오');
+		loginok.id.focus();
 		return;
 	}
-	
+	if(loginok.pw.value === ""){
+		alert('비밀번호를 입력하시오');
+		loginok.pw.focus();
+		return;
+	}
 	loginok.submit();
+}
+function gohome(){
+	location.href='/';
 }
 </script>
 {% include 'head.html' %}
@@ -40,7 +47,7 @@ function chkFunc(){
 				    <br><br>
 					<button class="w-100 btn btn-lg btn-outline-dark" type="button" id="btnLogin">로그인</button>
 					<br><br>
-					<button class="w-100 btn btn-lg btn-outline-dark" type="button" onclick="history.back()" >취소</button>
+					<button class="w-100 btn btn-lg btn-outline-dark" type="button" onclick="gohome()" >취소</button>
 			
 			</form>
 		  </div>

@@ -4,6 +4,19 @@
 <meta charset="UTF-8">
 <title>mypage</title>
 </head>
+<script>
+window.onload = function(){
+	document.getElementById("btnsu").onclick = function(){
+		location.href='su';
+	}
+	document.getElementById("btntal").onclick = function(){
+		location.href='tal';
+	}
+	document.getElementById("btnpw").onclick = function(){
+		location.href='pw';
+	}
+}
+</script>
 <body>
 {% include 'head.html' %}
 <body class="text-center" style="background-color: #FDF5E6">
@@ -14,41 +27,56 @@
          <div class="card-body" style="background-color: #FFCB9C; border-color: #FFCB9C" >
 			<form action="/users/signupok" name="signup" method="post">{% csrf_token %}
 			<div class="form-floating">
-			<input class="form-control" type="text" name="id" placeholder="{{datas.id}}">
+			<input class="form-control" type="text" name="id" value="{{data.id}}" disabled>
+			<label for="id" style="color: black;">ID</label>
 			</div>
 			<div class="form-floating">
-			<input class="form-control" type="password" name="pw"placeholder="PW">
+			<input class="form-control" type="password" name="pw" value='{{data.pw}}' disabled>
 			<label for="pw" style="color: black;">PW</label>
             </div>
-			<div class="form-floating">
-			<input class="form-control" type="password" name="pw2"placeholder="PW 확인">
-			<label for="pw2" style="color: black;">PW 확인</label>
-            </div>
             <div class="form-floating">
-            <input class="form-control" type="text" name="name"placeholder="이름">
+            <input class="form-control" type="text" name="name" value='{{data.name}}' disabled>
 			<label for="name" style="color: black;">이름</label>
 			</div>
 			<div class="form-floating">
-			<input class="form-control" type="email" name="email"placeholder="이메일">
+			<input class="form-control" type="email" name="email" value='{{data.email}}' disabled>
 			<label for="email" style="color: black;">이메일</label>
 			</div>
 			<div class="form-floating">
-			<input class="form-control" type="tel" name="phone" placeholder="전화번호">
+			<input class="form-control" type="tel" name="phone" value='{{data.phone}}' disabled>
 			<label for="tel" style="color: black;">전화번호</label>
 			</div>
 			<div class="form-floating">
+			<input class="form-control" type="text" name="addr" value='{{data.addr}}' disabled>
 			<label for="addr" style="color: black;">서울관심지역</label>
 			</div>
 			<br><br>
-			<button class="w-100 btn btn-lg btn-outline-dark" type="button" id="btnsignup">가입</button>
+			<button class="w-100 btn btn-lg btn-outline-dark" type="button" onclick="history.back()" >고 홈</button>
 			<br><br>
-			<button class="w-100 btn btn-lg btn-outline-dark" type="button" onclick="history.back()" >홈</button>
+			<button class="w-100 btn btn-lg btn-outline-dark" type="button" id="btnsu">회원정보 수정</button>
+			<br><br>
+			<button class="w-100 btn btn-lg btn-outline-dark" type="button" id="btnpw">비밀번호 수정</button>
+			<br><br>
+			<button class="w-100 btn btn-lg btn-outline-dark" type="button" id="btntal">회원 탈퇴</button>
 			</form>
 		  </div>
          </div>
         </div>
       </div>
      </div>
+{% if msg %}
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+  <symbol id="exclamation-triangle-fill" fill="currentColor" viewBox="0 0 16 16">
+    <path d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5zm.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"/>
+  </symbol>
+</svg>
+<div class="alert alert-danger d-flex align-items-center" role="alert">
+  <svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Warning:"><use xlink:href="#exclamation-triangle-fill"/></svg>
+  <div>
+    {{msg}}
+  </div>
+</div>
+{% endif %}
 </body>
 <!-- MDB -->
 <script type="text/javascript" src="../static/js/mdb.min.js"></script>
