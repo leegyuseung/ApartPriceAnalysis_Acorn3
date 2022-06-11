@@ -1,6 +1,5 @@
 from django.shortcuts import render, redirect
 from users.models import Users
-from django.contrib.auth import login, authenticate
 
 # Create your views here.
 def signUp(request):
@@ -44,7 +43,7 @@ def loginOk(request):
         if id2.count() != 0:
             # 비밀번호가 일치하면 session을 사용해 user.id 를 넘겨준다.
             request.session['user'] = id2[0].id
-            print(request.session['user'])
+
             # 로그인 성공 후 127.0.0.1:8000/ 이동   
             return redirect('/')
         else:
@@ -62,3 +61,54 @@ def myPage(request):
         id2 = Users.objects.get(id = id)
 
     return render(request, 'mypage.html', {'data':id2})
+
+def su(request):
+    if request.session['user']:
+        id = request.session['user']
+        id2 = Users.objects.get(id = id)
+    return render(request, 'su.html', {'data':id2})
+
+def suOk(request):
+    if request.method == 'POST':
+        id = request.session['user']
+        pw = request.POST.get('pw')
+        up = Users.objects.get(id = id)
+
+        if pw == up.pw:
+            up.email=request.POST.get('email')
+            up.name=request.POST.get('name')
+            up.phone=request.POST.get('phone')
+            up.addr=request.POST.get('addr')
+            up.save()
+        else:
+            msg = "비밀번호가 틀렸습니다"
+            return render(request, 'mypage.html', {'msg':msg})
+    return redirect('/users/mypage')
+
+def tal(request):
+    if request.session['user']:
+        id = request.session['user']
+        taldata = Users.objects.get(id=id)
+        taldata.delete()
+        del(request.session['user'])
+        
+    return render(request, 'tal.html')
+
+def pwC(request):
+    if request.session['user']:
+        id = request.session['user']
+        id2 = Users.objects.get(id = id)
+    return render(request, 'pwC.html', {'data':id2})
+
+def pwChange(request):
+    if request.method == 'POST':
+        id = request.session['user']
+        id2 = Users.objects.get(id = id)
+        pw = request.POST.get('pw')
+        if pw == id2.pw:
+            id2.pw=request.POST.get('newpw')
+            id2.save()
+        else:
+            msg = "비밀번호가 틀렸습니다"
+            return render(request, 'mypage.html', {'msg':msg})
+    return redirect('/users/mypage')
