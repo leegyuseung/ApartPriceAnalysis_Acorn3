@@ -10,18 +10,6 @@
 	}
 	function chkFunc(){
 		//alert('a');
-		if(upfrm.name.value ===""){
-			alert("작성자를 입력하세요");
-			upfrm.name.focus();
-			return;
-		}
-		if(upfrm.up_passwd.value ===""){
-			alert("비밀번호를 입력하세요");
-			upfrm.up_passwd.focus();
-			return;
-		}
-		
-		
 		upfrm.submit();
 	}
 </script>
@@ -29,23 +17,25 @@
 <body style="margin: 20px">
 	<div class="container" >
 	<h1 style="text-align: center">Content Edit</h1>
-	<form action="/board/updatetok" name="upfrm" method="post" >{% csrf_token %}
+	<form action="/qna/updateok" name="upfrm" method="post" >{% csrf_token %}
 	<input type="hidden" name="id" value="{{data_one.id}}" />
 	<table style="width: 95%" class="table">
 		<tr>
 			<td>작성자</td>
-			<td><input type="text" name="name" value="{{data_one.name}}" /></td>
+			<td><input type="text" name="userId" readonly="readonly" value="{{data_one.userId.id}}" /></td>
 		</tr>
+		{% if msg %}
 		<tr>
-			<td>비밀번호 확인:</td>
+			<td>user 확인:</td>
 			<td>
-				<input type="password" name="up_passwd" />
 				<span style="color: red">{{msg}}</span>
 			</td>
 		</tr>
+		{% endif %}
+  		
 		<tr>
 			<td>e-mail</td>
-			<td><input type="email" name="mail" value="{{data_one.mail}}"/></td>
+			<td><input type="email" name="mail" readonly="readonly" value="{{data_one.userId.email}}"/></td>
 		</tr>
 		<tr>
 			<td>title</td>
@@ -54,12 +44,12 @@
 		<tr>
 			<td>content</td>
 			<td>
-				<textarea name="cont" rows="5" style="width: 99%" value='{{data_one.cont}}'></textarea>
+				<textarea name="cont" rows="5" style="width: 99%">{{data_one.cont}}</textarea>
 			</td>
 		</tr>
 		<tr>
 			<td colspan="2" style="text-align: center;">
-				<input type="button" value="edit" id='btnUpdate' class="btn btn-primary" />
+				<input type="button"  value="edit" id='btnUpdate' class="btn btn-primary" />
 				<input type="button" value="back" class="btn btn-warning" onclick="history.back()" />
 			</td>
 		</tr>

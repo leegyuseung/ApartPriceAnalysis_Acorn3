@@ -96,7 +96,10 @@ def contentFunc(request):
 
 def updateFunc(request):
     try:
-        data = BoardTab.objects.get(id=request.GET.get('id'))
+        # data = BoardTab.objects.get(id=request.GET.get('id'))
+        # model join
+        data = BoardTab.objects.select_related('userId').get(id = request.GET.get('id') )
+        
     except Exception as e:
         print('수정자료 읽기 오류',e)
         return render(request,'error.html')
@@ -104,16 +107,23 @@ def updateFunc(request):
     return render(request, 'update.html', {'data_one': data})
 
 def updateOkFunc(request):
-    try:
-        upRec = BoardTab.objects.get(id=request.POST.get('id'))
-        
-        # 비밀번호 비교 후 수정 처리
-        
-    except Exception as e:
-        print('수정자료 읽기 오류',e)
-        return render(request,'error.html')
+   
+    if request.method == 'POST':
+        try:
+            upRec = BoardTab.objects.select_related('userId').get(id = request.POST.get('id') )
+            if request.POST.get('userId') == request.session['user']:
+                upRec.title = request.POST.get('title')
+                upRec.cont = request.POST.get('cont')
+                upRec.save()
+            else:
+                print(request.POST.get('userId'))
+                print(request.session['user'])
+                return render(request, 'update.html', {'data_one': upRec, 'msg': '글쓴이가 아니면 수정할 수 없습니다'})
+        except Exception as e:
+            print('수정자료 읽기 오류',e)
+            return render(request,'error.html')
     
-    return redirect('/board/list')   # 수정 후 목록 보기
+    return redirect('/qna/list')   # 수정 후 목록 보기
 
 def deleteFunc(request):
     pass
