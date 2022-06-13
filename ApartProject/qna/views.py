@@ -74,7 +74,8 @@ def searchFunc(request):
         if s_type =='title':
             datas_search = BoardTab.objects.filter(title__contains = s_value).order_by('-id')
         elif s_type == 'name':
-            datas_search = BoardTab.objects.filter(name__contains = s_value).order_by('-id')
+            # datas_search = BoardTab.objects.filter(name__contains = s_value).order_by('-id')
+            datas_search = BoardTab.objects.select_related('userId').filter(name__contains = s_value).order_by('-id')
         
         paginator = Paginator(datas_search, 10)
         page = request.GET.get('page')
@@ -126,7 +127,15 @@ def updateOkFunc(request):
     return redirect('/qna/list')   # 수정 후 목록 보기
 
 def deleteFunc(request):
-    pass
-
+    try:
+        delData = BoardTab.objects.select_related('userId').get(id = request.GET.get('id') )
+        
+    except Exception as e:
+        print('삭제자료 읽기 오류:',e)
+    
+        return render(request, 'error.html')
+    return render(request, 'delete.html',{'data_one':delData})
 def deleteOkFunc(request):
-    pass
+    delData = BoardTab.objects.get(id=request.GET.get('id'))
+    delData.delete()
+    return redirect("/qna/list") 
