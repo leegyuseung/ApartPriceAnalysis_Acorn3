@@ -57,7 +57,6 @@
 		</div>
 		<!-- Sidebar -->
 		<!-- 자료보내기-->
-		
 		<main class='col-md-10' style="margin-top:58px">
 			<div class="container">
 				<div class="row">
@@ -71,7 +70,6 @@
 </div>
 <script type="text/javascript">
 // graph 변수
-//let chart = document.getElementById('chart').getContext('2d');
 var ctx = document.getElementById('chart');
 
 var tdata = document.getElementById('chart').innerHTML;
@@ -80,25 +78,6 @@ var tdata = JSON.parse(tdata);
 
 var ymd = document.getElementById('ymd').innerHTML;
 var ymd = JSON.parse(ymd);
-
-
-/*
-let linechart = new Chart(chart, {
-	type : 'line',
-	data : {
-		labels : ymd,
-									  
-		datasets : [{
-			label : '월 평균 거래금액',
-			backgroundColor : '#FFCB9C',
-			borderWidth : 2,
-			borderColor : 'black',
-			data : tdata
-
-		}]
-	}
-})
-*/
 
 var config = {
 	type: 'line',
@@ -117,7 +96,6 @@ var config = {
  
 //차트 그리기
 var myChart = new Chart(ctx, config);
-
 
 function pred(){
 	let send_data = {};
@@ -189,11 +167,8 @@ function pred(){
 	     error:function(){
 	    	 alert('1 ~ 5년만 입력 가능!')
 	     }
-	});
-	
+	});	
 }
-
-
 </script>
 <!-- MDB -->
 <script type="text/javascript" src="../static/js/mdb.min.js"></script>
