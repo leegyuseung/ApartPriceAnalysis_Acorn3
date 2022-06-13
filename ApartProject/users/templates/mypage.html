@@ -10,7 +10,10 @@ window.onload = function(){
 		location.href='su';
 	}
 	document.getElementById("btntal").onclick = function(){
-		location.href='tal';
+		if (confirm('탈퇴 하시겠습니까?!') === true){
+			location.href='tal';
+		}
+			
 	}
 	document.getElementById("btnpw").onclick = function(){
 		location.href='pw';
