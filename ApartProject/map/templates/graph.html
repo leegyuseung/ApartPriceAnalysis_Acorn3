@@ -126,11 +126,12 @@ function pred(){
 	    	send_data['predict'] = data.predict;
 	    	send_data['ymd2'] = data.ymd2;
 	    	
-	    	//for (let i = 0; i < tdata.length; i++) {
-	    	//	tdata[i] = NaN;
-	    	//}
 	    	
-	    	tdata = tdata.concat(send_data['predict']); // 기존 가격와 예측 가격 합치기
+	    	tdata3 = tdata.concat(send_data['predict']); // 기존 가격와 예측 가격 합치기
+	    	
+	    	for (let i = 0; i < tdata.length -1; i++) {
+	    		tdata3[i] = NaN;
+	    	}
 	    	
 	    	//ymd2 = ymd.concat(send_data['ymd2']); // 기존 날짜와 예측 날짜 합치기
 	    	ymd2 = send_data['ymd2']
@@ -152,7 +153,7 @@ function pred(){
     			backgroundColor : 'yellow',
 	    		data: [],
 	    	}
-    		tdata3 = tdata
+    		tdata3 = tdata3
     		
     		// newDataset에 데이터 삽입
     		for (var i=0; i< tdata3.length; i++){
