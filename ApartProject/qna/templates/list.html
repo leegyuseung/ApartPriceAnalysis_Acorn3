@@ -6,12 +6,13 @@
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
 </head>
 <script>
-function write(){
-	location.href = "/qna/insert";
-};
+
 
 function login(){
 	location.href = "/users/login";
+};
+function insert(){
+	location.href = "insert";
 };
 </script>
 <body style="margin-top: 200px; background-color: #FDF5E6">
@@ -22,7 +23,8 @@ function login(){
 <h1>Q&A</h1>
 <div style="float: right; margin-right: 150px">
 {% if request.session.user %}
-<button class="btn btn-outline-dark" type="button" onclick ="write()">글쓰기</button>
+<button class="btn btn-outline-dark" type="button" onclick ="insert()">글쓰기</button>
+
 {% else %}
 <button class="btn btn-outline-dark" type="button" onclick="login()">로그인</button>
 {% endif %}
@@ -86,7 +88,6 @@ function login(){
 	      <div class="input-group" style="justify-content: center;">
 			 <form action="/qna/search" method="post">{%csrf_token%}
 			  <select class="form-select" style="display: inline;    width: auto;" id="inputGroupSelect04" name="s_type">
-			    <option selected>Choose...</option>
 			    <option value="title">글제목</option>
 			    <option value="name">작성자</option>
 			  </select>
