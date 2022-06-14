@@ -82,21 +82,22 @@ function login(){
 	</tr>
 	{% endif %}
 	<tr>
-      <td colspan="6">
-         <div class="input-group" style="justify-content: center;">
-          <form action="/qna/search" method="post">{%csrf_token%}
-           <select class="form-select" style="display: inline;    width: auto;" id="inputGroupSelect04" name="s_type">
-             <option selected>Choose...</option>
-             <option value="title">글제목</option>
-             <option value="name">작성자</option>
-           </select>
-              <input type="text" name="s_value" >
-              <button class="btn btn-outline-secondary " type="submit">검색</button>
-           </form>
-         </div>   
-      </td>
-   </tr>
+	   <td colspan="6">
+	      <div class="input-group" style="justify-content: center;">
+			 <form action="/qna/search" method="post">{%csrf_token%}
+			  <select class="form-select" style="display: inline;    width: auto;" id="inputGroupSelect04" name="s_type">
+			    <option selected>Choose...</option>
+			    <option value="title">글제목</option>
+			    <option value="name">작성자</option>
+			  </select>
+			  	<input type="text" name="s_value" >
+			  	<button class="btn btn-outline-secondary " type="submit">검색</button>
+			  </form>
+			</div>	
+	   </td>
+	</tr>
 </table>
+
 </div>
 </body>
 <!-- MDB -->
