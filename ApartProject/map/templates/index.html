@@ -374,7 +374,7 @@ function displayGu(coordinates, name) {
     kakao.maps.event.addListener(polygon, 'mouseover', function(mouseEvent) {
     	polygon.setOptions({fillColor: '#09f'});
 
-        customOverlay.setContent('<div class="area">' + name + '</div>');
+        customOverlay.setContent('<div class="area" id="area">' + name + '</div>');
         
         customOverlay.setPosition(mouseEvent.latLng); 
         customOverlay.setMap(map);
@@ -481,7 +481,7 @@ function displayDong(coordinates, name) {
     kakao.maps.event.addListener(polygon, 'mouseover', function(mouseEvent) {
     	polygon.setOptions({fillColor: '#09f'});
 
-        customOverlay.setContent('<div class="area">' + name + '</div>');
+        customOverlay.setContent('<div class="area" id="area">' + name + '</div>');
         
         customOverlay.setPosition(mouseEvent.latLng); 
         customOverlay.setMap(map);
@@ -506,6 +506,10 @@ function displayDong(coordinates, name) {
 		clickApt = dv.innerText;
 
 
+		const div = document.getElementById('area');
+		  
+		div.remove();
+		
 		// 지도를 클릭된 폴리곤의 중앙 위치를 기준으로 확대합니다
 		map.setLevel(level, {anchor: centroid(points), animate: {
 			duration: 350
