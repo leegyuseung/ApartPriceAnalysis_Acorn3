@@ -20,62 +20,63 @@
 </head>
 <body>
     <!--Main Navigation-->
-<header>
+	<header>
+	  <!-- Navbar -->
+	  {% include 'head.html' %}
+	  <!-- Navbar -->
+	</header>
+	
+<div class="container-fluid ">
+	<div class="row flex-xl-nowrap" >
+		<div class="col-md-3">
+		  <!-- Sidebar -->
+		  <nav id="sidebarMenu"class="collapse d-lg-block sidebar collapse col-md-3"  style="background-color: #FDF5E6; border-right: 2px solid #FFCB9C">
+		  
+		    <div class="position-sticky">
+		      <div class="list-group list-group-flush mx-3" >
+			      <!-- Search form -->
+			      <div class="input-group mb-3">
+						<input
+						   onkeyup="enterkey();"
+			               autocomplete="off"
+			               type="search"
+			               class="form-control rounded"
+			               placeholder='아파트 검색'
+			               style="border-color: #FFCB9C"
+			               id = "search"
+			               />
+			        	<button class="btn btn-outline-dark" id="serch" onclick="data()" type = "submit" style='background-color: #FFCB9C;border-color: #FFCB9C'><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
+		  				<path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/></svg>
+		  				</button>
+			      </div>
+				  <div class="d-none d-md-flex input-group " id="apartList"></div>
+			      </br>
+		       	  <!-- Pagination -->
+		       	  <nav style="align-self: center;" id="paging">
+		            <ul class="pagination" >
+		                <li class="page-item" id='prev' ></li>
+		                <li id='pageList'></li>
+		                
+		                <li class="page-item"id='next'></li>
+		      		</ul>
+		      	  </nav>
+		    	</div>
+		    </div>
+		  </nav>
+	  </div>
+	    <main style="margin-top: 140px;padding:0" class='col-md-9'>
+		  <div class="container" style='padding: 0px; margin:0'>        
+				<div id="map" style="width:100vw;height:100vh;"></div>
+			
+		  </div>
+		</main>
+	  
+	  </div>
+  </div>
   <!-- Sidebar -->
-  <nav id="sidebarMenu"class="collapse d-lg-block sidebar collapse " style = 'width:400px; background-color: #FDF5E6; border-right: 2px solid #FFCB9C'
-  v'>
-    <div class="position-sticky">
-      <div class="list-group list-group-flush mx-3" >
-	      <!-- Search form -->
-	      <div class="input-group mb-3">
-				<input
-				   onkeyup="enterkey();"
-	               autocomplete="off"
-	               type="search"
-	               class="form-control rounded"
-	               placeholder='아파트 검색'
-	               style="width: 280px; border-color: #FFCB9C"
-	               id = "search"
-	               />
-	        	<button class="btn btn-outline-dark" id="serch" onclick="data()" type = "submit" style='background-color: #FFCB9C;border-color: #FFCB9C'><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
-  				<path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/></svg>
-  				</button>
-	      </div>
-		  <div class="d-none d-md-flex input-group " id="apartList"></div>
-	      </br>
-       	  <!-- Pagination -->
-       	  <nav style="align-self: center;" id="paging">
-            <ul class="pagination" >
-                <li class="page-item" id='prev' ></li>
-                <li id='pageList'></li>
-                
-                <li class="page-item"id='next'></li>
-      		</ul>
-      	  </nav>
-    	</div>
-    </div>
-  </nav>
-  <!-- Sidebar -->
-
-  <!-- Navbar -->
-  {% include 'head.html' %}
-  <!-- Navbar -->
-</header>
 <!--Main Navigation-->
 <!--Main layout-->
-<main style="margin-top: 72px;padding-left: 389px;">
-  <div class="container-fluid" style='margin-left: 0px;'>
-        <p style="margin-top:-12px">
-		    <em class="link">
-		        <!--<a href="javascript:void(0);" onclick="window.open('http://fiy.daum.net/fiy/map/CsGeneral.daum', '_blank', 'width=981, height=650')">
-		            혹시 주소 결과가 잘못 나오는 경우에는 여기에 제보해주세요.
-		        </a>-->
-		    </em>
-		</p>
-		<div id="map" style="width:100vw;height:100vh;"></div>
-	
-  </div>
-</main>
+
 <!--Main layout-->
 <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=3209863b8ce059f0b5c2bf4e41cfef2d&libraries=services"></script>
 <script>
