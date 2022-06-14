@@ -2,7 +2,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Insert title here</title>
+<title>Q&A List</title>
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
 </head>
 <script>
@@ -19,9 +19,9 @@ function insert(){
 	<!-- Navbar -->
 	{% include 'head.html' %}
 	<!-- Navbar -->
-	<div class="container" style="width:95%; text-align: center">
+<div class="container" style="width:95%; text-align: center">
 	<h1>Q&A</h1>
-		<div style="float: right; margin-right: 150px">
+		<div style="float: right; margin-right: 110px">
 			{% if request.session.user %}
 			<button class="btn btn-outline-dark" type="button" onclick ="insert()">글쓰기</button>
 			

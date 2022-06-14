@@ -2,7 +2,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Insert title here</title>
+<title>글쓰기</title>
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
 <script>
 	window.onload = function(){
@@ -20,36 +20,43 @@
 	}
 </script>
 </head>
-<body style="margin: 20px">
-<div class="container" >
-	<h1 style="text-align: center">New Content</h1>
+<body style="margin-top: 200px; background-color: #FDF5E6">
+<!-- Navbar -->
+{% include 'head.html' %}
+<!-- Navbar -->
+<div class="container" style="width:95%; text-align: center">
 	<form action="/qna/insertok" name="frm" method="post" >{% csrf_token %}
-	<table style="width: 95%" class="table">
+	<table class="table">
 		<tr>
-			<td>작성자</td>
-			<td><input type="text" name="name" readonly="readonly" value="{{data.id}}" /></td>
+			<th style="text-align: right;">작성자</th>
+			<td><input type="text" name="name" readonly="readonly" value="{{data.id}}" style="width: 50%"/></td>
 		</tr>
 		<tr>
-			<td>e-mail</td>
-			<td><input type="email" name="mail"  readonly="readonly" value="{{data.email}}"/></td>
+			<th style="text-align: right;">e-mail</th>
+			<td><input type="email" name="mail"  readonly="readonly" value="{{data.email}}" style="width: 50%"/></td>
 		</tr>
 		<tr>
-			<td>title</td>
-			<td><input type="text" name="title" style="width: 99%" /></td>
+			<th style="text-align: right;">title</th>
+			<td><input type="text" name="title" style="width: 50%" /></td>
 		</tr>
 		<tr>
-			<td>content</td>
+			<th style="text-align: right;">content</th>
 			<td>
-				<textarea name="cont" rows="5" style="width: 99%"></textarea>
+				<textarea name="cont" rows="5" style="width: 50%"></textarea>
 			</td>
 		</tr>
 		<tr>
 			<td colspan="2" style="text-align: center;">
-				<input type="button" value="등록" id='btnOk' class="btn-primary" />
+				<input type="button" value="등록" id='btnOk' class="btn btn-outline-dark" />
+				<input type="button" value="취소" onclick="history.back()" class="btn btn-outline-dark" />
 			</td>
 		</tr>
 	</table>
 	</form>
 </div>
 </body>
+<!-- MDB -->
+<script type="text/javascript" src="../static/js/mdb.min.js"></script>
+<!-- Custom scripts -->
+<script type="text/javascript" src="../static/js/script.js"></script>
 </html>
