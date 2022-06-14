@@ -5,9 +5,12 @@
 <title>detail</title>
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
 </head>
-<body style="margin: 20px">
+<body style="margin-top: 200px; background-color: #FDF5E6">
+<!-- Navbar -->
+{% include 'head.html' %}
+<!-- Navbar -->
 <div class="container">
-	<h2 style="text-align: center"> * {{data_one.id}} 번 게시글 상세보기 *</h2>
+	<h2 style="text-align: center">{{data_one.id}} 번 게시글</h2>
 	<table class="table">
 		<tr style="width: 95%">
 			<td style="width: 95%; text-align: right;">
@@ -19,17 +22,32 @@
 	</table>
 	<table class="table">
 		<tr style="width: 95%; background-color: lightgray;">
+				<th>
+					작성자:
+				</th>
+				<td>
+					<a href="mailto:{{data_one.userId.mail}}">{{data_one.userId.id}}</a>
+				</td>
+		<tr>
+			<th>
+			ip: 
+			</th>
 			<td>
-				작성자: <a href="mailto:{{data_one.userId.mail}}">{{data_one.userId.id}}</a>
-				(ip: {{data_one.bip}})
+					{{data_one.bip}}
 			</td>
-			<td>작성일: {{data_one.bdate}}</td>
-			<td>조회수: {{data_one.readcnt}}</td>
 		</tr>
 		<tr>
-			<td colspan="3">제목: {{data_one.title}}</td>
+			<th>작성일:</th> <td>{{data_one.bdate}}</td>
 		</tr>
 		<tr>
+			<th>조회수:</th> <td>{{data_one.readcnt}}</td>
+		</tr>	
+		<tr>
+			<th>제목: </th>
+			<td>{{data_one.title}}</td>
+		</tr>
+		<tr>
+			
 			<td colspan="3">
 				<textarea rows="5" style="width: 100%" readonly="readonly">{{data_one.cont}}</textarea>
 			</td>
@@ -37,4 +55,8 @@
 	</table>
 </div>
 </body>
+<!-- MDB -->
+<script type="text/javascript" src="../static/js/mdb.min.js"></script>
+<!-- Custom scripts -->
+<script type="text/javascript" src="../static/js/script.js"></script>
 </html>

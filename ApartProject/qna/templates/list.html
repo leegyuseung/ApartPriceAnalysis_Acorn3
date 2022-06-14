@@ -22,9 +22,9 @@ function login(){
 <h1>Q&A</h1>
 <div style="float: right; margin-right: 150px">
 {% if request.session.user %}
-<button class="btn btn-outline-dark" type="button" onclick = "write()">글쓰기</button>
+	<button class="btn btn-outline-dark" type="button" onclick = "write()">글쓰기</button>
 {% else %}
-<button class="btn btn-outline-dark" type="button" onclick = "login()">로그인</button>
+	<button class="btn btn-outline-dark" type="button" onclick = "login()">로그인</button>
 {% endif %}
 </div>
 <br>
