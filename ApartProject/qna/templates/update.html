@@ -2,7 +2,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Insert title here</title>
+<title>수정</title>
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
 <script type="text/javascript">
 	window.onload = function(){
@@ -14,19 +14,21 @@
 	}
 </script>
 </head>
-<body style="margin: 20px">
-	<div class="container" >
-	<h1 style="text-align: center">Content Edit</h1>
+<body style="margin-top: 200px; background-color: #FDF5E6">
+<!-- Navbar -->
+{% include 'head.html' %}
+<!-- Navbar -->
+<div class="container col-md-5" >
 	<form action="/qna/updateok" name="upfrm" method="post" >{% csrf_token %}
 	<input type="hidden" name="id" value="{{data_one.id}}" />
-	<table style="width: 95%" class="table">
+	<table class="table">
 		<tr>
-			<td>작성자</td>
-			<td><input type="text" name="userId" readonly="readonly" value="{{data_one.userId.id}}" /></td>
+			<th style="text-align: right;">작성자</th>
+			<td><input type="text" name="userId" readonly="readonly" value="{{data_one.userId.id}}" style="width: 100%"/></td>
 		</tr>
 		{% if msg %}
 		<tr>
-			<td>user 확인:</td>
+			<th>user 확인:</th>
 			<td>
 				<span style="color: red">{{msg}}</span>
 			</td>
@@ -34,27 +36,31 @@
 		{% endif %}
   		
 		<tr>
-			<td>e-mail</td>
-			<td><input type="email" name="mail" readonly="readonly" value="{{data_one.userId.email}}"/></td>
+			<th style="text-align: right;">e-mail</th>
+			<td><input type="email" name="mail" style="width: 100%" readonly="readonly" value="{{data_one.userId.email}}"/></td>
 		</tr>
 		<tr>
-			<td>title</td>
-			<td><input type="text" name="title" style="width: 99%" value="{{data_one.title}}"/></td>
+			<th style="text-align: right;">title</th>
+			<td><input type="text" name="title"  style="width: 100%" value="{{data_one.title}}"/></td>
 		</tr>
 		<tr>
-			<td>content</td>
-			<td>
-				<textarea name="cont" rows="5" style="width: 99%">{{data_one.cont}}</textarea>
+			<th style="text-align: right;">content</th>
+			<td colspan="3" >
+				<textarea name="cont" rows="5" style="width: 100%">{{data_one.cont}}</textarea>
 			</td>
 		</tr>
 		<tr>
 			<td colspan="2" style="text-align: center;">
-				<input type="button"  value="edit" id='btnUpdate' class="btn btn-primary" />
-				<input type="button" value="back" class="btn btn-warning" onclick="history.back()" />
+				<input type="button"  value="수정" id='btnUpdate' class="btn btn-outline-dark" />
+				<input type="button" value="취소" class="btn btn-outline-dark" onclick="history.back()" />
 			</td>
 		</tr>
 	</table>
 	</form>
 </div>
 </body>
+<!-- MDB -->
+<script type="text/javascript" src="../static/js/mdb.min.js"></script>
+<!-- Custom scripts -->
+<script type="text/javascript" src="../static/js/script.js"></script>
 </html>
