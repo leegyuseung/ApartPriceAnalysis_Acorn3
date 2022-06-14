@@ -34,9 +34,7 @@
 			      		{{apt}}<input type="month" id="year" value="2022-01" min="2011-01" max="2026-12" /> &nbsp;&nbsp;
 				  		<button id="predbtn" onclick="pred()" style="border-color: #FFCB9C; background-color: #FFCB9C">가격 예측 하기</button>
 				  		<br />
-				  		<br />
-				  		<button id="destroyChart" onclick="destroyChart()" style="border-color: #FFCB9C; background-color: #FFCB9C">"destroyChart"</button>
-				  		
+				  		<br />				  		
 				  		<table class="table">
 				  			<thead>
 						  		<tr>
@@ -101,10 +99,6 @@ var zzz = config.data.labels.length;
 
 //차트 그리기
 var myChart = new Chart(ctx, config);
-
-function destroyChart(){
-	myChart.destroy();
-}
 
 var count = 0;
 
