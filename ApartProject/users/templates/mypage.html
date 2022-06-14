@@ -10,10 +10,16 @@ window.onload = function(){
 		location.href='su';
 	}
 	document.getElementById("btntal").onclick = function(){
-		if (confirm('탈퇴 하시겠습니까?!') === true){
+
+		 if(confirm("회원을 탈퇴 하시겠습니까?"))
+		 {
 			location.href='tal';
-		}
-			
+		 }
+		 else
+		 {
+		 alert('회원을 유지합니다.');
+		 }
+
 	}
 	document.getElementById("btnpw").onclick = function(){
 		location.href='pw';
