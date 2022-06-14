@@ -74,8 +74,9 @@ def searchFunc(request):
         if s_type =='title':
             datas_search = BoardTab.objects.filter(title__contains = s_value).order_by('-id')
         elif s_type == 'name':
-            # datas_search = BoardTab.objects.filter(name__contains = s_value).order_by('-id')
-            datas_search = BoardTab.objects.select_related('userId').filter(name__contains = s_value).order_by('-id')
+            # BoardTab의 외래키 필터링
+            datas_search = BoardTab.objects.filter(userId__id__contains = s_value).order_by('-id')
+            print(datas_search)
         
         paginator = Paginator(datas_search, 10)
         page = request.GET.get('page')
@@ -111,7 +112,7 @@ def updateOkFunc(request):
    
     if request.method == 'POST':
         try:
-            upRec = BoardTab.objects.select_related('userId').get(id = request.POST.get('id') )
+            upRec = BoardTab.objects.select_related('userId').get(id = request.POST.get('id'))
             if request.POST.get('userId') == request.session['user']:
                 upRec.title = request.POST.get('title')
                 upRec.cont = request.POST.get('cont')

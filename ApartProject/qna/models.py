@@ -5,7 +5,7 @@ from users.models import Users
 
 class BoardTab(models.Model):
 
-    userId = models.ForeignKey(Users, on_delete = models.CASCADE)
+    userId = models.ForeignKey(Users, on_delete = models.CASCADE, related_name='user')
     title = models.CharField(max_length = 100)
     cont = models.TextField()
     bip = models.GenericIPAddressField()
