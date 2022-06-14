@@ -14,8 +14,10 @@
 	<table class="table">
 		<tr style="width: 95%">
 			<td style="width: 95%; text-align: right;">
+			{% if request.session.user == data_one.userId.id%}
 				<a href="/qna/update?id={{data_one.id}}">수정</a>
 				<a href="/qna/delete?id={{data_one.id}}">삭제</a>
+			{% endif %}
 				<a href="/qna/list?page={{page}}">목록</a>
 			</td>
 		</tr>
