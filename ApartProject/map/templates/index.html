@@ -329,7 +329,7 @@ $.getJSON("map/polygon", function(geojson){
 		coordinates = val.geometry.coordinates;
 		name = val.properties.SIGUNGU_NM;
 		
-		displayGu(coordinates, name);
+		displayGu(coordinates, name); // 서울시 구를 폴리곤으로 나눠주는 함수
 	})
 })
 
@@ -404,7 +404,7 @@ function displayGu(coordinates, name) {
 					
 					name = data[i]['properties']['EMD_NM']
 					
-					displayDong(coordinates, name);
+					displayDong(coordinates, name); // 선택한 구의 동을 폴리곤으로 구분하는 함수
 				}
 			}
 		})
@@ -500,7 +500,7 @@ function displayDong(coordinates, name) {
 					name = data[i]['properties']['EMD_NM']
 					coordinates = data[i]['geometry']['coordinates']
 					
-					displayDD(coordinates, name);
+					displayDD(coordinates, name); // 폴리곤 그려주는 function
 				}
 			}
 			
@@ -514,21 +514,12 @@ function displayDong(coordinates, name) {
 			    type:"POST",
 			    data:send_data,
 			    datatype:"JSON",
-			    beforeSend: function() {
-                    //통신을 시작할때 처리되는 함수 
-                    $('html').css("cursor","wait");   // 현재 html 문서위에 있는 마우스 커서를 로딩 중 커서로 변경
-
-            	},
-                complete: function() {
-                    //통신이 완료된 후 처리되는 함수
-                    $('html').css("cursor","auto"); // 통신이 완료 된 후 다시 일반적인 커서 모양으로 변경
-                },
 				success:function(data){
 					// ajax로 받아 온 동 이름과 아파트 이름 
 			    	var addr = data.dong;
 			    	var apt = data.apt;
 			    	
-			    	pickapt(addr, apt)			
+			    	pickapt(addr, apt) // 선택한 동 안에 모든 아파트를 띄워주는 함수
 			    },
 				error : function(){
 			    	 alert('선택하신 동에 아파트 정보가 없습니다.');
