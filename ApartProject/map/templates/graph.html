@@ -95,7 +95,7 @@ var config = {
 };
 console.log(config.data.labels.length);
 
-var zzz = config.data.labels.length;
+var xaxis = config.data.labels.length;
 
 //차트 그리기
 var myChart = new Chart(ctx, config);
@@ -178,7 +178,7 @@ function pred(){
 	     	} else if(count > 0){
 	     		ymd2 = send_data['ymd2'];
 	     			     		
-	     		config.data.labels.length = zzz; // x축 초기화
+	     		config.data.labels.length = xaxis; // x축 초기화
 	     			     		
 	    		config.data.datasets.splice(-1,1); // 기존 예측치 제거
 				
