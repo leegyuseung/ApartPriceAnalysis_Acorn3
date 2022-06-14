@@ -161,7 +161,6 @@ def importData(request):
         df = df.drop(['num'], axis=1)
         df = df.sort_values(by = 'ymd')
         
-        print(df['gu'][:1].values[0])
         apt = df['apt'][:1].values[0]
         year = ['2011', '2012', '2013', '2014', '2015', '2016', '2017', '2018', '2019', '2020', '2021']
         mon = ['01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12']
@@ -200,7 +199,7 @@ def importData(request):
             ymd[i] = int(ymd[i])
         
         gu = df['gu'][:1].values[0]
-    # print(df)
+
        
     return render(request, 'graph.html', {'addr':detailaddr, 'mean':mean, 'ymd':ymd,'apt':apt,'gu':gu})
 
