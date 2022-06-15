@@ -34,7 +34,7 @@
 			      		{{apt}}<input type="month" id="year" value="2022-01" min="2011-01" max="2026-12" /> &nbsp;&nbsp;
 				  		<button id="predbtn" onclick="pred()" style="border-color: #FFCB9C; background-color: #FFCB9C">가격 예측 하기</button>
 				  		<br />
-				  		<br />
+				  		<br />				  		
 				  		<table class="table">
 				  			<thead>
 						  		<tr>
@@ -93,9 +93,14 @@ var config = {
 		}]
 	}
 };
- 
+console.log(config.data.labels.length);
+
+var xaxis = config.data.labels.length;
+
 //차트 그리기
 var myChart = new Chart(ctx, config);
+
+var count = 0;
 
 function pred(){
 	let send_data = {};
@@ -119,51 +124,99 @@ function pred(){
 	    data:send_data,
 	    dataType:"json",
 	    success:function(data){
+	    	
 	    	const pred = data.predictL.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",");
 	    	$("#predPrice").append(pred+' 만원');
 	     	$("#r2").append(data.r2+'%');
-	    			
-	    	send_data['predict'] = data.predict;
+	    		
+	     	send_data['predict'] = data.predict;
 	    	send_data['ymd2'] = data.ymd2;
 	    	
 	    	
-	    	tdata3 = tdata.concat(send_data['predict']); // 기존 가격와 예측 가격 합치기
-	    	
-	    	for (let i = 0; i < tdata.length -1; i++) {
-	    		tdata3[i] = NaN;
-	    	}
-	    	
-	    	//ymd2 = ymd.concat(send_data['ymd2']); // 기존 날짜와 예측 날짜 합치기
-	    	ymd2 = send_data['ymd2']
+	     	if (count == 0){
+		    	
+	     		
+		    	tdata3 = tdata.concat(send_data['predict']); // 기존 가격와 예측 가격 합치기
+		    	
+		    	for (let i = 0; i < tdata.length -1; i++) {
+		    		tdata3[i] = NaN;
+		    	}
+		    	
+		    	//ymd2 = ymd.concat(send_data['ymd2']); // 기존 날짜와 예측 날짜 합치기
+		    	ymd2 = send_data['ymd2']
+		    		
+		    	//라벨추가
+		    	for (let i = 0; i < ymd2.length; i++) {
+		    		config.data.labels.push(ymd2[i])
+		    	}
+		    		
+		    	//데이터셋 수 만큼 반복
+		    	//var dataset = config.data.datasets;
+		    	//for(var i=0; i<dataset.length; i++){
+		    	//	//데이터셋의 데이터 추가
+		    	//	dataset[i].data.push(Math.floor(Math.random() * 50));
+		    	//}
+	    		var newDataset = {
+	    			label: '예측 값',
+	    			borderColor : 'black',
+	    			backgroundColor : 'yellow',
+		    		data: [],
+		    	}
+	    		tdata3 = tdata3
 	    		
-	    	//라벨추가
-	    	for (let i = 0; i < ymd2.length; i++) {
-	    		config.data.labels.push(ymd2[i])
-	    	}
-	    		
-	    	//데이터셋 수 만큼 반복
-	    	//var dataset = config.data.datasets;
-	    	//for(var i=0; i<dataset.length; i++){
-	    	//	//데이터셋의 데이터 추가
-	    	//	dataset[i].data.push(Math.floor(Math.random() * 50));
-	    	//}
-    		var newDataset = {
-    			label: '예측 값',
-    			borderColor : 'black',
-    			backgroundColor : 'yellow',
-	    		data: [],
-	    	}
-    		tdata3 = tdata3
-    		
-    		// newDataset에 데이터 삽입
-    		for (var i=0; i< tdata3.length; i++){
-    			newDataset.data.push(tdata3[i]);
-    		}
-	    		
-    		// chart에 newDataset 푸쉬
-    		config.data.datasets.push(newDataset);
+	    		// newDataset에 데이터 삽입
+	    		for (var i=0; i< tdata3.length; i++){
+	    			newDataset.data.push(tdata3[i]);
+	    		}
+		    		
+	    		// chart에 newDataset 푸쉬
+	    		config.data.datasets.push(newDataset);
+	
+	    		myChart.update();	//차트 업데이트   	
 
-    		myChart.update();	//차트 업데이트   	
+	    		count++;
+	     	} else if(count > 0){
+	     		ymd2 = send_data['ymd2'];
+	     			     		
+	     		config.data.labels.length = xaxis; // x축 초기화
+	     			     		
+	    		config.data.datasets.splice(-1,1); // 기존 예측치 제거
+				
+				tdata3 = tdata.concat(send_data['predict']); // 기존 가격와 예측 가격 합치기
+		    	
+		    	for (let i = 0; i < tdata.length -1; i++) {
+		    		tdata3[i] = NaN;
+		    	}
+
+		    	//라벨추가
+		    	for (let i = 0; i < ymd2.length; i++) {
+		    		config.data.labels.push(ymd2[i])
+		    	}
+		    		
+		    	//데이터셋 수 만큼 반복
+		    	//var dataset = config.data.datasets;
+		    	//for(var i=0; i<dataset.length; i++){
+		    	//	//데이터셋의 데이터 추가
+		    	//	dataset[i].data.push(Math.floor(Math.random() * 50));
+		    	//}
+	    		var newDataset = {
+	    			label: '예측 값',
+	    			borderColor : 'black',
+	    			backgroundColor : 'yellow',
+		    		data: [],
+		    	}
+	    		tdata3 = tdata3
+	    		
+	    		// newDataset에 데이터 삽입
+	    		for (var i=0; i< tdata3.length; i++){
+	    			newDataset.data.push(tdata3[i]);
+	    		}
+		    		
+	    		// chart에 newDataset 푸쉬
+	    		config.data.datasets.push(newDataset);
+				     	
+		     	myChart.update();	//차트 업데이트
+	     	}
 	     },
 	     error:function(){
 	    	 alert('1 ~ 5년만 입력 가능!')
@@ -171,7 +224,6 @@ function pred(){
 	});	
 }
 </script>
-<!-- MDB -->
 <script type="text/javascript" src="../static/js/mdb.min.js"></script>
 <!-- Custom scripts -->
 <script type="text/javascript" src="../static/js/script.js"></script>

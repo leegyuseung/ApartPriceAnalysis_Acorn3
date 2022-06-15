@@ -199,7 +199,6 @@ def importData(request):
             ymd[i] = int(ymd[i])
         
         gu = df['gu'][:1].values[0]
-
        
     return render(request, 'graph.html', {'addr':detailaddr, 'mean':mean, 'ymd':ymd,'apt':apt,'gu':gu})
 
