@@ -18,7 +18,7 @@
 ## 3️⃣팀 멤버 & KEYPOINT👍
   <code><strong>-Frontend & Backend-</strong></code>
   <br/><br/>
-<a href="https://github.com/xerathul">이슬(팀장✔️)👧</a> <code>CSS</code> <code>Q&A</code> <code>MAP</code> <code>SEARCH</code> <code>PAGINATION</code> <code>GRAPH</code>
+<a href="https://github.com/xerathul">이슬(팀장✔️)👧</a> <code>CSS</code> <code>Q&A</code> <code>MAP</code> <code>SEARCH</code> <code>PAGINATION</code> <code>GRAPH</code><code>AWS</code>
   <br/><br/>
 <a href="https://github.com/gmlcks7575">김희찬👦</a>  <code>POLYGON</code> <code>DATA</code> <code>DB</code> <code>MAP</code> <code>GRAPH</code>
   <br/><br/>
